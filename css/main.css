@@ -15,20 +15,61 @@ header img {
     height: 40px;
 }
 
-.pad {
+.padDiv {
     display: grid;
-    grid-template-columns: repeat(5,30px);
-    grid-template-rows: repeat(2,40px);
+    grid-template-columns: 80px repeat(4,30px);
+    grid-template-rows: repeat(10,40px);
     grid-gap: 10px 10px;
+    align-items: center;
 }
 
-.block {
+.b {
     background-color: #333333;
     border-radius: 5px;
     width: 30px;
     height: 30px;
 }
 
-.blockOn {
-    background-color: #666666;
+.bp {
+    background-color: #444444;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
 }
+
+.bOn {
+    filter: brightness(1.5);
+}
+
+.b0 {
+    background-color: #0faf0f;
+}
+
+.b1 {
+    background-color: #af0f0f;
+}
+
+.b2 {
+    background-color: #cfcf10;
+}
+
+.b3 {
+    background-color: orange;
+}
+
+.b4 {
+    background-color: lightskyblue;
+}
+
+.b5 {
+    background-color: cyan;
+}
+
+.b6 {
+    background-color: peru;
+}
+
+.b7 {
+    background-color: purple;
+}
+
