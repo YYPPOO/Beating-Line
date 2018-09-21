@@ -6,23 +6,27 @@ const cE = (type,v0,v1,k2,v2) => {
     return myElement;
 };
 
-let state = [
-    [1,0,1,0],
-    [0,0,1,0],
-    [0,1,0,1],
-    [0,0,0,1],
-    [0,1,0,0],
-    [0,0,0,1],
-    [0,1,0,0],
-    [1,0,0,0]
-];
 
 let context;
 let bufferLoader;
-let bpm = 50;
-let t = 60/bpm/2;
+let bpm = 120;
+document.getElementById("bpm").addEventListener("change",function(){
+    console.log(this.value);
+    bpm = this.value;
+})
+let t = 30/bpm;
 let p=0;
-let length = 4;
+let length = 8;
+let state = [
+    [1,0,0,1,1,0,0,0],
+    [0,0,1,0,0,0,1,0],
+    [0,1,0,1,0,1,0,1],
+    [0,0,0,1,0,0,0,1],
+    [0,1,0,0,0,1,0,0],
+    [0,0,0,1,0,0,1,1],
+    [0,1,0,0,1,0,0,1],
+    [1,0,0,0,0,0,0,0]
+];
 // let intervalID;
 
 let trackName = ["Kick","Snare","Close Hat","Open Hat","Tom","Clap","Conga","Atm"];
@@ -58,11 +62,11 @@ function init() {
 function playByPoint(bufferList,p){
     let startTime = context.currentTime;
     for (let i=0;i<8;i++){
-        state[i][p%4] && playSound(bufferList[i],startTime+0.05);
-        padList[i][(p-1)%4] && padList[i][(p-1)%4].classList.remove("bOn");
-        padList[i][3] && padList[i][3].classList.remove("bOn");
-        padList[i][p%4].classList.add("bOn");
-        // for (let j=0;j<4;j++){
+        state[i][p%length] && playSound(bufferList[i],startTime+0.1);
+        padList[i][(p+length-1)%length].classList.remove("bOn");
+        // padList[i][length-1] && padList[i][length-1].classList.remove("bOn");
+        padList[i][p%length].classList.add("bOn");
+        // for (let j=0;j<length;j++){
         //     state[i][j] && playSound(bufferList[i],startTime+j*t);
         // }
     }
@@ -86,7 +90,7 @@ function finishedLoading(bufferList) {
             intervalID = setInterval(function(){
                 playByPoint(bufferList,p);
                 p++;
-            },t*1000);
+            },30000/bpm);
             playing = true;
             document.getElementById("stop").removeEventListener("click",stop);
             document.getElementById("stop").addEventListener("click",stop);
@@ -108,10 +112,11 @@ function finishedLoading(bufferList) {
         clearInterval(intervalID);
         playing = false;
         for (let i=0;i<8;i++){
-            padList[i][(p-1)%4].classList.remove("bOn");
+            padList[i][(p-1)%length].classList.remove("bOn");
         }
         p=0;
         document.getElementById("stop").removeEventListener("click",stop);
+        document.getElementById("play").textContent = "Beat!";
     }
 
     document.getElementById("play").addEventListener("click",play);
@@ -206,7 +211,7 @@ function createPad(){
     for(let i=0;i<8;i++){
         trackList[i] = cE("div","track",trackName[i]);
         padDiv.appendChild(trackList[i]);
-        for(let j=0;j<4;j++){
+        for(let j=0;j<length;j++){
             padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
             padList[i][j].addEventListener("click",function(){
                 state[i][j] = !state[i][j];

@@ -17,7 +17,7 @@ header img {
 
 .padDiv {
     display: grid;
-    grid-template-columns: 80px repeat(4,30px);
+    grid-template-columns: 80px repeat(8,30px);
     grid-template-rows: repeat(10,30px);
     grid-gap: 10px 10px;
     align-items: center;
