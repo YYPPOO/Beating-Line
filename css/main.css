@@ -18,9 +18,10 @@ header img {
 .padDiv {
     display: grid;
     grid-template-columns: 80px repeat(4,30px);
-    grid-template-rows: repeat(10,40px);
+    grid-template-rows: repeat(10,30px);
     grid-gap: 10px 10px;
     align-items: center;
+    margin: 20px auto;
 }
 
 .b {
@@ -28,6 +29,7 @@ header img {
     border-radius: 5px;
     width: 30px;
     height: 30px;
+    transition: all 0.1s;
 }
 
 .bp {
@@ -35,6 +37,7 @@ header img {
     border-radius: 5px;
     width: 30px;
     height: 30px;
+    transition: all 0.1s;
 }
 
 .bOn {

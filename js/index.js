@@ -8,18 +8,18 @@ const cE = (type,v0,v1,k2,v2) => {
 
 let state = [
     [1,0,1,0],
-    [0,1,0,1],
-    [1,1,1,1],
-    [0,0,0,1],
-    [0,0,0,0],
-    [0,0,0,0],
     [0,0,1,0],
+    [0,1,0,1],
+    [0,0,0,1],
+    [0,1,0,0],
+    [0,0,0,1],
+    [0,1,0,0],
     [1,0,0,0]
 ];
 
 let context;
 let bufferLoader;
-let bpm = 120;
+let bpm = 50;
 let t = 60/bpm/2;
 let p=0;
 let length = 4;
@@ -58,7 +58,7 @@ function init() {
 function playByPoint(bufferList,p){
     let startTime = context.currentTime;
     for (let i=0;i<8;i++){
-        state[i][p%4] && playSound(bufferList[i],startTime);
+        state[i][p%4] && playSound(bufferList[i],startTime+0.05);
         padList[i][(p-1)%4] && padList[i][(p-1)%4].classList.remove("bOn");
         padList[i][3] && padList[i][3].classList.remove("bOn");
         padList[i][p%4].classList.add("bOn");
@@ -75,22 +75,46 @@ function finishedLoading(bufferList) {
     //     },t*4000)
     // };
     let intervalID;
-    document.getElementById("play").addEventListener("click",function(){
-        intervalID = setInterval(function(){
-            playByPoint(bufferList,p);
-            p++;
-        },t*1000);
-        document.getElementById("stop").addEventListener("click",stop);
-    });
+    let playing = false;
+    
+    let play = function(e) {
+        if(playing) {
+            clearInterval(intervalID);
+            playing = false;
+            document.getElementById("play").textContent = "Beat!";
+        } else {
+            intervalID = setInterval(function(){
+                playByPoint(bufferList,p);
+                p++;
+            },t*1000);
+            playing = true;
+            document.getElementById("stop").removeEventListener("click",stop);
+            document.getElementById("stop").addEventListener("click",stop);
+            document.getElementById("play").textContent = "Pause";
+        }
+        // document.getElementById("play").removeEventListener("click",play);
+        // document.getElementById("play").addEventListener("click",pause);
+    }
+
+    // let pause = function(e) {
+    //     clearInterval(intervalID);
+    //     document.getElementById("stop").addEventListener("click",stop);
+    //     document.getElementById("play").removeEventListener("click",play);
+    //     document.getElementById("play").addEventListener("click",pause);
+    //     document.getElementById("play").textContent = "Pause";
+    // }
 
     let stop = function(e) {
         clearInterval(intervalID);
+        playing = false;
         for (let i=0;i<8;i++){
             padList[i][(p-1)%4].classList.remove("bOn");
         }
         p=0;
         document.getElementById("stop").removeEventListener("click",stop);
     }
+
+    document.getElementById("play").addEventListener("click",play);
 //   // Create two sources and play them both together.
 //   let source1 = context.createBufferSource();
 //   let source2 = context.createBufferSource();
@@ -134,7 +158,7 @@ function BufferLoader(context, urlList, callback) {
     this.onload = callback;
     this.bufferList = new Array();
     this.loadCount = 0;
-  }
+}
 
 BufferLoader.prototype.loadBuffer = function(url, index) {
     // Load buffer asynchronously
