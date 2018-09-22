@@ -8,7 +8,7 @@
     <meta name="author" content="YPO">
     <meta name="keywords" content="Drum">
     <link rel="stylesheet" href="css/main.css">
-    <link rel='shortcut icon' type='image/x-icon' href='../src/img/favicon.png'>
+    <link rel='shortcut icon' type='image/x-icon' href='../img/favicon.png'>
     <title>Beating Line --Online Drum Machine</title>
 </head>
 <body>
@@ -18,7 +18,8 @@
         <img class="memberIcon" src="img/member.svg" alt="Member"/>
     </header>
     <div class="nav">
-        <input type="number" value="120" id="bpm">
+        <span>BPM</span>
+        <input type="number" value="60" id="bpm">
         <select name="bpm">
             <option value="60">60</option>
             <option value="80">80</option>
@@ -26,7 +27,7 @@
             <option value="120">120</option>
             <option value="150">150</option>
         </select>
-        <input type="range" min="0" max="1" step="any">
+        <input type="range" min="0" max="1" step="any" id="totalVolume">
         <button class="play" id="play">Beat!</button>
         <button class="stop" id="stop">Stop</button>
         <button class="clear">Clear</button>

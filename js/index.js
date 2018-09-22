@@ -6,18 +6,27 @@ const cE = (type,v0,v1,k2,v2) => {
     return myElement;
 };
 
-
+// states --------------------------------------------------------------------------
 let context;
 let bufferLoader;
-let bpm = 120;
-document.getElementById("bpm").addEventListener("change",function(){
-    console.log(this.value);
-    bpm = this.value;
-})
-let t = 30/bpm;
+let bpm = 60;
+let totalVolume = 0.5;
+
+let t = 60/bpm/4;
 let p=0;
 let length = 8;
-let state = [
+let trackQty = 8;
+let bit = 16;
+
+
+let state = [];
+for(let i=0;i<trackQty;i++) {
+    state[i] = [];
+    for(let j=0;j<length;j++) {
+        state[i].push(0);
+    }
+}
+state = [
     [1,0,0,1,1,0,0,0],
     [0,0,1,0,0,0,1,0],
     [0,1,0,1,0,1,0,1],
@@ -27,6 +36,8 @@ let state = [
     [0,1,0,0,1,0,0,1],
     [1,0,0,0,0,0,0,0]
 ];
+console.log(state);
+
 // let intervalID;
 
 let trackName = ["Kick","Snare","Close Hat","Open Hat","Tom","Clap","Conga","Atm"];
@@ -90,7 +101,7 @@ function finishedLoading(bufferList) {
             intervalID = setInterval(function(){
                 playByPoint(bufferList,p);
                 p++;
-            },30000/bpm);
+            },15000/bpm);
             playing = true;
             document.getElementById("stop").removeEventListener("click",stop);
             document.getElementById("stop").addEventListener("click",stop);
@@ -99,14 +110,6 @@ function finishedLoading(bufferList) {
         // document.getElementById("play").removeEventListener("click",play);
         // document.getElementById("play").addEventListener("click",pause);
     }
-
-    // let pause = function(e) {
-    //     clearInterval(intervalID);
-    //     document.getElementById("stop").addEventListener("click",stop);
-    //     document.getElementById("play").removeEventListener("click",play);
-    //     document.getElementById("play").addEventListener("click",pause);
-    //     document.getElementById("play").textContent = "Pause";
-    // }
 
     let stop = function(e) {
         clearInterval(intervalID);
@@ -119,7 +122,25 @@ function finishedLoading(bufferList) {
         document.getElementById("play").textContent = "Beat!";
     }
 
+    let reset = function() {
+        clearInterval(intervalID);
+        intervalID = setInterval(function(){
+            playByPoint(bufferList,p);
+            p++;
+        },15000/bpm);
+    }
+
     document.getElementById("play").addEventListener("click",play);
+
+    document.getElementById("bpm").addEventListener("change",function(){
+        console.log(this.value);
+        bpm = this.value;
+        reset();
+    });
+    
+
+
+    // document.getElementById("bpm").addEventListener("change",reset);
 //   // Create two sources and play them both together.
 //   let source1 = context.createBufferSource();
 //   let source2 = context.createBufferSource();
@@ -133,11 +154,22 @@ function finishedLoading(bufferList) {
 
 
 function playSound(buffer,time) {
-  let source = context.createBufferSource(); // creates a sound source
-  source.buffer = buffer;                    // tell the source which sound to play
-  source.connect(context.destination);       // connect the source to the context's destination (the speakers)
-  source.start(time);                           // play the source now
-                                             // note: on older systems, may have to use deprecated noteOn(time);
+    let source = context.createBufferSource(); // creates a sound source
+    let gain = context.createGain();
+    source.buffer = buffer;                    // tell the source which sound to play
+    source.connect(gain);       // connect the source to the context's destination (the speakers)
+    gain.connect(context.destination);
+    gain.gain.value = totalVolume;
+    source.start(time);                           // play the source now
+    source.stop(time+10);
+
+    document.getElementById("stop").addEventListener("click",function(){source.stop()});
+    document.getElementById("totalVolume").addEventListener("change",function(){
+        totalVolume = this.value;
+        gain.gain.value = totalVolume;
+        console.log(this.value);
+    });
+                                                // note: on older systems, may have to use deprecated noteOn(time);
 }
 // let dogBarkingBuffer = null;
 // // Fix up prefixing
