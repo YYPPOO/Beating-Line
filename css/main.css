@@ -17,11 +17,24 @@ header img {
 
 .padDiv {
     display: grid;
-    grid-template-columns: 80px repeat(8,30px);
-    grid-template-rows: repeat(10,30px);
+    grid-template-columns: 100px repeat(8,30px);
+    grid-template-rows: repeat(8,30px);
     grid-gap: 10px 10px;
     align-items: center;
     margin: 20px auto;
+}
+
+.track {
+    display: flex;
+    align-items: center;
+    justify-self: flex-end;
+    font-size: 16px;
+}
+
+.trackIcon {
+    width: 30px;
+    height: 30px;
+    margin: 0 5px;
 }
 
 .b {
@@ -76,3 +89,6 @@ header img {
     background-color: purple;
 }
 
+#container>img{
+    border: solid 1px white;
+}

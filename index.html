@@ -19,7 +19,7 @@
     </header>
     <div class="nav">
         <span>BPM</span>
-        <input type="number" value="60" id="bpm">
+        <input type="number" value="60" min="30" max="240" id="bpm">
         <select name="bpm">
             <option value="60">60</option>
             <option value="80">80</option>
@@ -27,7 +27,7 @@
             <option value="120">120</option>
             <option value="150">150</option>
         </select>
-        <input type="range" min="0" max="1" step="any" id="totalVolume">
+        <input type="range" value="1" min="0" max="1" step="any" id="totalVolume">
         <button class="play" id="play">Beat!</button>
         <button class="stop" id="stop">Stop</button>
         <button class="clear">Clear</button>
@@ -96,6 +96,14 @@
     </div>
     <div>
         <div class="container" id="container">
+            <img src="img/track0.svg"/>
+            <img src="img/track1.svg"/>
+            <img src="img/track2.svg"/>
+            <img src="img/track3.svg"/>
+            <img src="img/track4.svg"/>
+            <img src="img/track5.svg"/>
+            <img src="img/track6.svg"/>
+            <img src="img/track7.svg"/>
         </div>
     </div>
     <script src="js/index.js" text/javascript></script>

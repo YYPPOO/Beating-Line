@@ -10,7 +10,7 @@ const cE = (type,v0,v1,k2,v2) => {
 let context;
 let bufferLoader;
 let bpm = 60;
-let totalVolume = 0.5;
+let totalVolume = 1;
 
 let t = 60/bpm/4;
 let p=0;
@@ -135,7 +135,7 @@ function finishedLoading(bufferList) {
     document.getElementById("bpm").addEventListener("change",function(){
         console.log(this.value);
         bpm = this.value;
-        reset();
+        playing && reset();
     });
     
 
@@ -162,6 +162,8 @@ function playSound(buffer,time) {
     gain.gain.value = totalVolume;
     source.start(time);                           // play the source now
     source.stop(time+10);
+    console.log(gain);
+    console.log(source);
 
     document.getElementById("stop").addEventListener("click",function(){source.stop()});
     document.getElementById("totalVolume").addEventListener("change",function(){
@@ -242,6 +244,8 @@ function createPad(){
     let padDiv = document.getElementById("padDiv");
     for(let i=0;i<8;i++){
         trackList[i] = cE("div","track",trackName[i]);
+        trackIcon = cE("img","trackIcon","","src","../img/track"+i+".svg")
+        trackList[i].appendChild(trackIcon);
         padDiv.appendChild(trackList[i]);
         for(let j=0;j<length;j++){
             padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
