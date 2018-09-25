@@ -11,6 +11,7 @@ let context;
 let bufferLoader;
 let bpm = 60;
 let totalVolume = 1;
+let playingList = [];
 
 let t = 60/bpm/4;
 let p=0;
@@ -107,12 +108,14 @@ function finishedLoading(bufferList) {
             document.getElementById("stop").addEventListener("click",stop);
             document.getElementById("play").textContent = "Pause";
         }
-        // document.getElementById("play").removeEventListener("click",play);
-        // document.getElementById("play").addEventListener("click",pause);
     }
 
     let stop = function(e) {
         clearInterval(intervalID);
+        console.log(playingList);
+        playingList.forEach(function(item){
+            item.gain.value = 0;
+        })
         playing = false;
         for (let i=0;i<8;i++){
             padList[i][(p-1)%length].classList.remove("bOn");
@@ -138,7 +141,15 @@ function finishedLoading(bufferList) {
         playing && reset();
     });
     
+    document.getElementById("totalVolume").addEventListener("change",function(){
+        totalVolume = this.value;
+        playingList.forEach(function(item){
+            item.gain.value = totalVolume;
+        })
+    });
+
     createPad(bufferList);
+
 
 
     // document.getElementById("bpm").addEventListener("change",reset);
@@ -160,19 +171,18 @@ function playSound(buffer,time) {
     source.buffer = buffer;                    // tell the source which sound to play
     source.connect(gain);       // connect the source to the context's destination (the speakers)
     gain.connect(context.destination);
-    gain.gain.value = totalVolume;
+    gain.gain.value = document.getElementById("totalVolume").value;
     source.start(time);                           // play the source now
-    source.stop(time+10);
-    console.log(gain);
-    console.log(source);
-    console.log(context);
+    // source.stop(time+source.buffer.duration);
+    // console.log(gain);
+    // console.log(source);
+    // console.log(context.createBufferSource());
+    playingList.push(gain);
+    // console.log(playingList);
+    source.onended = function(){
+        playingList.splice(playingList.indexOf(gain),1);
+    };
 
-    document.getElementById("stop").addEventListener("click",function(){source.stop()});
-    document.getElementById("totalVolume").addEventListener("change",function(){
-        totalVolume = this.value;
-        gain.gain.value = totalVolume;
-        console.log(this.value);
-    });
                                                 // note: on older systems, may have to use deprecated noteOn(time);
 }
 // let dogBarkingBuffer = null;
@@ -246,7 +256,7 @@ function createPad(bufferList){
     let padDiv = document.getElementById("padDiv");
     let lastSelect;
     for(let i=0;i<8;i++){
-        trackList[i] = cE("div","track",trackName[i]);
+        trackList[i] = cE("div","track",i+1);
         trackIcon = cE("img","trackIcon","","src","../img/track"+i+".svg")
         trackList[i].appendChild(trackIcon);
         trackList[i].addEventListener("click",function(){

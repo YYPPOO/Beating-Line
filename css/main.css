@@ -17,7 +17,7 @@ header img {
 
 .padDiv {
     display: grid;
-    grid-template-columns: 100px repeat(8,30px);
+    grid-template-columns: 55px repeat(8,30px);
     grid-template-rows: repeat(8,30px);
     grid-gap: 10px 10px;
     align-items: center;
@@ -27,8 +27,9 @@ header img {
 .track {
     display: flex;
     align-items: center;
-    justify-self: flex-end;
-    font-size: 16px;
+    font-size: 12px;
+    border-radius: 5px;
+    justify-content: flex-end;
 }
 
 .trackIcon {
@@ -67,35 +68,43 @@ header img {
 }
 
 .b0 {
-    background-color: #0faf0f;
+    background-color: #0d850d;
+    color: #0f1a2a;
 }
 
 .b1 {
-    background-color: #af0f0f;
+    background-color: #850d0d;
+    color: #0f1a2a;
 }
 
 .b2 {
-    background-color: #cfcf10;
+    background-color: #8f8f0d;
+    color: #0f1a2a;
 }
 
 .b3 {
-    background-color: orange;
+    background-color: #a8710b;
+    color: #0f1a2a;
 }
 
 .b4 {
     background-color: lightskyblue;
+    color: #0f1a2a;
 }
 
 .b5 {
     background-color: cyan;
+    color: #0f1a2a;
 }
 
 .b6 {
     background-color: peru;
+    color: #0f1a2a;
 }
 
 .b7 {
     background-color: purple;
+    color: #0f1a2a;
 }
 
 #container>img{
