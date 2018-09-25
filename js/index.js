@@ -67,7 +67,7 @@ function init() {
     );
 
   bufferLoader.load();
-  createPad();
+  
 }
 
 function playByPoint(bufferList,p){
@@ -138,6 +138,7 @@ function finishedLoading(bufferList) {
         playing && reset();
     });
     
+    createPad(bufferList);
 
 
     // document.getElementById("bpm").addEventListener("change",reset);
@@ -164,6 +165,7 @@ function playSound(buffer,time) {
     source.stop(time+10);
     console.log(gain);
     console.log(source);
+    console.log(context);
 
     document.getElementById("stop").addEventListener("click",function(){source.stop()});
     document.getElementById("totalVolume").addEventListener("change",function(){
@@ -240,21 +242,39 @@ BufferLoader.prototype.load = function() {
 }
 
 // create pad --------------------------------------------------------------
-function createPad(){
+function createPad(bufferList){
     let padDiv = document.getElementById("padDiv");
+    let lastSelect;
     for(let i=0;i<8;i++){
         trackList[i] = cE("div","track",trackName[i]);
         trackIcon = cE("img","trackIcon","","src","../img/track"+i+".svg")
         trackList[i].appendChild(trackIcon);
+        trackList[i].addEventListener("click",function(){
+            playSound(bufferList[i],context.currentTime);
+            lastSelect==i || handleSelect(i);
+            lastSelect = i;
+        })
         padDiv.appendChild(trackList[i]);
         for(let j=0;j<length;j++){
             padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
             padList[i][j].addEventListener("click",function(){
                 state[i][j] = !state[i][j];
+                state[i][j] && playSound(bufferList[i],context.currentTime);
                 padList[i][j].classList.toggle("b"+i);
+                lastSelect==i || handleSelect(i);
+                lastSelect = i;
             })
             state[i][j] && padList[i][j].classList.add("b"+i);
             padDiv.appendChild(padList[i][j]);
+        }
+    }
+
+    function handleSelect(s){
+        trackList[lastSelect] && trackList[lastSelect].classList.remove("b"+lastSelect);
+        trackList[s].classList.add("b"+s);
+        for(let j=0;j<length;j++){
+            padList[lastSelect] && padList[lastSelect][j].classList.remove("bSelected");
+            if(!state[s][j]) padList[s][j].classList.add("bSelected");
         }
     }
 }

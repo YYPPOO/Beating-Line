@@ -54,7 +54,16 @@ header img {
 }
 
 .bOn {
-    filter: brightness(1.5);
+    filter: brightness(1.3);
+}
+
+.bHit {
+    background-color: #dddddd;
+}
+
+.bSelected {
+    /* filter: brightness(2); */
+    background-color: #666666;
 }
 
 .b0 {
