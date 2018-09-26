@@ -134,12 +134,19 @@ function finishedLoading(bufferList) {
     }
 
     let clear = function() {
+        stop();
         for(let i=0;i<trackQty;i++){
-            
+            for(let j=0;j<length;j++){
+                if(state[i][j]){
+                    state[i][j] = 0;
+                    padList[i][j].classList.remove("b"+i);
+                }
+            }
         }
     }
 
     document.getElementById("play").addEventListener("click",play);
+    document.getElementById("clear").addEventListener("click",clear);
 
     document.getElementById("bpm").addEventListener("change",function(){
         console.log(this.value);
