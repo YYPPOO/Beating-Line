@@ -133,6 +133,12 @@ function finishedLoading(bufferList) {
         },15000/bpm);
     }
 
+    let clear = function() {
+        for(let i=0;i<trackQty;i++){
+            
+        }
+    }
+
     document.getElementById("play").addEventListener("click",play);
 
     document.getElementById("bpm").addEventListener("change",function(){
