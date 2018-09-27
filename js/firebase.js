@@ -1,13 +1,3 @@
-let config = {
-    apiKey: "AIzaSyBP9wMIOZ5j8K5F39AJFrGJ-WpERHMUE3c",
-    authDomain: "beating-line.firebaseapp.com",
-    databaseURL: "https://beating-line.firebaseio.com",
-    projectId: "beating-line",
-    storageBucket: "beating-line.appspot.com",
-    messagingSenderId: "498561389182"
-};
-firebase.initializeApp(config);
-
 let databaseHost = "https://beating-line.firebaseapp.com";
 
 authStatus = function(){
@@ -15,39 +5,31 @@ authStatus = function(){
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
+    let clickProfile = popUpLogIn;
+    document.querySelector(".memberIcon").removeEventListener("click",clickProfile);
     if (user) {
-        // User is signed in.
-        console.log("成功登入！");
-        // app.state.auth=user;
-        console.log('檢測登入',authStatus().uid);
-
         console.log(user);
-        app.showUserPic(user);
-        console.log("You're logging in with "+user.providerData[0].providerId);
+        console.log('登入id',authStatus().uid);
+
+        showUserPic(user);
+        console.log("成功以"+user.providerData[0].providerId+"登入");
+        clickProfile = goToProfile;
     } else {
-      console.log("You're logged out.");
+        console.log("未登入");
     }
-    if(app.profileInit){app.profileInit()};
-    setLogInButton(user);
+    // if(app.profileInit){app.profileInit()};
+    document.querySelector(".memberIcon").addEventListener("click",clickProfile);
 });
 
-app.showUserPic=function(data){
-    let storage = ourDB.storage();
+let showUserPic = function(data){
+    let storage = firebase.storage();
     storage.ref(authStatus().uid+'/main.jpg').getDownloadURL().then((url)=>{
         console.log(url);
-        app.get("#member-profile").src = url;
-
+        document.querySelector(".memberIcons").src = url;
     }).catch( (req) => {
         console.log(req);
-        if(data.photoURL){
         // let width = data.providerData[0].providerId == "facebook.com" ?"/picture/?width=200":"";
-            // app.get("#profile-picture").style.backgroundImage = "url("+data.photoURL+width+")";
-            app.get("#member-profile").src=data.photoURL;
-            app.get("#media-member-profile").src=data.photoURL;
-        } else {
-            app.get("#member-profile").src="../imgs/member.png";
-            app.get("#media-member-profile").src="../imgs/member-mobile.png";
-        }
+        document.querySelector(".memberIcons").src=data.photoURL?data.photoURL:"../img/member.svg"; //+width;
     })
 };
 
@@ -190,18 +172,7 @@ let resetPassword = function() {
         });
 }  
 
-// set member click handlers -----------------------------------------
-function setLogInButton() {
-    let user = firebase.auth().currentUser;
-    console.log(user);
-    let memberIcons=app.getAll(".member");
-    let clickProfile = user ? goToProfile:nLogIn;
-    for(let i=0;i<memberIcons.length;i++){
-        app.setEventHandlers(memberIcons[i], {
-            click:clickProfile
-        });
-    }
-}
+
 
 function goToProfile() {
     window.location = "/profile.html";
@@ -213,7 +184,7 @@ function goToProfile() {
 //實際跳出的產生函式
 
 function popUpLogIn() {
-    let lastSheild = document.querySelector(".shield");
+    let lastSheild = document.querySelector(".logInShield");
     while(lastSheild) {
         lastSheild.parentNode.removeChild(lastSheild);
     }
@@ -222,7 +193,7 @@ function popUpLogIn() {
     }
 
     //最大的那塊灰區域
-    let mySheild = cE("div","shield");
+    let mySheild = cE("div","logInShield");
     //點擊背後大塊區域會自動消失功能
 	mySheild.addEventListener('click',function(e){
         mySheild.style.display = "none";
@@ -250,24 +221,28 @@ function popUpLogIn() {
     let mySignInLink = cE("a",null,"登入");
         mySignInLink.addEventListener("click",function(){
             let logging = this.textContent == "登入";
+            console.log(logging);
             //true表示註冊中將轉為登入 false為登入中將轉為註冊
                 mySignInText.textContent = logging?"還沒有帳號嗎？請點這裡":"已經有帳號了？請點這裡";
                 mySignInLink.textContent = logging?"註冊":"登入";
-                myForget.style.display = logging?"block":"none";
+                myForget.textContent = logging?"忘記密碼？":"";
                 myNameInput.style.display = logging?"none":"block";
-                mySignUp.style.display = logging?"none":"block";
+                mySignUp.textContent = logging?"登入":"註冊";
+                signUpOnClick = logging?signIn:signUp;
+                // mySignIn.style.display = logging?"block":"none";
         })
-        mySignInText.appendChild(mySignInLink);
+        // mySignInText.appendChild(mySignInLink);
 
     //這邊是忘記密碼的那個連結！
-    let myForget = cE("a",null,"忘記密碼？","id","forgetPassword");
+    let myForget = cE("a",null,"","id","forgetPassword");
     myForget.addEventListener("click",resetPassword); 
     
     //點擊的按鈕 登入及註冊
+    let signUpOnClick = signUp;
     let mySignUp =  cE("button","","註冊");
-        mySignUp.addEventListener("click",signUp);
-    let mySignIn =  cE("button","","登入");
-        mySignIn.addEventListener("click",signIn);
+        mySignUp.addEventListener("click",signUpOnClick);
+    // let mySignIn =  cE("button","","登入");
+    //     mySignIn.addEventListener("click",signIn);
 
     //是那個ＯＲ分格線
 	let myHrDiv = cE("div","divideLine");
@@ -281,10 +256,10 @@ function popUpLogIn() {
     let myFB =  cE("button",null,"Log In With Facebook");
         myFB.addEventListener("click",fbLogin);
     let myG =  cE("button","goo","Log In With Gmail");
-        myG.addEventListener("click",glogin);
+        myG.addEventListener("click",gLogin);
 
-    myLogIn.append(myLogoImg,myNameInput,myEmailInput,myPasswordInput,mySignInText,myForget,mySignUp,mySignIn,myHrDiv,myFB,myG);
-    myForget.style.display = "none";
+    myLogIn.append(myLogoImg,myNameInput,myEmailInput,myPasswordInput,mySignInText,mySignInLink,myForget,mySignUp,myHrDiv,myFB,myG);
+    // myForget.style.display = "none";
 
 	document.body.append(mySheild,myLogIn);
 }
@@ -304,8 +279,8 @@ function popUpLogIn() {
 // 		myAlert.style.display = "none";
 // 	})
 // 	let myAlert = cE("div", "alert");
-// 	let myAlertImg = cE("img", "alertImg", "", src, boolean ? "imgs/checked.svg" : "imgs/warning.svg");
-// 	// myAlertImg.src = boolean ? "imgs/checked.svg" : "imgs/warning.svg";
+// 	let myAlertImg = cE("img", "alertImg", "", src, boolean ? "img/checked.svg" : "img/warning.svg");
+// 	// myAlertImg.src = boolean ? "img/checked.svg" : "img/warning.svg";
 // 	let myAlertText = cE('div', "alertText", text);
 // 	let myAlertBtn = cE('button', "alertBtn", "確認");
 // 	myAlertBtn.addEventListener('click', function () {
@@ -317,17 +292,17 @@ function popUpLogIn() {
 // }
 
 function alert(text, boolean, cb) {
-    let lastSheild = document.querySelector(".shield");
-    while(lastSheild) {
-        lastSheild.parentNode.removeChild(lastSheild);
-    }
+    // let lastSheild = document.querySelector(".shield");
+    // while(lastSheild) {
+    //     lastSheild.parentNode.removeChild(lastSheild);
+    // }
 	let mySheild = cE("div", "shield");
 	mySheild.addEventListener('click', function () {
 		mySheild.style.display = "none";
 		myAlert.style.display = "none";
 	})
 	let myAlert = cE("div", "alert");
-	let myAlertImg = cE("img", "alertImg", "", src, boolean ? "imgs/checked.svg" : "imgs/warning.svg");
+	let myAlertImg = cE("img","alertImg","","src", boolean ? "img/checked.svg" : "img/warning.svg");
 	let myAlertText = cE('div', "alertText", text);
 	let myAlertBtnDiv = cE("div","alertBtnDiv");
 	let myAlertBtn = cE('button', "alertBtn", "確認");

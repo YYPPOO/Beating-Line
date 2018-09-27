@@ -146,7 +146,7 @@ function finishedLoading(bufferList) {
     }
 
     let clear = function() {
-        stop();
+        playing && stop();
         for(let i=0;i<trackQty;i++){
             for(let j=0;j<length;j++){
                 if(state[i][j]){
@@ -158,7 +158,8 @@ function finishedLoading(bufferList) {
     }
 
     document.getElementById("play").addEventListener("click",play);
-    document.getElementById("clear").addEventListener("click",clear);
+    // document.getElementById("clear").addEventListener("click",clear);
+    document.getElementById("clear").addEventListener("click",function(){alert("確認清除？",false,clear)});
 
     document.getElementById("bpm").addEventListener("change",function(){
         console.log(this.value);
