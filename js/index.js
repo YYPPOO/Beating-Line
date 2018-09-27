@@ -18,6 +18,7 @@ let p=0;
 let length = 8;
 let trackQty = 8;
 let bit = 16;
+let playing = false;
 
 
 let state = [];
@@ -27,7 +28,7 @@ for(let i=0;i<trackQty;i++) {
         state[i].push(0);
     }
 }
-state = [
+let rhythm0 = [
     [1,0,0,1,1,0,0,0],
     [0,0,1,0,0,0,1,0],
     [0,1,0,1,0,1,0,1],
@@ -37,7 +38,19 @@ state = [
     [0,1,0,0,1,0,0,1],
     [1,0,0,0,0,0,0,0]
 ];
+let rhythm1 = [
+    [1,0,0,0,1,0,0,0],
+    [0,0,0,1,0,0,1,0],
+    [0,0,1,0,0,0,0,1],
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,0,0,0,1,0],
+    [0,0,0,0,1,1,0,0],
+    [1,1,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0]
+];
+state = rhythm1;
 console.log(state);
+
 
 // let intervalID;
 
@@ -91,7 +104,6 @@ function finishedLoading(bufferList) {
     //     },t*4000)
     // };
     let intervalID;
-    let playing = false;
     
     let play = function(e) {
         if(playing) {
@@ -282,7 +294,7 @@ function createPad(bufferList){
             padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
             padList[i][j].addEventListener("click",function(){
                 state[i][j] = !state[i][j];
-                state[i][j] && playSound(bufferList[i],context.currentTime);
+                state[i][j] && !playing && playSound(bufferList[i],context.currentTime);
                 padList[i][j].classList.toggle("b"+i);
                 lastSelect==i || handleSelect(i);
                 lastSelect = i;
@@ -297,7 +309,8 @@ function createPad(bufferList){
         trackList[s].classList.add("b"+s);
         for(let j=0;j<length;j++){
             padList[lastSelect] && padList[lastSelect][j].classList.remove("bSelected");
-            if(!state[s][j]) padList[s][j].classList.add("bSelected");
+            // if(!state[s][j]) 
+            padList[s][j].classList.add("bSelected");
         }
     }
 }

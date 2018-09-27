@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel='shortcut icon' type='image/x-icon' href='../img/favicon.png'>
     <title>Beating Line --Online Drum Machine</title>
+    <script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase-app.js"></script> -->
+	<!-- <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase-auth.js"></script> -->
+	<!-- <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase-storage.js"></script> -->
 </head>
 <body>
     <header>
@@ -19,7 +23,7 @@
     </header>
     <div class="nav">
         <span>BPM</span>
-        <input type="number" value="60" min="30" max="240" id="bpm">
+        <input type="number" value="60" min="30" max="240" step="5" id="bpm">
         <select name="bpm">
             <option value="60">60</option>
             <option value="80">80</option>
@@ -37,65 +41,12 @@
     <div class="visual"></div>
     
     <div class="padDiv" id="padDiv">
-        <!-- <div class="kick">
-            Kick
-            <audio id="kick">
-                <source src="sound/0kick0.wav" />
-            </audio>
-        </div>
-        <div class="b" id="0-0"></div>
-        <div class="b" id="0-1"></div>
-        <div class="b" id="0-2"></div>
-        <div class="b" id="0-3"></div>
-        <div class="snare">
-            Snare
-            <audio id="snare">
-                <source src="sound/1snare0.wav" />
-            </audio>
-        </div>
-        <div class="b" id="1-0"></div>
-        <div class="b" id="1-1"></div>
-        <div class="b" id="1-2"></div>
-        <div class="b" id="1-3"></div>
-        <div class="closeHat">
-            Close Hat
-            <audio id="closeHat">
-                <source src="../src/sound/2closeHat0.wav" />
-            </audio>
-        </div>
-        <div class="openHat">
-            Open Hat
-            <audio id="openHat">
-                <source src="../src/sound/3openHat0.wav" />
-            </audio>
-        </div>
-        <div class="tom">
-            Tom
-            <audio id="tom">
-                <source src="../src/sound/4tom0.wav" />
-            </audio>
-        </div>
-        <div class="clap">
-            Clap
-            <audio id="clap">
-                <source src="../src/sound/5clap0.wav" />
-            </audio>
-        </div>
-        <div class="cong">
-            Cong
-            <audio id="cong">
-                <source src="../src/sound/6conga0.wav" />
-            </audio>
-        </div>
-        <div class="atm">
-            Atm
-            <audio id="atm">
-                <source src="../src/sound/7atm0.wav" />
-            </audio>
-        </div> -->
+
     </div>
     <div>
         <div class="container" id="container">
+            <img src="img/checked.svg"/>
+            <img src="img/warning.svg"/>
             <img src="img/track0.svg"/>
             <img src="img/track1.svg"/>
             <img src="img/track2.svg"/>
