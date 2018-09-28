@@ -4,11 +4,14 @@ body {
 }
 
 button {
-    border: 0px;
+    border: solid 1px #ffffff;
     background-color: #3f4a5a;
+    border-radius: 5px;
     color: white;
-    width: 100px;
+    width: 80px;
     height: 30px;
+    padding: 0;
+    margin: 5px;
 }
 
 header {
@@ -19,8 +22,11 @@ header {
 }
 
 header img {
-    width: 40px;
     height: 40px;
+}
+
+header>.memberIcon {
+    border-radius: 3px;
 }
 
 .padDiv {
@@ -127,11 +133,15 @@ header img {
     width:100%;
     height:100%;
     background:#0f1a2a;
-    z-index:20;
+    z-index: 50;
     opacity: 0.6;
 }
 
-.alert{
+.logInShield {
+    z-index: 10;
+}
+
+.alert, .logIn{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -140,13 +150,17 @@ header img {
     left:50%;
     top:50%;
     transform: translate(-50%,-50%);
-    width:500px;
+    width:300px;
     height:350px;
     border-radius: 10px;
-    border:3px solid #ffffff;
+    border:1px solid #ffffff;
     background-color: #3f4a5a;
     color: white;
     z-index: 100;
+}
+
+.logIn {
+    z-index: 20;
 }
 
 .alertImg{
@@ -154,6 +168,65 @@ header img {
     width: 128px;
     margin: 10px auto;
     animation: show 0.6s;
+}
+
+.alertText {
+    width: 250px;
+    text-align: center;
+}
+
+.logIn {
+    width: 400px;
+    height: 400px;
+}
+
+.logInImg {
+    height: 40px;
+    margin: 10px auto;
+}
+
+.logIn>input {
+    width: 250px;
+    height: 20px;
+    padding: 5px;
+    border: 0px;
+    border-radius: 5px;
+}
+
+.logIn>button {
+    width: 260px;
+    height: 30px;
+    cursor: pointer;
+    background-color: #0f1a2a;
+}
+
+.logIn>a {
+    width: 260px;
+    text-align: end;
+    cursor: pointer;
+}
+
+.logInText {
+    font-size: 12px;
+}
+
+.divideLine {
+    display: flex;
+    align-items: center;
+}
+
+.divideLine>.hrLine {
+    flex: 1;
+    height: 1px;
+    width: 71px;
+    background-color: #ffffff;
+    margin: 10px;
+}
+
+.logInIcon {
+    height: 60px;
+    margin: 10px 30px;
+    cursor: pointer;
 }
 
 @keyframes show{
@@ -176,11 +249,11 @@ header img {
 }
 
 .alertBtn {
-    background-color: #cccccc;
-    border: 1px solid #aaaaaa;
+    background-color: #0f1a2a;
+    /* border: 1px solid #aaaaaa; */
 }
 
 .alertCancel {
-    background-color: #aaaaaa;
-    border: 1px solid #aaaaaa;
+    background-color: #3f4a5a;
+    /* border: 1px solid #aaaaaa; */
 }

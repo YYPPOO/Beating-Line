@@ -48,7 +48,7 @@ let rhythm1 = [
     [1,1,0,0,0,0,1,0],
     [0,0,0,0,0,0,0,0]
 ];
-state = rhythm1;
+state = rhythm0;
 console.log(state);
 
 

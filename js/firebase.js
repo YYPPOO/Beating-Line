@@ -25,11 +25,11 @@ let showUserPic = function(data){
     let storage = firebase.storage();
     storage.ref(authStatus().uid+'/main.jpg').getDownloadURL().then((url)=>{
         console.log(url);
-        document.querySelector(".memberIcons").src = url;
+        document.querySelector(".memberIcon").src = url;
     }).catch( (req) => {
         console.log(req);
         // let width = data.providerData[0].providerId == "facebook.com" ?"/picture/?width=200":"";
-        document.querySelector(".memberIcons").src=data.photoURL?data.photoURL:"../img/member.svg"; //+width;
+        document.querySelector(".memberIcon").src=data.photoURL?data.photoURL:"../img/member.svg"; //+width;
     })
 };
 
@@ -77,6 +77,15 @@ let getRedirectResult = function(){
 let signIn = function() {
     let email = document.getElementById("logInEmail").value;
     let password = document.getElementById("logInPassword").value;
+    if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(email)) {
+        alert("Email 錯誤，請重新輸入。");
+        return;
+    }
+    if (password.length < 4) {
+        alert("密碼錯誤，請重新輸入。");
+        return;
+    }
+    alert("資料傳送中…",true);
     firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function(e){
         console.log(e);
@@ -86,7 +95,7 @@ let signIn = function() {
     })
     .catch(function(error) {
         if(error.code=="auth/invalid-email"||error.code=="auth/user-not-found") {
-            alert("請輸入正確的Email。")
+            alert("Email 錯誤，請重新輸入。")
         } else if(error.code=="auth/wrong-password"){
             alert("密碼錯誤，請重新輸入。")
         } else {
@@ -106,11 +115,11 @@ let signUp = function() {
         return;
     }
     if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(email)) {
-        alert("請輸入Email");
+        alert("Email 錯誤，請重新輸入。");
         return;
     }
     if (password.length < 4) {
-        alert("請輸入密碼");
+        alert("密碼錯誤，請重新輸入。");
         return;
     }
     alert("資料傳送中…",true);
@@ -145,9 +154,9 @@ let signUp = function() {
     })
     .catch(function(error) {
         if (error.code == "auth/weak-password") {
-            alert("請輸入長一點的密碼");
+            alert("密碼強度不足，請重新輸入。");
         } else if (error.code=="auth/email-already-in-use") {
-            alert("此帳戶已註冊，請重新輸入 Email。")
+            alert("此 Email 已註冊，請重新輸入。")
         } else {
             alert(error.message);
         }
@@ -159,20 +168,18 @@ let signUp = function() {
 let resetPassword = function() {
     let email = document.getElementById("logInEmail").value;
     if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(email)) {
-        alert("請輸入 Email 後再點選，我們會寄送重設密碼連結至您的信箱。");
+        alert("請輸入 Email 。");
         return;
     }
     firebase.auth().sendPasswordResetEmail(email).then(function() {
-            alert("已寄送重設密碼連結至您的Email，即將在 3 秒後跳轉頁面…",true)
+            alert("已寄送重設密碼連結至您的 Email，即將在 3 秒後跳轉頁面…",true)
             console.log("Email sent!")
             setTimeout(document.location.reload(),3000);
         }).catch(function(error) {
-            alert("Email有誤，請重新再試。");
+            alert("Email 錯誤，請重新輸入。");
             console.log(error);
         });
 }  
-
-
 
 function goToProfile() {
     window.location = "/profile.html";
@@ -184,26 +191,28 @@ function goToProfile() {
 //實際跳出的產生函式
 
 function popUpLogIn() {
-    let lastSheild = document.querySelector(".logInShield");
-    while(lastSheild) {
-        lastSheild.parentNode.removeChild(lastSheild);
-    }
+    // let lastSheild = document.querySelector(".logInShield");
+    // while(lastSheild) {
+    //     lastSheild.parentNode.removeChild(lastSheild);
+    // }
     if(authStatus()!==null) {
         return;
+    }
+
+    let closeLogIn = function(){
+        mySheild.parentNode.removeChild(mySheild);
+		myLogIn.parentNode.removeChild(myLogIn);
     }
 
     //最大的那塊灰區域
     let mySheild = cE("div","logInShield");
     //點擊背後大塊區域會自動消失功能
-	mySheild.addEventListener('click',function(e){
-        mySheild.style.display = "none";
-        myLogIn.style.display = "none";
-    })
+	mySheild.addEventListener('click',closeLogIn);
 
     let myLogIn = cE("div","logIn");
 
     //LOGO 以及點擊回首頁的LINK
-	let myLogoImg = cE("img",null,null,"src","img/icon.svg");
+	let myLogoImg = cE("img","logInImg",null,"src","img/logo.svg");
 
 	//名字 信箱 密碼輸入框
 	let myNameInput = cE("input","logInName",null,"placeholder","請輸入姓名");
@@ -217,14 +226,14 @@ function popUpLogIn() {
 	myPasswordInput.type = "password";
     myPasswordInput.id = "logInPassword";
     
-    let mySignInText = cE("div",null,"已經有帳號了？請點這裡");
-    let mySignInLink = cE("a",null,"登入");
+    // let mySignInText = cE("div","logInText","");
+    let mySignInLink = cE("a","logInText","已經有帳號了？請點這裡登入");
         mySignInLink.addEventListener("click",function(){
-            let logging = this.textContent == "登入";
+            let logging = this.textContent == "已經有帳號了？請點這裡登入";
             console.log(logging);
             //true表示註冊中將轉為登入 false為登入中將轉為註冊
-                mySignInText.textContent = logging?"還沒有帳號嗎？請點這裡":"已經有帳號了？請點這裡";
-                mySignInLink.textContent = logging?"註冊":"登入";
+                // mySignInText.textContent = logging?"還沒有帳號嗎？請點這裡":"已經有帳號了？請點這裡";
+                mySignInLink.textContent = logging?"還沒有帳號嗎？請點這裡註冊":"已經有帳號了？請點這裡登入";
                 myForget.textContent = logging?"忘記密碼？":"";
                 myNameInput.style.display = logging?"none":"block";
                 mySignUp.textContent = logging?"登入":"註冊";
@@ -234,7 +243,7 @@ function popUpLogIn() {
         // mySignInText.appendChild(mySignInLink);
 
     //這邊是忘記密碼的那個連結！
-    let myForget = cE("a",null,"","id","forgetPassword");
+    let myForget = cE("a","logInText","","id","forgetPassword");
     myForget.addEventListener("click",resetPassword); 
     
     //點擊的按鈕 登入及註冊
@@ -247,21 +256,41 @@ function popUpLogIn() {
     //是那個ＯＲ分格線
 	let myHrDiv = cE("div","divideLine");
 		let myLine =  cE("span","hrLine");
-		let myOr =  cE("span","","or");	
+		let myOr =  cE("span","logInText","或 以社群帳號登入");	
 		let myLineTwo =  cE("span","hrLine");
 
     myHrDiv.append(myLine,myOr,myLineTwo);
     
     //ＦＢ跟ＧＯＯＧＬＥ的按鈕區
-    let myFB =  cE("button",null,"Log In With Facebook");
+    let myAlertBtnDiv = cE("div","alertBtnDiv");
+    let myFB =  cE("img","logInIcon","","src","img/facebook.svg");
         myFB.addEventListener("click",fbLogin);
-    let myG =  cE("button","goo","Log In With Gmail");
+    let myG =  cE("img","logInIcon","","src","img/google.svg");
+//     let myG =  cE("a");
+//         myG.innerHTML = `
+// <svg class="logInIcon" width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+// <style>
+// #googleIcon {
+//     fill: #0f1a2a;
+// }
+
+// #googleIcon:hover {
+//     fill: #dd4b39;
+// }
+// </style>
+//     <rect id="googleIcon" x="10" y="10" rx="64" ry="64" width="492" height="492" stroke="#ffffff" stroke-width="10" />
+//     <polygon id="svg_1" fill="#ffffff" points="407,242.5 407,188.5 380,188.5 380,242.5 326,242.5 326,269.5 380,269.5 380,323.5 407,323.5 407,269.5 461,269.5 461,242.5 "/>
+//     <path id="svg_2" fill="#ffffff" d="m177.5,230.699997l0,50.599991l71.5737,0c-10.448898,29.449188 -38.582504,50.600006 -71.5737,50.600006c-41.846191,0 -75.899994,-34.053802 -75.899994,-75.899994c0,-41.846191 34.053802,-75.899994 75.899994,-75.899994c18.140106,0 35.597107,6.50209 49.157898,18.317184l33.244202,-38.15239c-22.770004,-19.835205 -52.016785,-30.764801 -82.4021,-30.764801c-69.75209,0 -126.499992,56.747894 -126.499992,126.5s56.747902,126.5 126.499992,126.5s126.5,-56.747894 126.5,-126.5l0,-25.300003l-126.5,0z"/>
+// </svg>
+//         `;
         myG.addEventListener("click",gLogin);
 
-    myLogIn.append(myLogoImg,myNameInput,myEmailInput,myPasswordInput,mySignInText,mySignInLink,myForget,mySignUp,myHrDiv,myFB,myG);
+    myAlertBtnDiv.append(myFB,myG);
+
+    myLogIn.append(myLogoImg,myNameInput,myEmailInput,myPasswordInput/*,mySignInText*/,mySignInLink,myForget,mySignUp,myHrDiv,myAlertBtnDiv);
     // myForget.style.display = "none";
 
-	document.body.append(mySheild,myLogIn);
+    document.body.append(mySheild,myLogIn);
 }
 
 //點擊member icon跳出登入區塊
@@ -296,28 +325,26 @@ function alert(text, boolean, cb) {
     // while(lastSheild) {
     //     lastSheild.parentNode.removeChild(lastSheild);
     // }
+    let closeAlert = function() {
+        mySheild.parentNode.removeChild(mySheild);
+		myAlert.parentNode.removeChild(myAlert);
+    }
+
 	let mySheild = cE("div", "shield");
-	mySheild.addEventListener('click', function () {
-		mySheild.style.display = "none";
-		myAlert.style.display = "none";
-	})
+	mySheild.addEventListener('click',closeAlert)
 	let myAlert = cE("div", "alert");
 	let myAlertImg = cE("img","alertImg","","src", boolean ? "img/checked.svg" : "img/warning.svg");
 	let myAlertText = cE('div', "alertText", text);
 	let myAlertBtnDiv = cE("div","alertBtnDiv");
 	let myAlertBtn = cE('button', "alertBtn", "確認");
 	myAlertBtn.addEventListener('click', function () {
-		mySheild.style.display = "none";
-		myAlert.style.display = "none";
+        closeAlert();
 		cb && cb();
     });
     myAlertBtnDiv.appendChild(myAlertBtn);
     if(cb) {
         let myAlertBtn2 = cE('button', "alertCancel", "取消");
-        myAlertBtn2.addEventListener('click', function () {
-            mySheild.style.display = "none";
-            myAlert.style.display = "none";
-        });
+        myAlertBtn2.addEventListener('click',closeAlert);
         myAlertBtnDiv.appendChild(myAlertBtn2);
     }
 	myAlert.append(myAlertImg, myAlertText, myAlertBtnDiv);
