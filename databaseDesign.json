@@ -18,5 +18,13 @@
             ],
             "recordTrack":"recordTrackUrl"
         }
+    },
+    "userData":{
+        "user0":{
+            "name":"YPO",
+            "email":"email",
+            "provider":"google.com",
+            "beats":["beatName0","beatName1","beatName2"]
+        }
     }
 }

@@ -15,11 +15,12 @@ let playingList = [];
 
 let t = 60/bpm/4;
 let p=0;
-let length = 8;
+let length = 16;
 let trackQty = 8;
 let bit = 16;
 let playing = false;
 
+let soundList = [];
 
 let state = [];
 for(let i=0;i<trackQty;i++) {
@@ -29,14 +30,14 @@ for(let i=0;i<trackQty;i++) {
     }
 }
 let rhythm0 = [
-    [1,0,0,1,1,0,0,0],
-    [0,0,1,0,0,0,1,0],
-    [0,1,0,1,0,1,0,1],
-    [0,0,0,1,0,0,0,1],
-    [0,1,0,0,0,1,0,0],
-    [0,0,0,1,0,0,1,1],
-    [0,1,0,0,1,0,0,1],
-    [1,0,0,0,0,0,0,0]
+    [1,0,0,1,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,0,0,0],
+    [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,1],
+    [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+    [0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1],
+    [0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,1],
+    [0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
 ];
 let rhythm1 = [
     [1,0,0,0,1,0,0,0],
@@ -57,6 +58,37 @@ console.log(state);
 let trackName = ["Kick","Snare","Close Hat","Open Hat","Tom","Clap","Conga","Atm"];
 let trackList = [];
 let padList = [[],[],[],[],[],[],[],[]];
+
+function decideLength(media) {
+    if(mediaQuery[0].matches) {
+        length = 32;
+        console.log("A",length);
+        removePad();
+        createPad(soundList);
+        return;
+    } else if(mediaQuery[1].matches) {
+        length = 16;
+        console.log("B",length);
+        removePad();
+        createPad(soundList);
+        return;
+    } else if(mediaQuery[2].matches) {
+        length = 8;
+        console.log("C",length);
+        removePad();
+        createPad(soundList);
+        return;
+    }
+}
+
+let mediaQuery = [
+    window.matchMedia("(min-width: 1200px)"),
+    window.matchMedia("(min-width: 650px) and (max-width: 1200px)"),
+    window.matchMedia("(max-width: 650px)")
+];
+for(let i=0;i<mediaQuery.length;i++){
+    mediaQuery[i].addListener(decideLength);
+}
 
 window.onload = init;
 
@@ -84,26 +116,19 @@ function init() {
   
 }
 
-function playByPoint(bufferList,p){
+function playByPoint(soundList,p){
     let startTime = context.currentTime;
     for (let i=0;i<8;i++){
-        state[i][p%length] && playSound(bufferList[i],startTime+0.1);
+        state[i][p%length] && playSound(soundList[i],startTime+0.1);
         padList[i][(p+length-1)%length].classList.remove("bOn");
-        // padList[i][length-1] && padList[i][length-1].classList.remove("bOn");
         padList[i][p%length].classList.add("bOn");
-        // for (let j=0;j<length;j++){
-        //     state[i][j] && playSound(bufferList[i],startTime+j*t);
-        // }
     }
 }
 
 function finishedLoading(bufferList) {
-    // let start = function(){
-    //     setInterval(function(){
-    //         play(bufferList)
-    //     },t*4000)
-    // };
+
     let intervalID;
+    soundList = bufferList;
     
     let play = function(e) {
         if(playing) {
@@ -174,7 +199,9 @@ function finishedLoading(bufferList) {
         })
     });
 
-    createPad(bufferList);
+    decideLength(mediaQuery);
+    // decideLengthB(mediaB);
+    // createPad(bufferList);
 
 
 
@@ -278,15 +305,16 @@ BufferLoader.prototype.load = function() {
 }
 
 // create pad --------------------------------------------------------------
-function createPad(bufferList){
+function createPad(soundList){
     let padDiv = document.getElementById("padDiv");
+        padDiv.style = "grid-template-columns: 55px repeat("+length+",30px);"
     let lastSelect;
     for(let i=0;i<8;i++){
         trackList[i] = cE("div","track",i+1);
         trackIcon = cE("img","trackIcon","","src","../img/track"+i+".svg")
         trackList[i].appendChild(trackIcon);
         trackList[i].addEventListener("click",function(){
-            playSound(bufferList[i],context.currentTime);
+            playSound(soundList[i],context.currentTime);
             lastSelect==i || handleSelect(i);
             lastSelect = i;
         })
@@ -295,7 +323,7 @@ function createPad(bufferList){
             padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
             padList[i][j].addEventListener("click",function(){
                 state[i][j] = !state[i][j];
-                state[i][j] && !playing && playSound(bufferList[i],context.currentTime);
+                state[i][j] && !playing && playSound(soundList[i],context.currentTime);
                 padList[i][j].classList.toggle("b"+i);
                 lastSelect==i || handleSelect(i);
                 lastSelect = i;
@@ -313,5 +341,12 @@ function createPad(bufferList){
             // if(!state[s][j]) 
             padList[s][j].classList.add("bSelected");
         }
+    }
+}
+
+function removePad() {
+    let padDiv = document.getElementById("padDiv");
+    while (padDiv.hasChildNodes()) {
+        padDiv.removeChild(padDiv.firstChild);
     }
 }

@@ -210,6 +210,7 @@ function popUpLogIn() {
 	mySheild.addEventListener('click',closeLogIn);
 
     let myLogIn = cE("div","logIn");
+    let myLogInDiv = cE("div","logInDiv");
 
     //LOGO 以及點擊回首頁的LINK
 	let myLogoImg = cE("img","logInImg",null,"src","img/logo.svg");
@@ -226,37 +227,32 @@ function popUpLogIn() {
 	myPasswordInput.type = "password";
     myPasswordInput.id = "logInPassword";
     
-    // let mySignInText = cE("div","logInText","");
-    let mySignInLink = cE("a","logInText","已經有帳號了？請點這裡登入");
-        mySignInLink.addEventListener("click",function(){
+    let mySignLink = cE("a","logInText","已經有帳號了？請點這裡登入");
+        mySignLink.addEventListener("click",function(){
             let logging = this.textContent == "已經有帳號了？請點這裡登入";
             console.log(logging);
             //true表示註冊中將轉為登入 false為登入中將轉為註冊
                 // mySignInText.textContent = logging?"還沒有帳號嗎？請點這裡":"已經有帳號了？請點這裡";
-                mySignInLink.textContent = logging?"還沒有帳號嗎？請點這裡註冊":"已經有帳號了？請點這裡登入";
+                mySignLink.textContent = logging?"還沒有帳號嗎？請點這裡註冊":"已經有帳號了？請點這裡登入";
                 myForget.textContent = logging?"忘記密碼？":"";
                 myNameInput.style.display = logging?"none":"block";
-                mySignUp.textContent = logging?"登入":"註冊";
-                signUpOnClick = logging?signIn:signUp;
-                // mySignIn.style.display = logging?"block":"none";
+                mySignButton.textContent = logging?"登入":"註冊";
+                mySignButton.removeEventListener("click",logging?signUp:signIn);
+                mySignButton.addEventListener("click",logging?signIn:signUp);
         })
-        // mySignInText.appendChild(mySignInLink);
 
     //這邊是忘記密碼的那個連結！
     let myForget = cE("a","logInText","","id","forgetPassword");
-    myForget.addEventListener("click",resetPassword); 
+        myForget.addEventListener("click",resetPassword); 
     
     //點擊的按鈕 登入及註冊
-    let signUpOnClick = signUp;
-    let mySignUp =  cE("button","","註冊");
-        mySignUp.addEventListener("click",signUpOnClick);
-    // let mySignIn =  cE("button","","登入");
-    //     mySignIn.addEventListener("click",signIn);
+    let mySignButton =  cE("button","","註冊");
+        mySignButton.addEventListener("click",signUp);
 
     //是那個ＯＲ分格線
 	let myHrDiv = cE("div","divideLine");
 		let myLine =  cE("span","hrLine");
-		let myOr =  cE("span","logInText","或 以社群帳號登入");	
+		let myOr =  cE("span","logInOr","或 以社群帳號登入");	
 		let myLineTwo =  cE("span","hrLine");
 
     myHrDiv.append(myLine,myOr,myLineTwo);
@@ -287,7 +283,8 @@ function popUpLogIn() {
 
     myAlertBtnDiv.append(myFB,myG);
 
-    myLogIn.append(myLogoImg,myNameInput,myEmailInput,myPasswordInput/*,mySignInText*/,mySignInLink,myForget,mySignUp,myHrDiv,myAlertBtnDiv);
+    myLogInDiv.append(myLogoImg,myNameInput,myEmailInput,myPasswordInput/*,mySignInText*/,mySignLink,myForget,mySignButton,myHrDiv,myAlertBtnDiv);
+    myLogIn.appendChild(myLogInDiv);
     // myForget.style.display = "none";
 
     document.body.append(mySheild,myLogIn);
@@ -321,10 +318,11 @@ function popUpLogIn() {
 // }
 
 function alert(text, boolean, cb) {
-    // let lastSheild = document.querySelector(".shield");
-    // while(lastSheild) {
-    //     lastSheild.parentNode.removeChild(lastSheild);
-    // }
+    let lastSheild = document.querySelector(".shield");
+        lastSheild && lastSheild.parentNode.removeChild(lastSheild);
+    let lastAlert = document.querySelector(".alert");
+        lastAlert && lastAlert.parentNode.removeChild(lastAlert);
+    
     let closeAlert = function() {
         mySheild.parentNode.removeChild(mySheild);
 		myAlert.parentNode.removeChild(myAlert);
