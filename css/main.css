@@ -47,7 +47,7 @@ section {
 .padDiv {
     display: grid;
     grid-template-columns: 55px repeat(8,30px);
-    grid-template-rows: repeat(8,30px);
+    grid-template-rows: repeat(9,30px);
     grid-gap: 5px 5px;
     align-items: center;
     margin: 20px 10px;
@@ -78,6 +78,12 @@ section {
     margin: 0 5px;
 }
 
+.pointNumber {
+    text-align: center;
+    font-size: 12px;
+    align-self: flex-start;
+}
+
 .b {
     background-color: #333333;
     border-radius: 5px;
@@ -95,7 +101,7 @@ section {
 }
 
 .bOn {
-    filter: brightness(2);
+    filter: brightness(1.5);
 }
 
 .bHit {
@@ -145,6 +151,12 @@ section {
 .b7 {
     background-color: purple;
     color: #ffffff;
+}
+
+.b0.bOn,.b1.bOn,.b2.bOn,.b3.bOn,.b4.bOn,.b5.bOn,.b6.bOn,.b7.bOn {
+    transform: scale(1.2,1.2);
+    background-color: #ffffff;
+    filter: drop-shadow(5,5,5);
 }
 
 #container>img{

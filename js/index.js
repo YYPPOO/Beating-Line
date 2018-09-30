@@ -72,7 +72,7 @@ function decideLength(media) {
         removePad();
         createPad(soundList);
         return;
-    } else if(mediaQuery[2].matches) {
+    } else {
         length = 8;
         console.log("C",length);
         removePad();
@@ -83,8 +83,7 @@ function decideLength(media) {
 
 let mediaQuery = [
     window.matchMedia("(min-width: 1200px)"),
-    window.matchMedia("(min-width: 650px) and (max-width: 1200px)"),
-    window.matchMedia("(max-width: 650px)")
+    window.matchMedia("(min-width: 650px)")
 ];
 for(let i=0;i<mediaQuery.length;i++){
     mediaQuery[i].addListener(decideLength);
@@ -331,6 +330,10 @@ function createPad(soundList){
             state[i][j] && padList[i][j].classList.add("b"+i);
             padDiv.appendChild(padList[i][j]);
         }
+    }
+    padDiv.appendChild(cE("div"));
+    for(let j=0;j<length;j++){
+        padDiv.appendChild(cE("div","pointNumber",j+1));
     }
 
     function handleSelect(s){
