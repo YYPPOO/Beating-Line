@@ -1,0 +1,22 @@
+{
+  "name": "beating-line",
+  "version": "1.0.0",
+  "description": "online-drum-machine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YYPPOO/Beating-Line-0.git"
+  },
+  "author": "YPO",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YYPPOO/Beating-Line-0/issues"
+  },
+  "homepage": "https://github.com/YYPPOO/Beating-Line-0#readme",
+  "dependencies": {
+    "firebase": "^5.5.2"
+  }
+}
