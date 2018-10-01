@@ -1,6 +1,6 @@
 let databaseHost = "https://beating-line.firebaseapp.com";
 
-authStatus = function(){
+let authStatus = function(){
     return firebase.auth().currentUser;
 }
 
@@ -21,18 +21,6 @@ firebase.auth().onAuthStateChanged(function(user) {
     document.querySelector(".memberIcon").addEventListener("click",clickProfile);
 });
 
-let showUserPic = function(data){
-    let storage = firebase.storage();
-    storage.ref(authStatus().uid+'/main.jpg').getDownloadURL().then((url)=>{
-        console.log(url);
-        document.querySelector(".memberIcon").src = url;
-    }).catch( (req) => {
-        console.log(req);
-        // let width = data.providerData[0].providerId == "facebook.com" ?"/picture/?width=200":"";
-        document.querySelector(".memberIcon").src=data.photoURL?data.photoURL:"../img/member.svg"; //+width;
-    })
-};
-
 // facebook 登入 --------------------------------------------
 let fbLogin = function(){
 	let provider = new firebase.auth.FacebookAuthProvider();
@@ -45,12 +33,6 @@ let gLogin=function(){
     let provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
     alert("頁面即將跳轉…",true);
-    // firebase.auth().getRedirectResult().then(function(result) {
-    //         console.log(result);
-    //     }).catch(function(error) {
-    //         alert("Google登入失敗 :(");
-    //         console.log(error);
-    //     });
 }
 
 //確認FB或google登入狀態 更新後端user資料庫 -------------------------
@@ -186,10 +168,7 @@ function goToProfile() {
 }
 
 //==========================製造登入小視窗=============================
-
-
 //實際跳出的產生函式
-
 function popUpLogIn() {
     // let lastSheild = document.querySelector(".logInShield");
     // while(lastSheild) {
@@ -217,7 +196,7 @@ function popUpLogIn() {
 
 	//名字 信箱 密碼輸入框
 	let myNameInput = cE("input","logInName",null,"placeholder","請輸入姓名");
-	let myEmailInput = cE("input","logInEmail",null,"placeholder","請輸入Email");
+	let myEmailInput = cE("input","logInEmail",null,"placeholder","請輸入 Email");
 	let myPasswordInput = cE("input","logInPassword",null,"placeholder","請輸入密碼");
 
 	myNameInput.type = "text";
@@ -288,63 +267,4 @@ function popUpLogIn() {
     // myForget.style.display = "none";
 
     document.body.append(mySheild,myLogIn);
-}
-
-//點擊member icon跳出登入區塊
-// document.querySelector(".member").addEventListener("click", nLogIn);
-
-
-// function alert(text, boolean) {
-//     let lastSheild = document.querySelector(".shield");
-//     while(lastSheild) {
-//         lastSheild.parentNode.removeChild(lastSheild);
-//     }
-// 	let mySheild = cE("div", "shield");
-// 	mySheild.addEventListener('click', function () {
-// 		mySheild.style.display = "none";
-// 		myAlert.style.display = "none";
-// 	})
-// 	let myAlert = cE("div", "alert");
-// 	let myAlertImg = cE("img", "alertImg", "", src, boolean ? "img/checked.svg" : "img/warning.svg");
-// 	// myAlertImg.src = boolean ? "img/checked.svg" : "img/warning.svg";
-// 	let myAlertText = cE('div', "alertText", text);
-// 	let myAlertBtn = cE('button', "alertBtn", "確認");
-// 	myAlertBtn.addEventListener('click', function () {
-// 		mySheild.style.display = "none";
-// 		myAlert.style.display = "none";
-// 	});
-// 	myAlert.append(myAlertImg, myAlertText, myAlertBtn);
-// 	document.body.append(mySheild, myAlert);
-// }
-
-function alert(text, boolean, cb) {
-    let lastSheild = document.querySelector(".shield");
-        lastSheild && lastSheild.parentNode.removeChild(lastSheild);
-    let lastAlert = document.querySelector(".alert");
-        lastAlert && lastAlert.parentNode.removeChild(lastAlert);
-    
-    let closeAlert = function() {
-        mySheild.parentNode.removeChild(mySheild);
-		myAlert.parentNode.removeChild(myAlert);
-    }
-
-	let mySheild = cE("div", "shield");
-	mySheild.addEventListener('click',closeAlert)
-	let myAlert = cE("div", "alert");
-	let myAlertImg = cE("img","alertImg","","src", boolean ? "img/checked.svg" : "img/warning.svg");
-	let myAlertText = cE('div', "alertText", text);
-	let myAlertBtnDiv = cE("div","alertBtnDiv");
-	let myAlertBtn = cE('button', "alertBtn", "確認");
-	myAlertBtn.addEventListener('click', function () {
-        closeAlert();
-		cb && cb();
-    });
-    myAlertBtnDiv.appendChild(myAlertBtn);
-    if(cb) {
-        let myAlertBtn2 = cE('button', "alertCancel", "取消");
-        myAlertBtn2.addEventListener('click',closeAlert);
-        myAlertBtnDiv.appendChild(myAlertBtn2);
-    }
-	myAlert.append(myAlertImg, myAlertText, myAlertBtnDiv);
-	document.body.append(mySheild, myAlert);
 }

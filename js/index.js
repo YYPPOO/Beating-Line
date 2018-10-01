@@ -1,11 +1,3 @@
-const cE = (type,v0,v1,k2,v2) => {
-    let myElement = document.createElement(type);
-    myElement.className = v0;
-    myElement.textContent = v1 ? v1:"";
-    myElement[k2] = v2;
-    return myElement;
-};
-
 // states --------------------------------------------------------------------------
 let context;
 let bufferLoader;
@@ -77,13 +69,17 @@ function decideLength(media) {
         console.log("C",length);
         removePad();
         createPad(soundList);
+        if(mediaQuery[2].matches) {
+            document.getElementById("padDiv").style = "grid-template-columns: 30px repeat("+length+",30px);"
+        }
         return;
     }
 }
 
 let mediaQuery = [
     window.matchMedia("(min-width: 1200px)"),
-    window.matchMedia("(min-width: 650px)")
+    window.matchMedia("(min-width: 650px)"),
+    window.matchMedia("(max-width: 400px)")
 ];
 for(let i=0;i<mediaQuery.length;i++){
     mediaQuery[i].addListener(decideLength);
@@ -92,33 +88,33 @@ for(let i=0;i<mediaQuery.length;i++){
 window.onload = init;
 
 function init() {
-  // Fix up prefixing
-  window.AudioContext = window.AudioContext || window.webkitAudioContext;
-  context = new AudioContext();
+    // Fix up prefixing
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    context = new AudioContext();
 
-  bufferLoader = new BufferLoader(
-    context,
-    [
-      "sound/0kick0.wav",
-      "sound/1snare0.wav",
-      "sound/2closeHat0.wav",
-      "sound/3openHat0.wav",
-      "sound/4tom0.wav",
-      "sound/5clap0.wav",
-      "sound/6conga0.wav",
-      "sound/7atm0.wav"
-    ],
-    finishedLoading
-    );
+    bufferLoader = new BufferLoader(
+        context,
+        [
+        "sound/0kick0.wav",
+        "sound/1snare0.wav",
+        "sound/2closeHat0.wav",
+        "sound/3openHat0.wav",
+        "sound/4tom0.wav",
+        "sound/5clap0.wav",
+        "sound/6conga0.wav",
+        "sound/7atm0.wav"
+        ],
+        finishedLoading
+        );
 
-  bufferLoader.load();
-  
+    bufferLoader.load();
+
 }
 
 function playByPoint(soundList,p){
     let startTime = context.currentTime;
     for (let i=0;i<8;i++){
-        state[i][p%length] && playSound(soundList[i],startTime+0.1);
+        state[i][p%length] && playSound(soundList[i],startTime+0.05);
         padList[i][(p+length-1)%length].classList.remove("bOn");
         padList[i][p%length].classList.add("bOn");
     }
@@ -305,13 +301,15 @@ BufferLoader.prototype.load = function() {
 
 // create pad --------------------------------------------------------------
 function createPad(soundList){
+
     let padDiv = document.getElementById("padDiv");
         padDiv.style = "grid-template-columns: 55px repeat("+length+",30px);"
     let lastSelect;
     for(let i=0;i<8;i++){
-        trackList[i] = cE("div","track",i+1);
+        trackList[i] = cE("div","track");
+        trackNumber = cE("div","trackNumber",i+1);
         trackIcon = cE("img","trackIcon","","src","../img/track"+i+".svg")
-        trackList[i].appendChild(trackIcon);
+        trackList[i].append(trackNumber,trackIcon);
         trackList[i].addEventListener("click",function(){
             playSound(soundList[i],context.currentTime);
             lastSelect==i || handleSelect(i);
@@ -345,6 +343,18 @@ function createPad(soundList){
             padList[s][j].classList.add("bSelected");
         }
     }
+
+    function cancelSelect(){
+        console.log("body clicked");
+        trackList[lastSelect] && trackList[lastSelect].classList.remove("b"+lastSelect);
+        for(let j=0;j<length;j++){
+            padList[lastSelect] && padList[lastSelect][j].classList.remove("bSelected");
+        }
+        lastSelect = null;
+    }
+
+    document.getElementById("background").removeEventListener("click",cancelSelect);
+    document.getElementById("background").addEventListener("click",cancelSelect);
 }
 
 function removePad() {

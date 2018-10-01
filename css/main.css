@@ -2,6 +2,7 @@ body {
     background-color: #0f1a2a;
     color: white;
     margin: 0;
+    font-family: "Noto Sans TC", "微軟正黑體", "arial", "sans-serif";
 }
 
 button {
@@ -13,6 +14,7 @@ button {
     height: 30px;
     padding: 0;
     margin: 5px;
+    font-size: 16px;
 }
 
 header {
@@ -34,14 +36,98 @@ header img {
 
 nav {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+}
+
+@media (max-width:650px) {
+    nav {
+        flex-direction: column;
+    }
+}
+
+nav .nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav span, .nav input {
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.nav input[type="number"] {
+    width: 50px;
+    height: 20px;
+    border: 0px;
+    padding: 5px;
+}
+
+#play {
+    background-color: #4D99CC;
+}
+
+input[type="range"] {
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    overflow: hidden;     /* 限定範圍 */
+    height: 10px;
+    width: 100px;
+    outline: none;      /* 避免點選會有藍線或虛線 */
+    border-radius: 5px;
+    background: #3f4a5a;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border-radius: 50%;
+    transition: .2s;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border-radius: 50%;
+    transition: .2s;
+    border: none;
+}
+
+input[type="range"]::-webkit-slider-thumb:before {
+    position: absolute;
+    top: 0px;
+    width: 200px;          /* 長度很長沒關係，因為剛剛有用 overflow:hidden 了 */
+    height: 10px;
+    left: -197px;
+    background: #aaaaaa;
+    content:"";
+    pointer-events: none;   /* 讓滑鼠可以點擊穿透偽元素，不然會點不到下面 */
+    transition:.2s;
+}
+
+input[type="range"]::-moz-range-track{
+    height: 10px;
+    background-color: #3f4a5a;
+}
+
+
+/* input[type="range"]::-moz-range-progress{
+    height:10px;
+    background:#aaaaaa;
+} */
+
+input[type="range"]::-moz-focus-outer{
+    border:none;    /* 去除 focus 時候的外框虛線 */
 }
 
 section {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
 }
 
 .padDiv {
@@ -61,26 +147,34 @@ section {
     justify-content: flex-end;
 }
 
-@media (max-width:400px) {
-    .padDiv {
-        grid-template-columns: repeat(8,30px);
-        grid-gap: 2px 2px;
-        margin: 5px auto;
-    }
-    .track {
-        display: none;
-    }
-}
-
 .trackIcon {
     width: 30px;
     height: 30px;
     margin: 0 5px;
 }
 
+.trackNumber {
+    font-family: "arial", "sans-serif";
+}
+
+@media (max-width:400px) {
+    .padDiv {
+        grid-template-columns: repeat(8,30px);
+        grid-gap: 2px 2px;
+        margin: 5px auto;
+    }
+    .trackNumber {
+        display: none;
+    }
+    .trackIcon {
+        margin: 0;
+    }
+}
+
 .pointNumber {
     text-align: center;
     font-size: 12px;
+    font-family: "arial", "sans-serif";
     align-self: flex-start;
 }
 
@@ -93,7 +187,7 @@ section {
 }
 
 .bp {
-    background-color: #444444;
+    background-color: #555555;
     border-radius: 5px;
     width: 30px;
     height: 30px;
@@ -110,7 +204,7 @@ section {
 
 .bSelected {
     /* filter: brightness(2); */
-    background-color: #666666;
+    background-color: #777777;
 }
 
 .b0 {
@@ -154,9 +248,33 @@ section {
 }
 
 .b0.bOn,.b1.bOn,.b2.bOn,.b3.bOn,.b4.bOn,.b5.bOn,.b6.bOn,.b7.bOn {
-    transform: scale(1.2,1.2);
+    transform: scale(1.1,1.1);
     background-color: #ffffff;
     filter: drop-shadow(5,5,5);
+    animation: hit 0.3s;
+}
+
+@keyframes hit{
+    0% {
+        transform: scale(0.8,0.8);
+        opacity: 0.8;
+    }
+    25% {
+        transform: scale(1,1);
+        opacity: 0.9;
+    }
+    50% {
+        transform: scale(1.1,1.1);
+        opacity: 1;
+    }
+    75% {
+        transform: scale(1,1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1,1);
+        opacity: 1;
+    }
 }
 
 #container>img{
@@ -172,12 +290,22 @@ footer {
     line-height: 50px;
 }
 
-@media (min-width:400px) and (min-height:600px),
-(max-width:400px) and (min-height:510px){
+@media (min-width:650px) and (min-height:500px),
+(max-width:650px) and (min-height:535px){
     footer {
         position: absolute;
         bottom: 0;
     }
+}
+
+#background {
+    position:fixed;
+    left:0px;
+    top:0px;
+    width:100%;
+    height:100%;
+    background:#0f1a2a;
+    z-index: -1;
 }
 
 /* log in ------------------------*/
@@ -214,6 +342,12 @@ footer {
     z-index: 100;
 }
 
+@media (max-width:400px) {
+    .alert{
+        width: 75%;
+    }
+}
+
 .alertImg{
     /* filter: drop-shadow(3px 3px 3px #0f1a2a); */
     width: 128px;
@@ -240,6 +374,12 @@ footer {
     left:50%;
     top:50%;
     transform: translate(-50%,-50%);
+}
+
+@media (max-width:450px) {
+    .logIn{
+        width: 88%;
+    }
 }
 
 .logInDiv {
