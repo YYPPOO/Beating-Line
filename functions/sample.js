@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 
-app.use("/exe/", function (req, res, next) {
+app.use("/exe/", (req, res, next) => {
 	res.set("Access-Control-Allow-Origin", "*");
 	res.set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
 	res.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
@@ -27,7 +27,7 @@ app.use(express.static('public'));
 
 app.get('/', (req, res) => res.send('Hello My Server!'))
 
-app.get('/getData', function (req, res) {
+app.get('/getData', (req, res) => {
     let i = req.query.number;
     console.log(i);
     if (i){
@@ -39,7 +39,7 @@ app.get('/getData', function (req, res) {
     }
     else {
         res.send("Wrong Parameters");
-    };
+    }
 });
 
 app.listen(3000, () => console.log('Listening on port 3000!'))
