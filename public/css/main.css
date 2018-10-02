@@ -15,6 +15,7 @@ button {
     padding: 0;
     margin: 5px;
     font-size: 16px;
+    cursor: pointer;
 }
 
 header {
@@ -29,6 +30,7 @@ header {
 header img {
     height: 40px;
     border-radius: 3px;
+    cursor: pointer;
 }
 
 /* header>.memberIcon {

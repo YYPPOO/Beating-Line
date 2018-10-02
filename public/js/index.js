@@ -308,7 +308,7 @@ function createPad(soundList){
     for(let i=0;i<8;i++){
         trackList[i] = cE("div","track");
         trackNumber = cE("div","trackNumber",i+1);
-        trackIcon = cE("img","trackIcon","","src","../img/track"+i+".svg")
+        trackIcon = cE("img","trackIcon","","src","img/track"+i+".svg")
         trackList[i].append(trackNumber,trackIcon);
         trackList[i].addEventListener("click",function(){
             playSound(soundList[i],context.currentTime);

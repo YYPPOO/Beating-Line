@@ -12,7 +12,7 @@ let showUserPic = function(data){
         console.log(url);
         document.querySelector(".memberIcon").src = url;
     }).catch( (req) => {
-        console.log(req);
+        // console.log(req);
         // let width = data.providerData[0].providerId == "facebook.com" ?"/picture/?width=200":"";
         document.querySelector(".memberIcon").src=data.photoURL?data.photoURL:"../img/member.svg"; //+width;
     })

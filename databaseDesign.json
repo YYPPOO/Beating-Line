@@ -20,11 +20,15 @@
         }
     },
     "userData":{
-        "user0":{
+        "userId":{
             "name":"YPO",
             "email":"email",
             "provider":"google.com",
-            "beats":["beatName0","beatName1","beatName2"]
+            "beats":{
+                "beatName0":"key0",
+                "beatName1":"key1",
+                "beatName2":"key2"
+            }
         }
     }
 }
