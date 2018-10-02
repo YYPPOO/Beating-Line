@@ -22,6 +22,8 @@ firebase.auth().onAuthStateChanged(function(user) {
     }
 });
 
+document.getElementById("logout").addEventListener("click",function(){alert("即將登出您的帳戶？！",false,logout)});
+
 let logout = function () {
 	firebase.auth().signOut().then(function () {
 		alert("成功登出！即將在 3 秒後跳轉頁面…", true);

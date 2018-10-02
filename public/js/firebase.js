@@ -1,4 +1,4 @@
-let databaseHost = "https://beating-line.firebaseapp.com";
+let dbHost = "https://beating-line.firebaseapp.com";
 
 let authStatus = function(){
     return firebase.auth().currentUser;
@@ -14,6 +14,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         showUserPic(user);
         console.log("成功以"+user.providerData[0].providerId+"登入");
         clickProfile = goToProfile;
+        getRedirectResult();
     } else {
         console.log("未登入");
     }
@@ -42,13 +43,24 @@ let getRedirectResult = function(){
         if(result.user){
             let user = firebase.auth().currentUser;
             let userData = {
-                name:user.displayName,
-                email:user.email,
-                id:user.uid,
+                userName:user.displayName,
+                userEmail:user.email,
+                userId:user.uid,
                 providerId:user.providerData[0].providerId
             };
-            fetch()
-            app.ajax("post",databaseHost+"/exe/manageAccount",userData,function(){})
+            fetch(dbHost+"/exe/manageAccount", {
+                method:"POST",
+                body: JSON.stringify(userData),
+                mode: 'cors',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(res => res.json())
+            .catch(error => console.error("Fetch error:",error))
+            .then(response => {
+                console.log("Log in success:",response);
+            });
+            // app.ajax("post",dbHost+"/exe/manageAccount",userData,function(){})
         }
     }).catch(function(error) {
         console.log(error);
