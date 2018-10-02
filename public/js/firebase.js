@@ -60,7 +60,6 @@ let getRedirectResult = function(){
             .then(response => {
                 console.log("Log in success:",response);
             });
-            // app.ajax("post",dbHost+"/exe/manageAccount",userData,function(){})
         }
     }).catch(function(error) {
         console.log(error);

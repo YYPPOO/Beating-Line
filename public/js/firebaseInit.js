@@ -6,4 +6,5 @@ let config = {
     storageBucket: "beating-line.appspot.com",
     messagingSenderId: "498561389182"
 };
-firebase.initializeApp(config);
+let ourFirebase = firebase.initializeApp(config);
+// console.log(ourFirebase);

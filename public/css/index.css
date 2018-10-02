@@ -1,0 +1,256 @@
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width:650px) {
+    nav {
+        flex-direction: column;
+    }
+}
+
+nav .nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav span, .nav input {
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.nav input[type="number"] {
+    width: 50px;
+    height: 20px;
+    border: 0px;
+    padding: 5px;
+}
+
+#play {
+    background-color: #4D99CC;
+}
+
+input[type="range"] {
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    overflow: hidden;     /* 限定範圍 */
+    height: 10px;
+    width: 100px;
+    outline: none;      /* 避免點選會有藍線或虛線 */
+    border-radius: 5px;
+    background: #3f4a5a;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border-radius: 50%;
+    transition: .2s;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border-radius: 50%;
+    transition: .2s;
+    border: none;
+}
+
+input[type="range"]::-webkit-slider-thumb:before {
+    position: absolute;
+    top: 0px;
+    width: 200px;          /* 長度很長沒關係，因為剛剛有用 overflow:hidden 了 */
+    height: 10px;
+    left: -197px;
+    background: #aaaaaa;
+    content:"";
+    pointer-events: none;   /* 讓滑鼠可以點擊穿透偽元素，不然會點不到下面 */
+    transition:.2s;
+}
+
+input[type="range"]::-moz-range-track{
+    height: 10px;
+    background-color: #3f4a5a;
+}
+
+
+/* input[type="range"]::-moz-range-progress{
+    height:10px;
+    background:#aaaaaa;
+} */
+
+input[type="range"]::-moz-focus-outer{
+    border:none;    /* 去除 focus 時候的外框虛線 */
+}
+
+section {
+    display: flex;
+    justify-content: center;
+}
+
+.padDiv {
+    display: grid;
+    grid-template-columns: 55px repeat(8,30px);
+    grid-template-rows: repeat(9,30px);
+    grid-gap: 5px 5px;
+    align-items: center;
+    margin: 20px 10px;
+}
+
+.track {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    border-radius: 5px;
+    justify-content: flex-end;
+}
+
+.trackIcon {
+    width: 30px;
+    height: 30px;
+    margin: 0 5px;
+}
+
+.trackNumber {
+    font-family: "arial", "sans-serif";
+}
+
+@media (max-width:400px) {
+    .padDiv {
+        grid-template-columns: repeat(8,30px);
+        grid-gap: 2px 2px;
+        margin: 5px auto;
+    }
+    .trackNumber {
+        display: none;
+    }
+    .trackIcon {
+        margin: 0;
+    }
+}
+
+.pointNumber {
+    text-align: center;
+    font-size: 12px;
+    font-family: "arial", "sans-serif";
+    align-self: flex-start;
+}
+
+.b {
+    background-color: #333333;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    transition: all 0.1s;
+}
+
+.bp {
+    background-color: #555555;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    transition: all 0.1s;
+}
+
+.bOn {
+    filter: brightness(1.5);
+}
+
+.bHit {
+    background-color: #dddddd;
+}
+
+.bSelected {
+    /* filter: brightness(2); */
+    background-color: #777777;
+}
+
+.b0 {
+    background-color: #0d850d;
+    color: #ffffff;
+}
+
+.b1 {
+    background-color: #850d0d;
+    color: #ffffff;
+}
+
+.b2 {
+    background-color: #8f8f0d;
+    color: #0f1a2a;
+}
+
+.b3 {
+    background-color: #a8710b;
+    color: #0f1a2a;
+}
+
+.b4 {
+    background-color: lightskyblue;
+    color: #0f1a2a;
+}
+
+.b5 {
+    background-color: cyan;
+    color: #0f1a2a;
+}
+
+.b6 {
+    background-color: peru;
+    color: #0f1a2a;
+}
+
+.b7 {
+    background-color: purple;
+    color: #ffffff;
+}
+
+.b0.bOn,.b1.bOn,.b2.bOn,.b3.bOn,.b4.bOn,.b5.bOn,.b6.bOn,.b7.bOn {
+    transform: scale(1.1,1.1);
+    background-color: #ffffff;
+    filter: drop-shadow(5,5,5);
+    animation: hit 0.3s;
+}
+
+@keyframes hit{
+    0% {
+        transform: scale(0.8,0.8);
+        opacity: 0.8;
+    }
+    25% {
+        transform: scale(1,1);
+        opacity: 0.9;
+    }
+    50% {
+        transform: scale(1.1,1.1);
+        opacity: 1;
+    }
+    75% {
+        transform: scale(1,1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1,1);
+        opacity: 1;
+    }
+}
+
+#container>img{
+    border: solid 1px white;
+}
+
+
+@media (min-width:650px) and (min-height:500px),
+(max-width:650px) and (min-height:535px){
+    footer {
+        position: absolute;
+        bottom: 0;
+    }
+}
