@@ -220,7 +220,7 @@ function finishedLoading(bufferList) {
         })
     });
 
-    document.getElementById("save").addEventListener("click",saveBeat);
+    // document.getElementById("save").addEventListener("click",saveBeat);
 
     decideLength(mediaQuery);
     // decideLengthB(mediaB);
@@ -435,5 +435,35 @@ function saveBeat() {
 }
 
 function saveAsNewBeat() {
-    
+    let beatName = document.getElementById("beatName").value;
+    let beatData = {
+        user:authStatus().uid,
+        beat:state,
+        beatName:beatName,
+        bpm:bpm,
+        length:length,
+        volume:volume
+    }
+
+    // 準備要放 fetch post 的地方
+    fetch(dbHost+"/exe/saveAsNewBeat", {
+        method:"POST",
+        body: JSON.stringify(beatData),
+        mode: 'cors',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(res => res.json())
+    .catch(error => {
+        alert("資料更新失敗，請再試一次 :(");
+        console.error("Update to database error:",error)
+    })
+    .then(response => {
+        alert("資料已儲存！", true);
+        console.log("Update to database success:",response);
+        let newBeatId = response.newBeatId;
+        if(newBeatId !== beatId) {
+            window.location = "index.html?id="+newBeatId;
+        }
+    });
 }
