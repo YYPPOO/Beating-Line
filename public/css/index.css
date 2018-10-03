@@ -90,6 +90,21 @@ input[type="range"]::-moz-focus-outer{
     border:none;    /* 去除 focus 時候的外框虛線 */
 }
 
+/* side nav --------------------------------------*/
+.sideNav {
+    width: 200px;
+    height: 100%;
+    position: absolute;
+    left: -200px;
+    transition: left 0.5s;
+    background-color: #3f4a5a;
+}
+
+.sideNavShow {
+    left: 0px;
+}
+
+/* section ---------------------------------------*/
 section {
     display: flex;
     justify-content: center;
