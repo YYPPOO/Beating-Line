@@ -19,7 +19,7 @@
 </head>
 <body>
     <header>
-        <a href="index.html"><img class="logo" src="img/icon.svg" alt="logo"/></a>
+        <img class="logo" id="icon" src="img/icon.svg" alt="logo"/>
         <a href="index.html"><img class="logo" src="img/logo.svg" alt="logo"/></a>
         <!-- <div class="title">Beating Line</div> -->
         <img class="memberIcon" src="img/member.svg" alt="Member"/>
@@ -44,9 +44,15 @@
             <button class="clear" id="clear">Clear</button>
         </div>
         <div class="nav">
-            <button class="save" id="save">Save</button>
+            <!-- <button class="save" id="save">Save</button> -->
         </div>
     </nav>
+    <div class="sideNav" id="sideNav">
+        <img class="closeNav" src="img/close.svg" alt="clase"/>
+        <div class="sideNavButton" id="save">儲存節奏</div>
+        <div class="sideNavButton" id="saveAs">另存為新節奏</div>
+        <div class="sideNavButton" id="download">下載音檔</div>
+    </div>
     <section>
         <div class="visual"></div>
         <div class="padDiv" id="padDiv"></div>

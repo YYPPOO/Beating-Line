@@ -270,6 +270,30 @@ app.post("/exe/saveAsNewBeat", (req, res) => {
 	});
 })
 
+// get beat ------------------------------------------
+app.get("/exe/getBeat", (req, res) => {
+	let beatId = req.body;
+	console.log(beatId)
+	if (beatId === null) {
+		return res.json({
+			error: 'No Beat Data'
+		})
+	} else {
+		db.ref("/beatData/" + beatId).once('value', (snapshot) => {
+			if (snapshot.exists()) {
+				let data = snapshot.val();
+				return res.json(data);
+			} else {
+				return res.json({
+					error: 'No Beat Data'
+				})
+			}
+
+		})
+	}
+
+})
+
 // app.listen(3000, () => console.log('Listening on port 3000!'))
 
 exports.app = functions.https.onRequest(app);

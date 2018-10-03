@@ -181,19 +181,19 @@ function finishedLoading(bufferList) {
     if(beatId) {
         fetch(dbHost+"/exe/getBeat", {
             method:"GET",
-            body: JSON.stringify(beatData),
+            body: beatId,
             mode: 'cors',
             headers: {
                 "Content-Type": "application/json"
             }
         }).then(res => res.json())
         .catch(error => {
-            alert("資料更新失敗，請再試一次 :(");
-            console.error("Update to database error:",error)
+            console.error("Load beat error:",error)
         })
         .then(response => {
-            alert("資料已儲存！", true);
-            console.log("Update to database success:",response);
+            console.log("Load beat success:",response);
+            state = response.beat;
+            bpm = response.bpm;
         });
     } else if(localStorage.beat) {
         state = JSON.parse(localStorage.getItem("beat"));
