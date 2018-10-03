@@ -115,6 +115,83 @@ app.post("/exe/manageAccount", (req, res) => {
 	})
 })
 
+app.post("/exe/saveBeat", (req, res) => {
+	let beatData = req.body;
+	let now = new Date();
+	if (!beatData.name) {
+		res.send({
+			error: "Save Beat Error: No Beat Name."
+		});
+		return;
+	}
+	let beatId = beatData.beatId;
+	let newBeat = {
+		author:beatId,
+		beat:beatData.state,
+		beatName:beatData.beatName,
+		bpm:beatData.bpm,
+		length:beatData.length,
+		volume:beatData.volume
+	}
+
+	db.ref("/beatData/"+beatId).once("value", (snapshot) => {
+		if(snapshot.exists()) {
+			let originBeat = snapshot.val();
+			console.log(originBeat);
+
+			if(originBeat.auther === beatData.user) {
+				originBeat.beat = state;
+				originBeat.beatName = beatName;
+				originBeat.bpm = bpm;
+				originBeat.length = length;
+				originBeat.volume = volume;
+
+				db.ref("/beatData/"+beatId).update(originBeat, (error) => {
+					if (error) {
+						res.send({
+							error: "Save Beat Error."
+						});
+					} else {
+						res.send({
+							success: "Update beat success!",
+							beatId: beatId
+						});
+					}
+				});
+			} else {
+				let key = db.ref("/beatData/").push().key;
+				db.ref("/beatData/"+key).set(newBeat, (error) => {
+					if (error) {
+						res.send({
+							error: "Save Beat Error."
+						});
+					} else {
+						res.send({
+							success: "Saved as a new beat.",
+							newBeatId: key
+						});
+					}
+				});
+			}
+
+		} else {
+			let key = db.ref("/beatData/").push().key;
+			db.ref("/beatData/"+key).set(newBeat, (error) => {
+				if (error) {
+					res.send({
+						error: "Save Beat Error."
+					});
+				} else {
+					res.send({
+						success: "Saved as a new beat.",
+						newBeatId: key
+					});
+				}
+			});
+		}
+	})
+})
+
 // app.listen(3000, () => console.log('Listening on port 3000!'))
 
 exports.app = functions.https.onRequest(app);

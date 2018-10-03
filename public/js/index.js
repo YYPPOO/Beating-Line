@@ -1,7 +1,7 @@
 // states --------------------------------------------------------------------------
 let context;
 let bufferLoader;
-let bpm = 60;
+let bpm = 120;
 let totalVolume = 1;
 let playingList = [];
 
@@ -14,6 +14,7 @@ let playing = false;
 
 let soundList = [];
 
+let volume = [1,1,1,1,1,1,1,1];
 let state = [];
 for(let i=0;i<trackQty;i++) {
     state[i] = [];
@@ -32,20 +33,16 @@ let rhythm0 = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
 ];
 let rhythm1 = [
-    [1,0,0,0,1,0,0,0],
-    [0,0,0,1,0,0,1,0],
-    [0,0,1,0,0,0,0,1],
-    [0,0,0,0,0,0,0,0],
-    [0,1,1,0,0,0,1,0],
-    [0,0,0,0,1,1,0,0],
-    [1,1,0,0,0,0,1,0],
-    [0,0,0,0,0,0,0,0]
+    [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,1],
+    [0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0],
+    [0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,1,0,1,0,1,1,1,0,1,0,1,0,1,1,0,0,1],
+    [0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1],
+    [0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,1,0,1,1,0,0,0,0,0,0,0,1,0,0,0],
+    [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,1],
+    [0,1,0,0,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
-state = rhythm0;
-console.log(state);
-
-
-// let intervalID;
+state = rhythm1;
 
 let trackName = ["Kick","Snare","Close Hat","Open Hat","Tom","Clap","Conga","Atm"];
 let trackList = [];
@@ -84,6 +81,9 @@ let mediaQuery = [
 for(let i=0;i<mediaQuery.length;i++){
     mediaQuery[i].addListener(decideLength);
 }
+
+let url = new URL(window.location);
+let beatId = url.searchParams.get("id") || "";
 
 window.onload = init;
 
@@ -177,14 +177,40 @@ function finishedLoading(bufferList) {
         }
     }
 
+    // get beat from back end or local storage ---------------------------------------
+    if(beatId) {
+        fetch(dbHost+"/exe/getBeat", {
+            method:"GET",
+            body: JSON.stringify(beatData),
+            mode: 'cors',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(res => res.json())
+        .catch(error => {
+            alert("資料更新失敗，請再試一次 :(");
+            console.error("Update to database error:",error)
+        })
+        .then(response => {
+            alert("資料已儲存！", true);
+            console.log("Update to database success:",response);
+        });
+    } else if(localStorage.beat) {
+        state = JSON.parse(localStorage.getItem("beat"));
+        bpm = localStorage.getItem("bpm");
+    }
+
+    // set button feature -------------------------------------------------------------
     document.getElementById("play").addEventListener("click",play);
     // document.getElementById("clear").addEventListener("click",clear);
     document.getElementById("clear").addEventListener("click",function(){alert("確認清除？",false,clear)});
 
+    document.getElementById("bpm").value = bpm;
     document.getElementById("bpm").addEventListener("change",function(){
         console.log(this.value);
         bpm = this.value;
         playing && reset();
+        localStorage.setItem("bpm",bpm);
     });
     
     document.getElementById("totalVolume").addEventListener("change",function(){
@@ -193,6 +219,8 @@ function finishedLoading(bufferList) {
             item.gain.value = totalVolume;
         })
     });
+
+    document.getElementById("save").addEventListener("click",saveBeat);
 
     decideLength(mediaQuery);
     // decideLengthB(mediaB);
@@ -324,6 +352,7 @@ function createPad(soundList){
                 padList[i][j].classList.toggle("b"+i);
                 lastSelect==i || handleSelect(i);
                 lastSelect = i;
+                saveBeatToLocalStorage();
             })
             state[i][j] && padList[i][j].classList.add("b"+i);
             padDiv.appendChild(padList[i][j]);
@@ -362,4 +391,49 @@ function removePad() {
     while (padDiv.hasChildNodes()) {
         padDiv.removeChild(padDiv.firstChild);
     }
+}
+// save to local storage
+function saveBeatToLocalStorage() {
+    let beatString = JSON.stringify(state);
+    localStorage.setItem("beat",beatString);
+}
+
+// save beat feature ------------------------------------------------------------
+function saveBeat() {
+    let beatName = document.getElementById("beatName").value;
+    let beatData = {
+        beatId:beatId,
+        user:authStatus().uid,
+        beat:state,
+        beatName:beatName,
+        bpm:bpm,
+        length:length,
+        volume:volume
+    }
+
+    // 準備要放 fetch post 的地方
+    fetch(dbHost+"/exe/saveBeat", {
+        method:"POST",
+        body: JSON.stringify(beatData),
+        mode: 'cors',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(res => res.json())
+    .catch(error => {
+        alert("資料更新失敗，請再試一次 :(");
+        console.error("Update to database error:",error)
+    })
+    .then(response => {
+        alert("資料已儲存！", true);
+        console.log("Update to database success:",response);
+        let newBeatId = response.newBeatId;
+        if(newBeatId !== beatId) {
+            window.location = "index.html?id="+newBeatId;
+        }
+    });
+}
+
+function saveAsNewBeat() {
+    
 }
