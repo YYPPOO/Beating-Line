@@ -126,7 +126,7 @@ app.post("/exe/saveBeat", (req, res) => {
 	}
 	let beatId = beatData.beatId;
 	let newBeat = {
-		author:beatId,
+		author:beatData.user,
 		beat:beatData.state,
 		beatName:beatData.beatName,
 		bpm:beatData.bpm,
@@ -134,19 +134,13 @@ app.post("/exe/saveBeat", (req, res) => {
 		volume:beatData.volume
 	}
 
-	db.ref("/beatData/"+beatId).once("value", (snapshot) => {
-		if(snapshot.exists()) {
+	if (beatId) {
+		db.ref("/beatData/"+beatId).once("value", (snapshot) => {
 			let originBeat = snapshot.val();
 			console.log(originBeat);
+			if(originBeat && originBeat.auther === newBeat.author) {
 
-			if(originBeat.auther === beatData.user) {
-				originBeat.beat = state;
-				originBeat.beatName = beatName;
-				originBeat.bpm = bpm;
-				originBeat.length = length;
-				originBeat.volume = volume;
-
-				db.ref("/beatData/"+beatId).update(originBeat, (error) => {
+				db.ref("/beatData/"+beatId).update(newBeat, (error) => {
 					if (error) {
 						res.send({
 							error: "Save Beat Error."
@@ -158,6 +152,7 @@ app.post("/exe/saveBeat", (req, res) => {
 						});
 					}
 				});
+
 			} else {
 				let key = db.ref("/beatData/").push().key;
 				db.ref("/beatData/"+key).set(newBeat, (error) => {
@@ -172,24 +167,107 @@ app.post("/exe/saveBeat", (req, res) => {
 						});
 					}
 				});
+				db.ref("/userData/"+newBeat.author).update({
+					beats: {
+						beatId: newBeat.beatName
+					}
+				},(error) => {
+					if(error) {
+						res.send({
+							error: "Save User Beat Error."
+						});
+					} else {
+						res.send({
+							success: "Saved new user beat.",
+							newBeatId: key,
+							author: newBeat.author
+						});
+					}
+				});
 			}
+		});
+	} else {
+		let key = db.ref("/beatData/").push().key;
+		db.ref("/beatData/"+key).set(newBeat, (error) => {
+			if (error) {
+				res.send({
+					error: "Save Beat Error."
+				});
+			} else {
+				res.send({
+					success: "Saved as a new beat.",
+					newBeatId: key
+				});
+			}
+		});
+		db.ref("/userData/"+newBeat.author).update({
+			beats: {
+				beatId: newBeat.beatName
+			}
+		},(error) => {
+			if(error) {
+				res.send({
+					error: "Save User Beat Error."
+				});
+			} else {
+				res.send({
+					success: "Saved new user beat.",
+					newBeatId: key,
+					author: newBeat.author
+				});
+			}
+		});
+	}
+});
 
+app.post("/exe/saveAsNewBeat", (req, res) => {
+	let beatData = req.body;
+	let now = new Date();
+	if (!beatData.name) {
+		res.send({
+			error: "Save Beat Error: No Beat Name."
+		});
+		return;
+	}
+	let newBeat = {
+		author:beatData.user,
+		beat:beatData.state,
+		beatName:beatData.beatName,
+		bpm:beatData.bpm,
+		length:beatData.length,
+		volume:beatData.volume
+	}
+
+	let key = db.ref("/beatData/").push().key;
+	db.ref("/beatData/"+key).set(newBeat, (error) => {
+		if (error) {
+			res.send({
+				error: "Save Beat Error."
+			});
 		} else {
-			let key = db.ref("/beatData/").push().key;
-			db.ref("/beatData/"+key).set(newBeat, (error) => {
-				if (error) {
-					res.send({
-						error: "Save Beat Error."
-					});
-				} else {
-					res.send({
-						success: "Saved as a new beat.",
-						newBeatId: key
-					});
-				}
+			res.send({
+				success: "Saved as a new beat.",
+				newBeatId: key
 			});
 		}
-	})
+	});
+	db.ref("/userData/"+newBeat.author).update({
+		beats: {
+			beatId: newBeat.beatName
+		}
+	},(error) => {
+		if(error) {
+			res.send({
+				error: "Save User Beat Error."
+			});
+		} else {
+			res.send({
+				success: "Saved new user beat.",
+				newBeatId: key,
+				author: newBeat.author
+			});
+		}
+	});
 })
 
 // app.listen(3000, () => console.log('Listening on port 3000!'))
