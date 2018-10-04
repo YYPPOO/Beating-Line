@@ -131,7 +131,11 @@ function init() {
     });
 
     document.getElementById("save").addEventListener("click",function(){
-        authStatus() ? popUpSaveBeat(saveBeat) : popUpLogIn();
+        if(authStatus()) {
+            beatId ? saveBeat() :popUpSaveBeat(saveBeat);
+        } else {
+            popUpLogIn();
+        }
     });
     document.getElementById("saveAs").addEventListener("click",function(){
         authStatus() ? popUpSaveBeat(saveAsNewBeat) : popUpLogIn();
@@ -210,16 +214,24 @@ function finishedLoading(bufferList) {
 
     // get beat from back end or local storage ---------------------------------------
     if(beatId) {
+        console.log(beatId);
         fetch(dbHost+"/exe/getBeat?id="+beatId, {
             method:"GET",
-            headers: {
+            headers: new Headers({
                 "Content-Type": "application/json"
-            }
+            })
         }).then(res => res.json())
         .then(response => {
-            console.log("Load beat success:",response);
-            state = response.beat;
-            bpm = response.bpm;
+            if(response.error) {
+                console.error("Load beat error:",response.error)
+            } else {
+                console.log("Load beat success:",response);
+                state = response.beat;
+                bpm = response.bpm;
+                beatName = response.beatName;
+            }
+            document.getElementById("bpm").value = bpm;
+            decideLength(mediaQuery);
         })
         .catch(error => {
             console.error("Load beat error:",error)
@@ -227,14 +239,14 @@ function finishedLoading(bufferList) {
     } else {
         if(localStorage.beat) {state = JSON.parse(localStorage.getItem("beat"));}
         if(localStorage.bpm) {bpm = localStorage.getItem("bpm");}
+        document.getElementById("bpm").value = bpm;
+        decideLength(mediaQuery);
     }
 
     // set button feature -------------------------------------------------------------
     document.getElementById("play").addEventListener("click",play);
     // document.getElementById("clear").addEventListener("click",clear);
     document.getElementById("clear").addEventListener("click",function(){alert("確認清除？",false,clear)});
-
-    document.getElementById("bpm").value = bpm;
     document.getElementById("bpm").addEventListener("change",function(){
         console.log(this.value);
         bpm = this.value;
@@ -251,7 +263,6 @@ function finishedLoading(bufferList) {
 
     // document.getElementById("save").addEventListener("click",saveBeat);
 
-    decideLength(mediaQuery);
     // decideLengthB(mediaB);
     // createPad(bufferList);
 
@@ -492,9 +503,14 @@ function saveBeat() {
             let newBeatId = response.newBeatId;
             if(newBeatId !== beatId) {
                 console.log(newBeatId);
-                // window.location = "index.html?id="+newBeatId;
+                setTimeOut(function(){
+                    window.location = "index.html?id="+newBeatId;
+                },3000);
             }
         }
+    })
+    .then(response => {
+        console.log(response);
     })
     .catch(error => {
         alert(error+" 請再試一次 :)");
