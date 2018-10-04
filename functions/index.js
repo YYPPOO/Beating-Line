@@ -139,7 +139,7 @@ app.post("/exe/saveBeat", (req, res) => {
 		db.ref("/beatData/"+beatId).once("value", (snapshot) => {
 			let originBeat = snapshot.val();
 			console.log(originBeat);
-			if(originBeat && originBeat.auther === newBeat.author) {
+			if(originBeat && originBeat.author === newBeat.author) {
 
 				db.ref("/beatData/"+beatId).update(newBeat, (error) => {
 					if (error) {
@@ -170,7 +170,7 @@ app.post("/exe/saveBeat", (req, res) => {
 				});
 				db.ref("/userData/"+newBeat.author).update({
 					beats: {
-						beatId: newBeat.beatName
+						key: newBeat.beatName
 					}
 				},(error) => {
 					if(error) {
@@ -204,7 +204,7 @@ app.post("/exe/saveBeat", (req, res) => {
 		});
 		db.ref("/userData/"+newBeat.author).update({
 			beats: {
-				beatId: newBeat.beatName
+				key: newBeat.beatName
 			}
 		},(error) => {
 			if(error) {
@@ -278,7 +278,7 @@ app.get("/exe/getBeat", (req, res) => {
 	console.log(beatId)
 	if (beatId === null) {
 		return res.json({
-			error: 'No Beat Data'
+			error: 'No Beat Id Data'
 		})
 	} else {
 		db.ref("/beatData/" + beatId).once('value', (snapshot) => {
