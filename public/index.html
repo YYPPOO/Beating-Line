@@ -27,7 +27,7 @@
     <nav>
         <div class="nav">
             <span>BPM</span>
-            <input type="number" value="60" min="30" max="240" step="5" id="bpm">
+            <input type="number" min="30" max="240" step="5" id="bpm">
             <!-- <select name="bpm">
                 <option value="60">60</option>
                 <option value="80">80</option>
@@ -48,10 +48,11 @@
         </div>
     </nav>
     <div class="sideNav" id="sideNav">
-        <img class="closeNav" src="img/close.svg" alt="clase"/>
-        <div class="sideNavButton" id="save">儲存節奏</div>
-        <div class="sideNavButton" id="saveAs">另存為新節奏</div>
-        <div class="sideNavButton" id="download">下載音檔</div>
+        <img id="closeNav" src="img/close.svg" alt="close"/>
+        <div></div>
+        <button class="sideNavButton" id="save">儲存節奏</button>
+        <button class="sideNavButton" id="saveAs">另存節奏</button>
+        <button class="sideNavButton" id="download">下載音檔</button>
     </div>
     <section>
         <div class="visual"></div>

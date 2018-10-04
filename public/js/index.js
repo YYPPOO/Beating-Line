@@ -84,6 +84,7 @@ for(let i=0;i<mediaQuery.length;i++){
 
 let url = new URL(window.location);
 let beatId = url.searchParams.get("id") || "";
+let beatName;
 
 window.onload = init;
 
@@ -108,6 +109,36 @@ function init() {
         );
 
     bufferLoader.load();
+
+    document.querySelector(".memberIcon").addEventListener("click",function() {
+        authStatus() ? goToProfile() : popUpLogIn();
+    });
+
+    document.getElementById("icon").addEventListener("click",function(){
+        document.getElementById("sideNav").classList.add("sideNavShow");
+        let navShield = cE("div","navShield");
+        document.body.appendChild(navShield);
+        navShield.addEventListener("click",function(){
+            document.getElementById("sideNav").classList.remove("sideNavShow");
+            navShield.parentNode.removeChild(navShield);
+        })
+    });
+
+    document.getElementById("closeNav").addEventListener("click",function(){
+        document.getElementById("sideNav").classList.remove("sideNavShow");
+        let navShield = document.querySelector(".navShield");
+        navShield.parentNode.removeChild(navShield);
+    });
+
+    document.getElementById("save").addEventListener("click",function(){
+        authStatus() ? popUpSaveBeat(saveBeat) : popUpLogIn();
+    });
+    document.getElementById("saveAs").addEventListener("click",function(){
+        authStatus() ? popUpSaveBeat(saveAsNewBeat) : popUpLogIn();
+    });
+    document.getElementById("download").addEventListener("click",function(){
+        alert("功能即將開放，敬請期待。");
+    });
 
 }
 
@@ -179,25 +210,23 @@ function finishedLoading(bufferList) {
 
     // get beat from back end or local storage ---------------------------------------
     if(beatId) {
-        fetch(dbHost+"/exe/getBeat", {
+        fetch(dbHost+"/exe/getBeat?id="+beatId, {
             method:"GET",
-            body: beatId,
-            mode: 'cors',
             headers: {
                 "Content-Type": "application/json"
             }
         }).then(res => res.json())
-        .catch(error => {
-            console.error("Load beat error:",error)
-        })
         .then(response => {
             console.log("Load beat success:",response);
             state = response.beat;
             bpm = response.bpm;
+        })
+        .catch(error => {
+            console.error("Load beat error:",error)
         });
-    } else if(localStorage.beat) {
-        state = JSON.parse(localStorage.getItem("beat"));
-        bpm = localStorage.getItem("bpm");
+    } else {
+        if(localStorage.beat) {state = JSON.parse(localStorage.getItem("beat"));}
+        if(localStorage.bpm) {bpm = localStorage.getItem("bpm");}
     }
 
     // set button feature -------------------------------------------------------------
@@ -399,10 +428,42 @@ function saveBeatToLocalStorage() {
 }
 
 // save beat feature ------------------------------------------------------------
+function popUpSaveBeat(cb) {
+    let mySheild = cE("div","shield");
+    let myNaming = cE("div","naming");
+
+    let closeNaming = function() {
+        mySheild.parentNode.removeChild(mySheild);
+        myNaming.parentNode.removeChild(myNaming);
+    }
+
+    let myNamingText = cE('div', "namingText","請輸入節奏名稱");
+    let myNamingInput = cE("input","namingInput",null,"placeholder","Untitled");
+        myNamingInput.id = "beatName";
+        myNamingInput.addEventListener("change",function(){
+            beatName = this.value;
+            console.log(beatName);
+        })
+    
+	let myNamingBtnDiv = cE("div","namingBtnDiv");
+	let myNamingBtn = cE('button', "namingBtn", "確認");
+	myNamingBtn.addEventListener('click', function () {
+		cb && cb();
+        closeNaming();
+    });
+    let myNamingBtn2 = cE('button', "namingCancel", "取消");
+    myNamingBtn2.addEventListener('click',closeNaming);
+
+    myNamingBtnDiv.append(myNamingBtn,myNamingBtn2);
+    
+    myNaming.append(myNamingText,myNamingInput,myNamingBtnDiv);
+	document.body.append(mySheild, myNaming);
+}
+
 function saveBeat() {
-    let beatName = document.getElementById("beatName").value;
+    // let beatName = document.getElementById("beatName").value;
     let beatData = {
-        beatId:beatId,
+        beatId:beatId || false,
         user:authStatus().uid,
         beat:state,
         beatName:beatName,
@@ -410,32 +471,39 @@ function saveBeat() {
         length:length,
         volume:volume
     }
+    console.log(beatData);
 
     // 準備要放 fetch post 的地方
     fetch(dbHost+"/exe/saveBeat", {
         method:"POST",
         body: JSON.stringify(beatData),
-        mode: 'cors',
-        headers: {
+        // mode: 'no-cors',
+        headers: new Headers({
             "Content-Type": "application/json"
-        }
+        })
     }).then(res => res.json())
-    .catch(error => {
-        alert("資料更新失敗，請再試一次 :(");
-        console.error("Update to database error:",error)
-    })
     .then(response => {
-        alert("資料已儲存！", true);
-        console.log("Update to database success:",response);
-        let newBeatId = response.newBeatId;
-        if(newBeatId !== beatId) {
-            window.location = "index.html?id="+newBeatId;
+        if(response.error){
+            alert(response.error+" 請再試一次 :)");
+            console.error("Update to database error:",response.error)
+        } else {
+            alert("資料已儲存！", true);
+            console.log("Update to database success:",response);
+            let newBeatId = response.newBeatId;
+            if(newBeatId !== beatId) {
+                console.log(newBeatId);
+                // window.location = "index.html?id="+newBeatId;
+            }
         }
+    })
+    .catch(error => {
+        alert(error+" 請再試一次 :)");
+        console.error("Update to database error:",error)
     });
 }
 
 function saveAsNewBeat() {
-    let beatName = document.getElementById("beatName").value;
+    // let beatName = document.getElementById("beatName").value;
     let beatData = {
         user:authStatus().uid,
         beat:state,
@@ -454,16 +522,16 @@ function saveAsNewBeat() {
             "Content-Type": "application/json"
         }
     }).then(res => res.json())
+    .then(response => {
+        alert("資料已儲存，將於 3 秒後跳轉頁面。", true);
+        console.log("Update to database success:",response);
+        let newBeatId = response.newBeatId;
+        setTimeOut(function(){
+            window.location = "index.html?id="+newBeatId;
+        },3000);
+    })
     .catch(error => {
         alert("資料更新失敗，請再試一次 :(");
         console.error("Update to database error:",error)
-    })
-    .then(response => {
-        alert("資料已儲存！", true);
-        console.log("Update to database success:",response);
-        let newBeatId = response.newBeatId;
-        if(newBeatId !== beatId) {
-            window.location = "index.html?id="+newBeatId;
-        }
     });
 }

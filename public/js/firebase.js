@@ -1,25 +1,26 @@
 let dbHost = "https://beating-line.firebaseapp.com";
+// let clickProfile = popUpLogIn;
 
 let authStatus = function(){
     return firebase.auth().currentUser;
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
-    let clickProfile = popUpLogIn;
-    document.querySelector(".memberIcon").removeEventListener("click",clickProfile);
+    // document.querySelector(".memberIcon").removeEventListener("click",clickProfile);
     if (user) {
         console.log(user);
         console.log('登入id',authStatus().uid);
 
         showUserPic(user);
         console.log("成功以"+user.providerData[0].providerId+"登入");
-        clickProfile = goToProfile;
+        // clickProfile = goToProfile;
         getRedirectResult();
     } else {
         console.log("未登入");
+        // clickProfile = popUpLogIn;
     }
     // if(app.profileInit){app.profileInit()};
-    document.querySelector(".memberIcon").addEventListener("click",clickProfile);
+    // document.querySelector(".memberIcon").addEventListener("click",clickProfile);
 });
 
 // facebook 登入 --------------------------------------------
@@ -39,7 +40,7 @@ let gLogin=function(){
 //確認FB或google登入狀態 更新後端user資料庫 -------------------------
 let getRedirectResult = function(){
     firebase.auth().getRedirectResult().then(function(result) {            
-        console.log(result);
+        // console.log(result);
         if(result.user){
             let user = firebase.auth().currentUser;
             let userData = {
@@ -181,10 +182,6 @@ function goToProfile() {
 //==========================製造登入小視窗=============================
 //實際跳出的產生函式
 function popUpLogIn() {
-    // let lastSheild = document.querySelector(".logInShield");
-    // while(lastSheild) {
-    //     lastSheild.parentNode.removeChild(lastSheild);
-    // }
     if(authStatus()!==null) {
         return;
     }

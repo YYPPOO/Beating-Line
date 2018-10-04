@@ -95,14 +95,104 @@ input[type="range"]::-moz-focus-outer{
     width: 200px;
     height: 100%;
     position: absolute;
+    top: 0px;
     left: -200px;
     transition: left 0.5s;
     background-color: #3f4a5a;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: 120px;
+    grid-template-rows: repeat(6,60px);
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
 }
 
 .sideNavShow {
     left: 0px;
 }
+
+.navShield {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    opacity: 0;
+}
+
+.sideNav>#closeNav {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.sideNav>button {
+    width: 100%;
+}
+
+/* pop up naming ---------------------------------*/
+/* .shield {
+    position:fixed;
+    left:0px;
+    top:0px;
+    width:100%;
+    height:100%;
+    background:#0f1a2a;
+    z-index: 50;
+    opacity: 0.6;
+} */
+
+.naming{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    width:300px;
+    height:180px;
+    border-radius: 10px;
+    border:1px solid #ffffff;
+    background-color: #3f4a5a;
+    color: white;
+    z-index: 100;
+}
+
+@media (max-width:400px) {
+    .naming{
+        width: 75%;
+    }
+}
+
+.namingText {
+    width: 80%;
+    text-align: center;
+}
+
+.naming>input {
+    width: 80%;
+    height: 20px;
+    padding: 5px;
+    border: 0px;
+    border-radius: 5px;
+}
+
+.namingBtn {
+    background-color: #0f1a2a;
+    /* border: 1px solid #aaaaaa; */
+}
+
+.namingCancel {
+    background-color: #3f4a5a;
+    /* border: 1px solid #aaaaaa; */
+}
+
 
 /* section ---------------------------------------*/
 section {

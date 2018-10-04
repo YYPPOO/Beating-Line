@@ -105,6 +105,16 @@ footer {
     text-align: center;
 }
 
+.alertBtn {
+    background-color: #0f1a2a;
+    /* border: 1px solid #aaaaaa; */
+}
+
+.alertCancel {
+    background-color: #3f4a5a;
+    /* border: 1px solid #aaaaaa; */
+}
+
 .logIn {
     width: 400px;
     height: 400px;
@@ -208,14 +218,4 @@ footer {
     100% {
         transform: rotate(0deg);
     }
-}
-
-.alertBtn {
-    background-color: #0f1a2a;
-    /* border: 1px solid #aaaaaa; */
-}
-
-.alertCancel {
-    background-color: #3f4a5a;
-    /* border: 1px solid #aaaaaa; */
 }
