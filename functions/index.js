@@ -117,17 +117,18 @@ app.post("/exe/manageAccount", (req, res) => {
 
 app.post("/exe/saveBeat", (req, res) => {
 	let beatData = req.body;
+	console.log(req.body);
 	let now = new Date();
-	if (!beatData.name) {
+	if (!beatData.beatName) {
 		res.send({
-			error: "Save Beat Error: No Beat Name."
+			error: "No Beat Name."
 		});
 		return;
 	}
 	let beatId = beatData.beatId;
 	let newBeat = {
 		author:beatData.user,
-		beat:beatData.state,
+		beat:beatData.beat,
 		beatName:beatData.beatName,
 		bpm:beatData.bpm,
 		length:beatData.length,
@@ -188,6 +189,7 @@ app.post("/exe/saveBeat", (req, res) => {
 		});
 	} else {
 		let key = db.ref("/beatData/").push().key;
+		console.log(key,newBeat);
 		db.ref("/beatData/"+key).set(newBeat, (error) => {
 			if (error) {
 				res.send({
@@ -272,7 +274,7 @@ app.post("/exe/saveAsNewBeat", (req, res) => {
 
 // get beat ------------------------------------------
 app.get("/exe/getBeat", (req, res) => {
-	let beatId = req.body;
+	let beatId = req.query.id;
 	console.log(beatId)
 	if (beatId === null) {
 		return res.json({
