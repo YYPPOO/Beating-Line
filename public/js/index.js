@@ -500,17 +500,14 @@ function saveBeat() {
         } else {
             alert("資料已儲存！", true);
             console.log("Update to database success:",response);
-            let newBeatId = response.beatId;
+            let newBeatId = response.newBeatId;
             if(newBeatId !== beatId) {
                 console.log(newBeatId);
                 setTimeout(function(){
-                    window.location = "index.html?id="+newBeatId;
+                    // window.location = "index.html?id="+newBeatId;
                 },3000);
             }
         }
-    })
-    .then(response => {
-        console.log(response);
     })
     .catch(error => {
         alert(error+" 請再試一次 :)");
@@ -539,12 +536,17 @@ function saveAsNewBeat() {
         }
     }).then(res => res.json())
     .then(response => {
-        alert("資料已儲存，將於 3 秒後跳轉頁面。", true);
-        console.log("Update to database success:",response);
-        let newBeatId = response.newBeatId;
-        setTimeout(function(){
-            window.location = "index.html?id="+newBeatId;
-        },3000);
+        if(response.error) {
+            alert("資料更新失敗，請再試一次 :(");
+            console.error("Update to database error:",error)
+        } else {
+            alert("資料已儲存，將於 3 秒後跳轉頁面。", true);
+            console.log("Update to database success:",response);
+            let newBeatId = response.newBeatId;
+            setTimeout(function(){
+                // window.location = "index.html?id="+newBeatId;
+            },3000);
+        }
     })
     .catch(error => {
         alert("資料更新失敗，請再試一次 :(");
