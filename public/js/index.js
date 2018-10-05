@@ -500,10 +500,10 @@ function saveBeat() {
         } else {
             alert("資料已儲存！", true);
             console.log("Update to database success:",response);
-            let newBeatId = response.newBeatId;
+            let newBeatId = response.beatId;
             if(newBeatId !== beatId) {
                 console.log(newBeatId);
-                setTimeOut(function(){
+                setTimeout(function(){
                     window.location = "index.html?id="+newBeatId;
                 },3000);
             }
@@ -542,7 +542,7 @@ function saveAsNewBeat() {
         alert("資料已儲存，將於 3 秒後跳轉頁面。", true);
         console.log("Update to database success:",response);
         let newBeatId = response.newBeatId;
-        setTimeOut(function(){
+        setTimeout(function(){
             window.location = "index.html?id="+newBeatId;
         },3000);
     })
