@@ -32,7 +32,7 @@ app.use("/exe/", (req, res, next) => {
 	next();
 });
 
-//＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝get Account 得到帳號
+// get Account ---------------------------------------------------
 app.get("/exe/getAccount", (req, res) => {
 	let userId = req.query.id
 	console.log(userId)
@@ -286,7 +286,22 @@ app.get("/exe/getBeat", (req, res) => {
 
 		})
 	}
+})
 
+// get user's beat list -----------------------------------------
+app.get("/exe/getUserBeat", (req,res) => {
+	let userId = req.query.userId;
+	db.ref("/userData/"+userId+"/beats/").once("value", (snapshot)=> {
+		if (snapshot.exists()) {
+			let userBeatList = snapshot.val();
+			console.log(userBeatList);
+			return res.json(userBeatList);
+		} else {
+			return res.json({
+				error: "No user data."
+			});
+		}
+	})
 })
 
 // app.listen(3000, () => console.log('Listening on port 3000!'))
