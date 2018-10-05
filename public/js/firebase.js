@@ -9,14 +9,15 @@ firebase.auth().onAuthStateChanged(function(user) {
     // document.querySelector(".memberIcon").removeEventListener("click",clickProfile);
     if (user) {
         console.log(user);
-        console.log('登入id',authStatus().uid);
+        // console.log('登入id',authStatus().uid);
 
         showUserPic(user);
-        console.log("成功以"+user.providerData[0].providerId+"登入");
+        getUserBeatList(user.uid);
+        console.log("Log in with "+user.providerData[0].providerId);
         // clickProfile = goToProfile;
         getRedirectResult();
     } else {
-        console.log("未登入");
+        console.log("Log out.");
         // clickProfile = popUpLogIn;
     }
     // if(app.profileInit){app.profileInit()};
@@ -27,14 +28,14 @@ firebase.auth().onAuthStateChanged(function(user) {
 let fbLogin = function(){
 	let provider = new firebase.auth.FacebookAuthProvider();
     firebase.auth().signInWithRedirect(provider);
-    alert("頁面即將跳轉…",true);
+    alert("Page is reloading...",true);
 };
 
 // google登入 ----------------------------------------------
 let gLogin=function(){
     let provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
-    alert("頁面即將跳轉…",true);
+    alert("Page is reloading...",true);
 }
 
 //確認FB或google登入狀態 更新後端user資料庫 -------------------------
@@ -72,26 +73,26 @@ let signIn = function() {
     let email = document.getElementById("logInEmail").value;
     let password = document.getElementById("logInPassword").value;
     if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(email)) {
-        alert("Email 錯誤，請重新輸入。");
+        alert("Email error, please try again.");
         return;
     }
     if (password.length < 4) {
-        alert("密碼錯誤，請重新輸入。");
+        alert("Password error, please try again.");
         return;
     }
-    alert("資料傳送中…",true);
+    alert("Delivering the data.",true);
     firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function(e){
         console.log(e);
-        alert("登入成功！",true)
+        alert("Log in success.",true)
         document.location.reload();
         // setTimeout(document.location.reload(),3000);
     })
     .catch(function(error) {
         if(error.code=="auth/invalid-email"||error.code=="auth/user-not-found") {
-            alert("Email 錯誤，請重新輸入。")
+            alert("Email error, please try again.")
         } else if(error.code=="auth/wrong-password"){
-            alert("密碼錯誤，請重新輸入。")
+            alert("Password error, please try again.")
         } else {
             alert(error.message,false);
         }
@@ -105,18 +106,18 @@ let signUp = function() {
     let password = document.getElementById("logInPassword").value;
     let name = document.getElementById("logInName").value;
     if (!name) {
-        alert("註冊請輸入姓名！");
+        alert("Please enter your name.");
         return;
     }
     if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(email)) {
-        alert("Email 錯誤，請重新輸入。");
+        alert("Email error, please try again.");
         return;
     }
     if (password.length < 4) {
-        alert("密碼錯誤，請重新輸入。");
+        alert("Password error, please try again.");
         return;
     }
-    alert("資料傳送中…",true);
+    alert("Delivering the data.",true);
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(function(e){
         let user = firebase.auth().currentUser;
@@ -134,7 +135,7 @@ let signUp = function() {
             };
             app.ajax("post",app.cst.DB_HOST+"/exe/manageAccount",userData,function(req){
                 // app.closeLoading();
-                alert("已成功註冊，請前往信箱點擊驗證連結，畫面將在3秒後跳轉。",true);
+                alert("Sign up success, and the verify email is send. Reload in 3 seconds.",true);
                 setTimeout(function(){document.location.reload()},3000);
             })
             }).catch(function(error) {
@@ -148,9 +149,9 @@ let signUp = function() {
     })
     .catch(function(error) {
         if (error.code == "auth/weak-password") {
-            alert("密碼強度不足，請重新輸入。");
+            alert("The password is too weak, please try again.");
         } else if (error.code=="auth/email-already-in-use") {
-            alert("此 Email 已註冊，請重新輸入。")
+            alert("This Email is already registered, please try again.")
         } else {
             alert(error.message);
         }
@@ -162,15 +163,15 @@ let signUp = function() {
 let resetPassword = function() {
     let email = document.getElementById("logInEmail").value;
     if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(email)) {
-        alert("請輸入 Email 。");
+        alert("Please enter your email.");
         return;
     }
     firebase.auth().sendPasswordResetEmail(email).then(function() {
-            alert("已寄送重設密碼連結至您的 Email，即將在 3 秒後跳轉頁面…",true)
+            alert("The reset password email is send. Reload in 3 seconds.",true)
             console.log("Email sent!")
             setTimeout(document.location.reload(),3000);
         }).catch(function(error) {
-            alert("Email 錯誤，請重新輸入。");
+            alert("Email error, please try again.");
             console.log(error);
         });
 }  
@@ -203,9 +204,9 @@ function popUpLogIn() {
 	let myLogoImg = cE("img","logInImg",null,"src","img/logo.svg");
 
 	//名字 信箱 密碼輸入框
-	let myNameInput = cE("input","logInName",null,"placeholder","請輸入姓名");
-	let myEmailInput = cE("input","logInEmail",null,"placeholder","請輸入 Email");
-	let myPasswordInput = cE("input","logInPassword",null,"placeholder","請輸入密碼");
+	let myNameInput = cE("input","logInName",null,"placeholder","Name");
+	let myEmailInput = cE("input","logInEmail",null,"placeholder","Email");
+	let myPasswordInput = cE("input","logInPassword",null,"placeholder","********");
 
 	myNameInput.type = "text";
 	myNameInput.id = "logInName";
@@ -214,16 +215,16 @@ function popUpLogIn() {
 	myPasswordInput.type = "password";
     myPasswordInput.id = "logInPassword";
     
-    let mySignLink = cE("a","logInText","已經有帳號了？請點這裡登入");
+    let mySignLink = cE("a","logInText","Already have an account? Sign in here.");
         mySignLink.addEventListener("click",function(){
-            let logging = this.textContent == "已經有帳號了？請點這裡登入";
+            let logging = this.textContent == "Already have an account? Sign in here.";
             console.log(logging);
             //true表示註冊中將轉為登入 false為登入中將轉為註冊
                 // mySignInText.textContent = logging?"還沒有帳號嗎？請點這裡":"已經有帳號了？請點這裡";
-                mySignLink.textContent = logging?"還沒有帳號嗎？請點這裡註冊":"已經有帳號了？請點這裡登入";
-                myForget.textContent = logging?"忘記密碼？":"";
+                mySignLink.textContent = logging?"Don't have an account? Sign up here.":"Already have an account? Sign in here.";
+                myForget.textContent = logging?"Forget password?":"";
                 myNameInput.style.display = logging?"none":"block";
-                mySignButton.textContent = logging?"登入":"註冊";
+                mySignButton.textContent = logging?"Sign In":"Sign Up";
                 mySignButton.removeEventListener("click",logging?signUp:signIn);
                 mySignButton.addEventListener("click",logging?signIn:signUp);
         })
@@ -233,13 +234,13 @@ function popUpLogIn() {
         myForget.addEventListener("click",resetPassword); 
     
     //點擊的按鈕 登入及註冊
-    let mySignButton =  cE("button","","註冊");
+    let mySignButton =  cE("button","","Sign Up");
         mySignButton.addEventListener("click",signUp);
 
     //是那個ＯＲ分格線
 	let myHrDiv = cE("div","divideLine");
 		let myLine =  cE("span","hrLine");
-		let myOr =  cE("span","logInOr","或 以社群帳號登入");	
+		let myOr =  cE("span","logInOr","or Sign in by community account.");	
 		let myLineTwo =  cE("span","hrLine");
 
     myHrDiv.append(myLine,myOr,myLineTwo);
@@ -275,4 +276,71 @@ function popUpLogIn() {
     // myForget.style.display = "none";
 
     document.body.append(mySheild,myLogIn);
+}
+
+function getUserBeatList(uid) {
+    fetch(dbHost+"/exe/getUserBeat?userId="+uid, {
+        method:"GET"
+        // headers: new Headers({
+        //     "Content-Type": "application/json"
+        // })
+    }).then(res => {
+        console.log(res);
+        return res.json();
+    })
+    .then(response => {
+        console.log("Load user beat: ",response);
+        showUserBeatList(response);
+    })
+    .catch(error => {
+        console.error("Load user beat error: ",error);
+    })
+}
+
+function showUserBeatList(userBeatList) {
+    let myBeatListDiv = cE("div","beatListDiv","My Beat ▼");
+    document.getElementById("sideNav").appendChild(myBeatListDiv);
+    for(let i in userBeatList) {
+        let myBeatDiv = cE("div","beatDiv");
+        let myBeat = cE("div",null,userBeatList[i],"id",i);
+            myBeat.addEventListener("click",function(){
+                fetch(dbHost+"/exe/getBeat?id="+i, {
+                    method:"GET",
+                    headers: new Headers({
+                        "Content-Type": "application/json"
+                    })
+                }).then(res => res.json())
+                .then(response => {
+                    if(response.error) {
+                        console.error("Load beat error:",response.error)
+                    } else {
+                        console.log("Load beat success:",response);
+                        state = response.beat;
+                        bpm = response.bpm;
+                        beatName = response.beatName;
+                    }
+                    beatId = i;
+                    document.getElementById("bpm").value = bpm;
+                    decideLength(mediaQuery);
+                })
+                .catch(error => {
+                    console.error("Load beat error:",error)
+                });
+                // window.location = "index.html?id="+i;
+            })
+        let myBeatDelete = cE("div","deleteBeat","X");
+            myBeatDelete.addEventListener("click",function(){
+                alert("Delete the beat?!",false,function(){
+                    deleteBeat(i);
+                });
+            })
+        myBeatDiv.append(myBeat,myBeatDelete);
+        // myBeatListDiv.appendChild(myBeatDiv);
+        document.getElementById("sideNav").appendChild(myBeatDiv);
+    }
+    // document.getElementById("sideNav").appendChild(myBeatListDiv);
+}
+
+function deleteBeat(beatId) {
+
 }
