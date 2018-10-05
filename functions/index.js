@@ -168,11 +168,9 @@ app.post("/exe/saveBeat", (req, res) => {
 						});
 					}
 				});
-				db.ref("/userData/"+newBeat.author).update({
-					beats: {
-						key: newBeat.beatName
-					}
-				},(error) => {
+				let userBeats = {beats:{}};
+					userBeats.beats[key] = newBeat.beatName;
+				db.ref("/userData/"+newBeat.author).update(userBeats,(error) => {
 					if(error) {
 						res.send({
 							error: "Save User Beat Error."
@@ -202,11 +200,9 @@ app.post("/exe/saveBeat", (req, res) => {
 				});
 			}
 		});
-		db.ref("/userData/"+newBeat.author).update({
-			beats: {
-				key: newBeat.beatName
-			}
-		},(error) => {
+		let userBeats = {beats:{}};
+		userBeats.beats[key] = newBeat.beatName;
+		db.ref("/userData/"+newBeat.author).update(userBeats,(error) => {
 			if(error) {
 				res.send({
 					error: "Save User Beat Error."
@@ -233,7 +229,7 @@ app.post("/exe/saveAsNewBeat", (req, res) => {
 	}
 	let newBeat = {
 		author:beatData.user,
-		beat:beatData.state,
+		beat:beatData.beat,
 		beatName:beatData.beatName,
 		bpm:beatData.bpm,
 		length:beatData.length,
@@ -253,11 +249,9 @@ app.post("/exe/saveAsNewBeat", (req, res) => {
 			});
 		}
 	});
-	db.ref("/userData/"+newBeat.author).update({
-		beats: {
-			beatId: newBeat.beatName
-		}
-	},(error) => {
+	let userBeats = {beats:{}};
+		userBeats.beats[key] = newBeat.beatName;
+	db.ref("/userData/"+newBeat.author).update(userBeats,(error) => {
 		if(error) {
 			res.send({
 				error: "Save User Beat Error."
