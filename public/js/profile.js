@@ -14,11 +14,11 @@ firebase.auth().onAuthStateChanged(function(user) {
         document.querySelector(".memberIcon").addEventListener("click",function(){
             window.location = "/profile.html";
         });
-        document.getElementById("logout").addEventListener("click",function(){alert("即將登出您的帳戶？！",false,logout)});
+        document.getElementById("logout").addEventListener("click",function(){alert("Log out of your account?!",false,logout)});
 
     } else {
         console.log("未登入");
-        alert("您已登出！即將在 3 秒後跳轉頁面…", true);
+        alert("You're logged out, go back to index in 3 seconds.", true);
 		setTimeout(function () {
 			window.location = "/index.html";
 		}, 3000);
@@ -29,7 +29,7 @@ let showUserData = function(user) {
     // app.removeElement(".nRight");
 	console.log(user);
 
-	let myTitle = cE("h2","profileTitle","個人資料");
+	let myTitle = cE("h2","profileTitle","Profile");
 	// let myHr = cE("div","hr");
 
 	// let profileDiv = cE("div", "profileDiv");
@@ -38,7 +38,7 @@ let showUserData = function(user) {
         emailValue.type = "text";
         emailValue.value = user.email;
         emailValue.disabled = true;
-	let nameKey = cE("span", "profileKey","顯示名稱");
+	let nameKey = cE("span", "profileKey","Name");
     let nameValue = cE("input", "profileValue", user.userName, "id", "userName");
         nameValue.type = "text";
         nameValue.value = user.displayName;
@@ -46,16 +46,16 @@ let showUserData = function(user) {
     
         // profileDiv.append();
 
-    let uploadPicButton = cE("button",null,"上傳頭像","id","uploadPicButton");
+    let uploadPicButton = cE("button",null,"Upload Pic","id","uploadPicButton");
         uploadPicButton.style.display = "none";
         uploadPicButton.addEventListener("click",uploadProfilePic);
     let uploadPic = cE("input",null,null,"type","file");
         uploadPic.id = "uploadPic";
         uploadPic.style.display = "none";
     
-    let renewProfileButton = cE("button",null,"更改資料","id","renewProfileButton");
+    let renewProfileButton = cE("button",null,"Edit","id","renewProfileButton");
         renewProfileButton.addEventListener("click",renewProfile);
-    let renewProfileCancel = cE("button",null,"取消","id","renewProfileCancel");
+    let renewProfileCancel = cE("button",null,"Cancel","id","renewProfileCancel");
         renewProfileCancel.style.display = "none";
         renewProfileCancel.addEventListener("click",cancelRenewProfile);
 
@@ -80,36 +80,40 @@ let showProfilePic = function(user) {
 let uploadProfilePic = function () {
 	let image = document.getElementById("uploadPic").files[0];
     console.log(image);
-    let user = authStatus();
-    // let storage = ourFirebase.storage();
-	let imageRef = firebase.storage().ref(user.uid + "/").child("main.jpg");
-	console.log(imageRef);
-	imageRef.put(image).then((snapshot) => {
-		console.log("Main Image Uploaded");
-		console.log(snapshot);
-		// storage.ref(authStatus().uid+'/main.jpg').getDownloadURL().then((url)=>{
-		//     console.log(url);
-		// 	user.updateProfile({photoURL:snapshop}).then((res) => {
-		// 		alert("圖片上傳成功！",true);
-		// 		console.log(res);
-		// 	}).catch((error)=>{console.log(error)});
-		// }).catch( (req) => {
-		// 	console.log("Cannot get photo url."+req);
-		// })
-		alert("圖片上傳成功！", true);
-		cancelRenewProfile();
-		showProfilePic(user);
-		showUserPic(user);
-	}).catch((error) => {
-		console.log("Main Image Error:" + error);
-		alert("圖片上傳失敗 : (");
-	});
+    if (image) {
+        let user = authStatus();
+        // let storage = ourFirebase.storage();
+        let imageRef = firebase.storage().ref(user.uid + "/").child("main.jpg");
+        console.log(imageRef);
+        imageRef.put(image).then((snapshot) => {
+            console.log("Main Image Uploaded");
+            console.log(snapshot);
+            // storage.ref(authStatus().uid+'/main.jpg').getDownloadURL().then((url)=>{
+            //     console.log(url);
+            // 	user.updateProfile({photoURL:snapshop}).then((res) => {
+            // 		alert("圖片上傳成功！",true);
+            // 		console.log(res);
+            // 	}).catch((error)=>{console.log(error)});
+            // }).catch( (req) => {
+            // 	console.log("Cannot get photo url."+req);
+            // })
+            alert("Upload success!", true);
+            cancelRenewProfile();
+            showProfilePic(user);
+            showUserPic(user);
+        }).catch((error) => {
+            console.log("Main Image Error:" + error);
+            alert("Upload fail, please try again. : (");
+        });
+    } else {
+        alert("Please select an image.");
+    }
 }
 
 let renewProfile = function() {
-	if (document.getElementById("renewProfileButton").textContent == "確認資料") {
+	if (document.getElementById("renewProfileButton").textContent == "Done") {
 		document.getElementById("userName").disabled = true;
-		document.getElementById("renewProfileButton").textContent = "更改資料";
+		document.getElementById("renewProfileButton").textContent = "Edit";
 		document.getElementById("renewProfileCancel").style.display = "none";
 		document.getElementById("uploadPicButton").style.display = "none";
 		document.getElementById("uploadPic").style.display = "none";
@@ -134,23 +138,23 @@ let renewProfile = function() {
                     }
                 }).then(res => res.json())
                 .catch(error => {
-                    alert("資料更新失敗，請再試一次 :(");
+                    alert("Update fail, please try again.");
                     console.error("Update to database error:",error)
                 })
                 .then(response => {
-                    alert("資料更改成功！", true);
+                    alert("Update profile!", true);
                     console.log("Update to database success:",response);
 				    console.log(authStatus());
                 });
             }).catch(function(error) {
             // An error happened.
-            alert("資料更新失敗，請再試一次 :(");
+            alert("Update fail, please try again.");
             console.log("Update display name fail:",error);
         });
 
 	} else {
 		document.getElementById("userName").disabled = false;
-		document.getElementById("renewProfileButton").textContent = "確認資料";
+		document.getElementById("renewProfileButton").textContent = "Done";
 		document.getElementById("renewProfileCancel").style.display = "block";
 		document.getElementById("uploadPicButton").style.display = "block";
 		document.getElementById("uploadPic").style.display = "block";
@@ -160,7 +164,7 @@ let renewProfile = function() {
 let cancelRenewProfile = function() {
     document.getElementById("userName").disabled = true;
     document.getElementById("userName").value = authStatus().displayName;
-    document.getElementById("renewProfileButton").textContent = "更改資料";
+    document.getElementById("renewProfileButton").textContent = "Edit";
     document.getElementById("renewProfileCancel").style.display = "none";
     document.getElementById("uploadPicButton").style.display = "none";
     document.getElementById("uploadPic").style.display = "none";
@@ -169,13 +173,13 @@ let cancelRenewProfile = function() {
 
 let logout = function () {
 	firebase.auth().signOut().then(function () {
-		alert("成功登出！即將在 3 秒後跳轉頁面…", true);
+		alert("Log out success, go back to index in 3 seconds.", true);
 		console.log("email sign out")
 		setTimeout(function () {
 			window.location = "/index.html";
 		}, 3000);
 	}).catch(function (error) {
-		alert("登出失敗，請再試一次 :(");
+		alert("Log out fail, please try again.");
 		console.log(error);
 	})
 }

@@ -35,14 +35,14 @@ function alert(text, boolean, cb) {
 	let myAlertImg = cE("img","alertImg","","src", boolean ? "img/checked.svg" : "img/warning.svg");
 	let myAlertText = cE('div', "alertText", text);
 	let myAlertBtnDiv = cE("div","alertBtnDiv");
-	let myAlertBtn = cE('button', "alertBtn", "確認");
+	let myAlertBtn = cE('button', "alertBtn", "Okay");
 	myAlertBtn.addEventListener('click', function () {
         closeAlert();
 		cb && cb();
     });
     myAlertBtnDiv.appendChild(myAlertBtn);
     if(cb) {
-        let myAlertBtn2 = cE('button', "alertCancel", "取消");
+        let myAlertBtn2 = cE('button', "alertCancel", "Cancel");
         myAlertBtn2.addEventListener('click',closeAlert);
         myAlertBtnDiv.appendChild(myAlertBtn2);
     }
