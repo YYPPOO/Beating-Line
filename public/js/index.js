@@ -143,6 +143,9 @@ function init() {
     document.getElementById("download").addEventListener("click",function(){
         alert("The Feature Is Comming Soon.");
     });
+    document.getElementById("share").addEventListener("click",function(){
+        alert("The Feature Is Comming Soon.");
+    });
 
 }
 

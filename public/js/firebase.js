@@ -125,19 +125,26 @@ let signUp = function() {
             .then(function() {
             // Update successful.
             user.sendEmailVerification().then(function() {
-            console.log(user);
-            console.log("Email sent.");
-            let userData = {
-                userName:user.displayName,
-                userEmail:user.email,
-                userId:user.uid,
-                providerId:user.providerData[0].providerId
-            };
-            app.ajax("post",app.cst.DB_HOST+"/exe/manageAccount",userData,function(req){
-                // app.closeLoading();
-                alert("Sign up success, and the verify email is send. Reload in 3 seconds.",true);
-                setTimeout(function(){document.location.reload()},3000);
-            })
+                console.log(user);
+                console.log("Email sent.");
+                let userData = {
+                    userName:user.displayName,
+                    userEmail:user.email,
+                    userId:user.uid,
+                    providerId:user.providerData[0].providerId
+                };
+                fetch(dbHost+"/exe/manageAccount", {
+                    method: "POST",
+                    body: JSON.stringify(userData),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(res => res.json())
+                .catch(error => console.error("Create account data error:",error))
+                .then(response => {
+                    alert("Sign up success, and the verify email is send. Reload in 3 seconds.",true);
+                    setTimeout(function(){document.location.reload()},3000);
+                })
             }).catch(function(error) {
             // An error happened.
                 console.log("send mail fail:"+error);
@@ -240,7 +247,7 @@ function popUpLogIn() {
     //是那個ＯＲ分格線
 	let myHrDiv = cE("div","divideLine");
 		let myLine =  cE("span","hrLine");
-		let myOr =  cE("span","logInOr","or Sign in by community account.");	
+		let myOr =  cE("span","logInOr","or Sign in with community account.");	
 		let myLineTwo =  cE("span","hrLine");
 
     myHrDiv.append(myLine,myOr,myLineTwo);
@@ -298,11 +305,16 @@ function getUserBeatList(uid) {
 }
 
 function showUserBeatList(userBeatList) {
-    let myBeatListDiv = cE("div","beatListDiv","My Beat ▼");
-    document.getElementById("sideNav").appendChild(myBeatListDiv);
+    let myBeatListBtn = cE("button","beatListBtn","My Beat ");
+    myBeatListBtn.addEventListener("click",function(){
+        myBeatListBtn.classList.toggle("beatListBtnShow");
+        myBeatListDiv.classList.toggle("beatListDivShow");
+    })
+    document.getElementById("sideNav").appendChild(myBeatListBtn);
+    let myBeatListDiv = cE("div","beatListDiv");
     for(let i in userBeatList) {
         let myBeatDiv = cE("div","beatDiv");
-        let myBeat = cE("div",null,userBeatList[i],"id",i);
+        let myBeat = cE("div","beatName",userBeatList[i],"id",i);
             myBeat.addEventListener("click",function(){
                 fetch(dbHost+"/exe/getBeat?id="+i, {
                     method:"GET",
@@ -335,10 +347,10 @@ function showUserBeatList(userBeatList) {
                 });
             })
         myBeatDiv.append(myBeat,myBeatDelete);
-        // myBeatListDiv.appendChild(myBeatDiv);
-        document.getElementById("sideNav").appendChild(myBeatDiv);
+        myBeatListDiv.appendChild(myBeatDiv);
+        // document.getElementById("sideNav").appendChild(myBeatDiv);
     }
-    // document.getElementById("sideNav").appendChild(myBeatListDiv);
+    document.getElementById("sideNav").appendChild(myBeatListDiv);
 }
 
 function deleteBeat(beatId) {
