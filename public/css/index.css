@@ -94,6 +94,7 @@ input[type="range"]::-moz-focus-outer{
 .sideNav {
     width: 200px;
     height: 100%;
+    overflow: hidden;
     position: absolute;
     top: 0px;
     left: -200px;
@@ -102,7 +103,7 @@ input[type="range"]::-moz-focus-outer{
     z-index: 20;
     display: grid;
     grid-template-columns: 120px;
-    grid-template-rows: repeat(4,60px);
+    grid-template-rows: repeat(6,60px) 1fr;
     justify-content: center;
     justify-items: center;
     align-items: center;
@@ -134,7 +135,53 @@ input[type="range"]::-moz-focus-outer{
     width: 100%;
 }
 
-.beatDiv
+.beatListBtn::after {
+    content: "▼";
+}
+
+.beatListBtnShow::after {
+    content: "▲";
+}
+
+.beatListDiv {
+    /* display: none; */
+    overflow: auto;
+    align-self: flex-start;
+    transform: translate(0,-55%) scale(1,0);
+    transition: all 0.4s;
+}
+
+.beatListDivShow {
+    /* display: block; */
+    transform: translate(0,0) scale(1,1);
+    align-self: stretch;
+}
+
+.beatDiv {
+    display: flex;
+    width: 110px;
+    margin: 10px;
+    background-color: #0f1a2a;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.beatDiv div {
+    cursor: pointer;
+}
+
+.beatName {
+    flex: 1;
+}
+
+.deleteBeat {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    text-align: center;
+    color: #aaaaaa;
+    font-size: 10px;
+}
 
 /* pop up naming ---------------------------------*/
 /* .shield {
@@ -148,7 +195,7 @@ input[type="range"]::-moz-focus-outer{
     opacity: 0.6;
 } */
 
-.naming{
+.naming {
     display: flex;
     flex-direction: column;
     align-items: center;
