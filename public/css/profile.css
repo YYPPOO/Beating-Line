@@ -53,3 +53,7 @@ section {
         bottom: 0;
     }
 }
+
+#uploadPicButton {
+    width: 100px;
+}
