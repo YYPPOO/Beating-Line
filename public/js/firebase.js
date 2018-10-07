@@ -297,15 +297,16 @@ function getUserBeatList(uid) {
     })
     .then(response => {
         console.log("Load user beat: ",response);
-        showUserBeatList(response);
+        showUserBeatList(response,uid);
     })
     .catch(error => {
         console.error("Load user beat error: ",error);
     })
 }
 
-function showUserBeatList(userBeatList) {
+function showUserBeatList(userBeatList,uid) {
     let myBeatListBtn = cE("button","beatListBtn","My Beat ");
+        myBeatListBtn.id = "myBeat";
     myBeatListBtn.addEventListener("click",function(){
         myBeatListBtn.classList.toggle("beatListBtnShow");
         myBeatListDiv.classList.toggle("beatListDivShow");
@@ -343,7 +344,7 @@ function showUserBeatList(userBeatList) {
         let myBeatDelete = cE("div","deleteBeat","X");
             myBeatDelete.addEventListener("click",function(){
                 alert("Delete the beat?!",false,function(){
-                    deleteBeat(i);
+                    deleteBeat(i,uid);
                 });
             })
         myBeatDiv.append(myBeat,myBeatDelete);
@@ -353,6 +354,24 @@ function showUserBeatList(userBeatList) {
     document.getElementById("sideNav").appendChild(myBeatListDiv);
 }
 
-function deleteBeat(beatId) {
-    
+function deleteBeat(beatId,uid) {
+    fetch(dbHost+"/exe/deleteBeat?beatId="+beatId+"&userId="+uid,{
+        method:"delete"
+    }).then(res => res.json())
+    .then(response => {
+        console.log(response);
+        alert("Beat delete.",true);
+        removeUserBeatList();
+        getUserBeatList(authStatus().uid);
+    }).catch((error)=>{
+        console.log(error);
+        alert("Beat delete fail, please try again.")
+    })
+}
+
+function removeUserBeatList() {
+    let beatListBtn = document.querySelector(".beatListBtn");
+    beatListBtn.parentNode.removeChild(beatListBtn);
+    let beatListDiv = document.querySelector(".beatListDiv");
+    beatListDiv.parentNode.removeChild(beatListDiv);
 }

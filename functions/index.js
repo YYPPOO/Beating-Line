@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({
 app.use("/exe/", (req, res, next) => {
 	res.set("Access-Control-Allow-Origin", "*");
 	res.set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
-	res.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+	res.set("Access-Control-Allow-Methods", "POST, GET, DELETE, OPTIONS");
 	res.set("Access-Control-Allow-Credentials", "true");
 	next();
 });
@@ -305,7 +305,22 @@ app.get("/exe/getUserBeat", (req,res) => {
 })
 
 // delete beat --------------------------------------------------
-app.delete("/exe/deleteBeat")
+app.delete("/exe/deleteBeat", (req,res) => {
+	let beatId = req.query.beatId;
+	let userId = req.query.userId;
+	db.ref("/beatData/"+beatId).remove()
+		.then(()=>{
+			db.ref("/userData/"+userId+"/beats/"+beatId).remove()
+				.then(()=>{
+					return res.json({status: "delete success"});
+				}).catch((error)=>{
+					return res.json({error:error});
+				})
+			return;
+		}).catch((error)=>{
+			return res.json({error: error});
+		})
+})
 
 // app.listen(3000, () => console.log('Listening on port 3000!'))
 
