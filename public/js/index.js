@@ -505,6 +505,8 @@ function saveBeat() {
             let newBeatId = response.newBeatId;
             if(newBeatId !== beatId) {
                 console.log(newBeatId);
+                removeUserBeatList();
+                getUserBeatList(authStatus().uid);
                 setTimeout(function(){
                     // window.location = "index.html?id="+newBeatId;
                 },3000);
@@ -544,6 +546,8 @@ function saveAsNewBeat() {
             alert("Beat saved! Jump page after 3 seconds.", true);
             console.log("Update to database success:",response);
             let newBeatId = response.newBeatId;
+            removeUserBeatList();
+            getUserBeatList(authStatus().uid);
             setTimeout(function(){
                 // window.location = "index.html?id="+newBeatId;
             },3000);
