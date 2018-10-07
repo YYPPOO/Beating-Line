@@ -354,5 +354,5 @@ function showUserBeatList(userBeatList) {
 }
 
 function deleteBeat(beatId) {
-
+    
 }
