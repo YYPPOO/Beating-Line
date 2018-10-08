@@ -155,7 +155,7 @@ function playByPoint(soundList,p){
     let startTime = context.currentTime;
     for (let i=0;i<8;i++){
         if(trackSwitch[i]) {
-            state[i][p%length] && playSound(soundList[i],startTime+0.05);
+            state[i][p%length] && playSound(soundList[i],startTime+0.05,volume[i]);
             padList[i][p%length].classList.add("bOn");
         }
         padList[i][(p+length-1)%length].classList.remove("bOn");
@@ -290,14 +290,14 @@ function finishedLoading(bufferList) {
 }
 
 
-function playSound(buffer,time) {
+function playSound(buffer,time,volume) {
     let source = context.createBufferSource(); // creates a sound source
     let gain = context.createGain();
     source.buffer = buffer;                    // tell the source which sound to play
     source.connect(gain);       // connect the source to the context's destination (the speakers)
     gain.connect(context.destination);
     // gain.gain.value = document.getElementById("totalVolume").value;
-    gain.gain.value = totalVolume;
+    gain.gain.value = totalVolume*volume;
     source.start(time);                           // play the source now
     // source.stop(time+source.buffer.duration);
     // console.log(gain);
@@ -388,7 +388,7 @@ function createPad(soundList){
         trackIcon = cE("img","trackIcon","","src","img/track"+i+".svg")
         trackList[i].append(trackNumber,trackIcon);
         trackList[i].addEventListener("click",function(){
-            playSound(soundList[i],context.currentTime);
+            playSound(soundList[i],context.currentTime,volume[i]);
             lastSelect==i || handleSelect(i);
             lastSelect = i;
         })
@@ -397,7 +397,7 @@ function createPad(soundList){
             padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
             padList[i][j].addEventListener("click",function(){
                 state[i][j] = !state[i][j];
-                state[i][j] && !playing && playSound(soundList[i],context.currentTime);
+                state[i][j] && !playing && playSound(soundList[i],context.currentTime,volume[i]);
                 padList[i][j].classList.toggle("b"+i);
                 lastSelect==i || handleSelect(i);
                 lastSelect = i;
@@ -452,7 +452,7 @@ function createTrackSetting() {
     for(let i=0;i<8;i++){
         let trackSetDiv = cE("div","trackSetDiv",null,"id","trackSetDiv"+i);
             trackSetDiv.addEventListener("click",function(){
-                playSound(soundList[i],context.currentTime);
+                playSound(soundList[i],context.currentTime,volume[i]);
                 lastSelect==i || handleSelect(i);
                 lastSelect = i;
             })
