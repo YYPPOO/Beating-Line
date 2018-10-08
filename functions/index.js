@@ -310,13 +310,9 @@ app.delete("/exe/deleteBeat", (req,res) => {
 	let userId = req.query.userId;
 	db.ref("/beatData/"+beatId).remove()
 		.then(()=>{
-			db.ref("/userData/"+userId+"/beats/"+beatId).remove()
-				.then(()=>{
-					return res.json({status: "delete success"});
-				}).catch((error)=>{
-					return res.json({error:error});
-				})
-			return;
+			return db.ref("/userData/"+userId+"/beats/"+beatId).remove();
+		}).then(()=>{
+			return res.json({status: "delete success"});
 		}).catch((error)=>{
 			return res.json({error: error});
 		})
