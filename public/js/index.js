@@ -4,6 +4,7 @@ let bufferLoader;
 let bpm = 120;
 let totalVolume = 1;
 let playingList = [];
+let lastSelect;
 
 let t = 60/bpm/4;
 let p=0;
@@ -15,6 +16,7 @@ let playing = false;
 let soundList = [];
 
 let volume = [1,1,1,1,1,1,1,1];
+let trackSwitch = [true,true,true,true,true,true,true,true];
 let state = [];
 for(let i=0;i<trackQty;i++) {
     state[i] = [];
@@ -152,9 +154,11 @@ function init() {
 function playByPoint(soundList,p){
     let startTime = context.currentTime;
     for (let i=0;i<8;i++){
-        state[i][p%length] && playSound(soundList[i],startTime+0.05);
+        if(trackSwitch[i]) {
+            state[i][p%length] && playSound(soundList[i],startTime+0.05);
+            padList[i][p%length].classList.add("bOn");
+        }
         padList[i][(p+length-1)%length].classList.remove("bOn");
-        padList[i][p%length].classList.add("bOn");
     }
 }
 
@@ -377,8 +381,7 @@ BufferLoader.prototype.load = function() {
 function createPad(soundList){
 
     let padDiv = document.getElementById("padDiv");
-        padDiv.style = "grid-template-columns: 55px repeat("+length+",30px);"
-    let lastSelect;
+        padDiv.style = "grid-template-columns: 40px repeat("+length+",30px);"
     for(let i=0;i<8;i++){
         trackList[i] = cE("div","track");
         trackNumber = cE("div","trackNumber",i+1);
@@ -406,18 +409,10 @@ function createPad(soundList){
     }
     padDiv.appendChild(cE("div"));
     for(let j=0;j<length;j++){
-        padDiv.appendChild(cE("div","pointNumber",j+1));
+        padDiv.appendChild(cE("div",j%4?"pointNumber":"pointNumberP",j%4?(j%4)+1:(j/4)+1));
     }
 
-    function handleSelect(s){
-        trackList[lastSelect] && trackList[lastSelect].classList.remove("b"+lastSelect);
-        trackList[s].classList.add("b"+s);
-        for(let j=0;j<length;j++){
-            padList[lastSelect] && padList[lastSelect][j].classList.remove("bSelected");
-            // if(!state[s][j]) 
-            padList[s][j].classList.add("bSelected");
-        }
-    }
+
 
     function cancelSelect(){
         console.log("body clicked");
@@ -432,6 +427,20 @@ function createPad(soundList){
     document.getElementById("background").addEventListener("click",cancelSelect);
 }
 
+function handleSelect(s){
+    if(trackList[lastSelect]) {
+        trackList[lastSelect].classList.remove("b"+lastSelect);
+        document.getElementById("trackSetDiv"+lastSelect).classList.remove("b"+lastSelect);
+    }
+    trackList[s].classList.add("b"+s);
+    document.getElementById("trackSetDiv"+s).classList.add("b"+s);
+    for(let j=0;j<length;j++){
+        padList[lastSelect] && padList[lastSelect][j].classList.remove("bSelected");
+        // if(!state[s][j]) 
+        padList[s][j].classList.add("bSelected");
+    }
+}
+
 function removePad() {
     let padDiv = document.getElementById("padDiv");
     while (padDiv.hasChildNodes()) {
@@ -441,16 +450,28 @@ function removePad() {
 
 function createTrackSetting() {
     for(let i=0;i<8;i++){
-        let trackSetDiv = cE("div","trackSetDiv");
+        let trackSetDiv = cE("div","trackSetDiv",null,"id","trackSetDiv"+i);
+            trackSetDiv.addEventListener("click",function(){
+                playSound(soundList[i],context.currentTime);
+                lastSelect==i || handleSelect(i);
+                lastSelect = i;
+            })
         let trackSetNum = cE("div","trackSetNum",i+1);
         let trackSetIcon = cE("img","trackSetIcon",null,"src","img/track"+i+".svg");
         let trackSetPlay = cE("img","trackSetPlay",null,"src","img/play.svg");
             trackSetPlay.addEventListener("click",function(){
-                playSingleTrack(i);
+                if(playing){
+                    stopSingleTrack();
+                } else {
+                    playSingleTrack(i);
+                }
             });
         let trackSetSwitch = cE("label","trackSetSwitch");
             let trackSetCheckBox = cE("input",null,null,"type","checkbox");
-                trackSetCheckBox.checked = true;
+                trackSetCheckBox.checked = trackSwitch[i];
+                trackSetCheckBox.addEventListener("change",function(){
+                    trackSwitch[i] = this.checked;
+                })
             let trackSetSlider = cE("span","trackSetSlider");
         trackSetSwitch.append(trackSetCheckBox,trackSetSlider);
         let trackSetVolumeKey = cE("div","trackSetVolumeKey","Volume");

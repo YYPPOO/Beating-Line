@@ -15,6 +15,7 @@ nav .nav {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 20px;
 }
 
 .nav span, .nav input {
@@ -39,7 +40,7 @@ input[type="range"] {
     -moz-appearance: none;
     overflow: hidden;     /* 限定範圍 */
     height: 10px;
-    width: 120px;
+    width: 100px;
     outline: none;      /* 避免點選會有藍線或虛線 */
     border-radius: 5px;
     background: #3f4a5a;
@@ -274,25 +275,26 @@ section {
 
 .padDiv {
     display: grid;
-    grid-template-columns: 55px repeat(8,30px);
+    grid-template-columns: 40px repeat(8,30px);
     grid-template-rows: repeat(9,30px);
-    grid-gap: 2px 2px;
+    grid-gap: 5px 5px;
     align-items: center;
     margin: 20px 10px;
 }
 
 .track {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     font-size: 12px;
     border-radius: 5px;
     justify-content: flex-end;
+    background-color: #333333;
 }
 
 .trackIcon {
     width: 30px;
     height: 30px;
-    margin: 0 5px;
+    margin: 0;
 }
 
 .trackNumber {
@@ -318,6 +320,16 @@ section {
     font-size: 12px;
     font-family: "arial", "sans-serif";
     align-self: flex-start;
+    color: #777777;
+}
+
+.pointNumberP {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: "arial", "sans-serif";
+    align-self: flex-start;
+    color: #ffffff;
 }
 
 .b {
@@ -347,6 +359,146 @@ section {
 .bSelected {
     /* filter: brightness(2); */
     background-color: #777777;
+}
+
+/* track setting */
+.trackSettingListDiv {
+    display: grid;
+    grid-template-columns: repeat(4,auto);
+    grid-template-rows: repeat(2,auto);
+    grid-gap: 30px 50px;
+    align-items: center;
+    justify-items: center;
+}
+
+.trackSetDiv {
+    display: grid;
+    grid-template-columns: 10px repeat(4,30px) 45px;
+    grid-template-rows: repeat(2,30px);
+    grid-template-areas:
+        "number icon . . play switch"
+        "volumeKey volumeKey volumeKey volume volume volume";
+    grid-gap: 5px 0px;
+    justify-items: flex-start;
+    align-items: center;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #333333;
+}
+
+.trackSetNum {
+    grid-area: number;
+    font-size: 12px;
+    align-self: flex-start;
+}
+
+.trackSetIcon {
+    grid-area: icon;
+    width: 30px;
+}
+
+.trackSetPlay {
+    grid-area: play;
+    width: 25px;
+}
+
+.trackSetSwitch {
+    grid-area: switch;
+    display: block;
+    position: relative;
+    width: 44px;
+    height: 24px;
+}
+
+.trackSetSwitch input {
+    visibility: hidden;
+}
+
+.trackSetSlider {
+    position: absolute;
+    cursor: pointer;
+    border-radius: 12px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #3f4a5a;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.trackSetSlider::before {
+    position: absolute;
+    content: "";
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    top: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.trackSetSwitch input:checked + .trackSetSlider {
+    background-color: #4D99CC;
+}
+
+.trackSetSwitch input:checked + .trackSetSlider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+}
+
+.trackSetVolumeKey {
+    grid-area: volumeKey;
+}
+
+.trackSetVolume {
+    grid-area: volume;
+    justify-self: flex-end;
+}
+
+@media (max-width:1200px) and (min-width:650px) {
+    .trackSettingListDiv {
+        grid-template-columns: repeat(2,200px);
+        grid-template-rows: repeat(4,auto);
+    }
+}
+@media (max-width:650px) {
+    .trackSettingListDiv {
+        grid-template-columns: 320px;
+        grid-template-rows: repeat(8,auto);
+        grid-gap: 5px 0px;
+        justify-content: flex-start;
+        margin: 0px auto;
+    }
+    .trackSetDiv {
+        grid-template-columns: 10px repeat(2,30px) 45px 80px 100px;
+        grid-template-rows: 30px;
+        grid-template-areas:
+            "number icon play switch volumeKey volume";
+        grid-gap: 0px 5px;
+        justify-items: center;
+    }
+}
+@media (max-width:400px) {
+    .trackSettingListDiv {
+        grid-template-columns: 286px;
+    }
+    .trackSetDiv {
+        grid-template-columns: repeat(2,30px) 45px 70px 100px;
+        grid-template-areas:
+            "icon play switch volumeKey volume";
+        grid-gap: 0px 2px;
+        justify-items: center;
+    }
+    .trackSetVolumeKey {
+        font-size: 14px;
+    }
+    .trackSetNum {
+        display: none;
+    }
 }
 
 .b0 {
@@ -419,105 +571,14 @@ section {
     }
 }
 
-/* track setting */
-.trackSettingListDiv {
-    display: grid;
-    grid-template-columns: repeat(4,200px);
-    grid-template-rows: repeat(2,auto);
-    grid-gap: 30px 50px;
-}
-
-.trackSetDiv {
-    display: grid;
-    grid-template-columns: 10px repeat(6,30px);
-    grid-template-rows: repeat(2,30px);
-    grid-template-areas:
-        "number icon . . play switch switch"
-        "volumeKey volumeKey volumeKey volume volume volume volume";
-    grid-gap: 3px 3px;
-    justify-items: flex-start;
-    align-items: center;
-}
-
-.trackSetNum {
-    grid-area: number;
-    font-size: 12px;
-}
-
-.trackSetIcon {
-    grid-area: icon;
-    width: 30px;
-}
-
-.trackSetPlay {
-    grid-area: play;
-    width: 25px;
-}
-
-.trackSetSwitch {
-    grid-area: switch;
-    display: block;
-    position: relative;
-    width: 44px;
-    height: 24px;
-}
-
-.trackSetSwitch input {
-    visibility: hidden;
-}
-
-.trackSetSlider {
-    position: absolute;
-    cursor: pointer;
-    border-radius: 12px;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #3f4a5a;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.trackSetSlider::before {
-    position: absolute;
-    content: "";
-    border-radius: 50%;
-    height: 20px;
-    width: 20px;
-    left: 2px;
-    top: 2px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.trackSetSwitch input:checked + .trackSetSlider {
-    background-color: #4D99CC;
-}
-
-.trackSetSwitch input:checked + .trackSetSlider:before {
-    -webkit-transform: translateX(20px);
-    -ms-transform: translateX(20px);
-    transform: translateX(20px);
-}
-
-.trackSetVolumeKey {
-    grid-area: volumeKey;
-    justify-self: flex-start;
-}
-
-.trackSetVolume {
-    grid-area: volume;
-}
-
 #container>img{
     border: solid 1px white;
 }
 
 
-@media (min-width:650px) and (min-height:500px),
-(max-width:650px) and (min-height:535px){
+@media (min-width:1200px) and (min-height:700px),
+(max-width:1200px) and (min-width:650px) and (min-height:860px),
+(max-width:650px) and (min-height:830px){
     footer {
         position: absolute;
         bottom: 0;
