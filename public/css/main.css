@@ -6,7 +6,8 @@ body {
 }
 
 button {
-    border: solid 1px #ffffff;
+    border: solid 1px #777777;
+    outline: 0px;
     background-color: #3f4a5a;
     border-radius: 5px;
     color: white;
@@ -43,7 +44,7 @@ footer {
 }
 
 
-#background {
+/* #background {
     position:fixed;
     left:0px;
     top:0px;
@@ -51,7 +52,7 @@ footer {
     height:100%;
     background:#0f1a2a;
     z-index: -1;
-}
+} */
 
 /* log in ------------------------*/
 .shield, .logInShield{
