@@ -235,6 +235,7 @@ function finishedLoading(bufferList) {
             }
             document.getElementById("bpm").value = bpm;
             decideLength(mediaQuery);
+            createTrackSetting()
         })
         .catch(error => {
             console.error("Load beat error:",error)
@@ -244,6 +245,7 @@ function finishedLoading(bufferList) {
         if(localStorage.bpm) {bpm = localStorage.getItem("bpm");}
         document.getElementById("bpm").value = bpm;
         decideLength(mediaQuery);
+        createTrackSetting();
     }
 
     // set button feature -------------------------------------------------------------
@@ -290,7 +292,8 @@ function playSound(buffer,time) {
     source.buffer = buffer;                    // tell the source which sound to play
     source.connect(gain);       // connect the source to the context's destination (the speakers)
     gain.connect(context.destination);
-    gain.gain.value = document.getElementById("totalVolume").value;
+    // gain.gain.value = document.getElementById("totalVolume").value;
+    gain.gain.value = totalVolume;
     source.start(time);                           // play the source now
     // source.stop(time+source.buffer.duration);
     // console.log(gain);
@@ -435,6 +438,38 @@ function removePad() {
         padDiv.removeChild(padDiv.firstChild);
     }
 }
+
+function createTrackSetting() {
+    for(let i=0;i<8;i++){
+        let trackSetDiv = cE("div","trackSetDiv");
+        let trackSetNum = cE("div","trackSetNum",i+1);
+        let trackSetIcon = cE("img","trackSetIcon",null,"src","img/track"+i+".svg");
+        let trackSetPlay = cE("img","trackSetPlay",null,"src","img/play.svg");
+            trackSetPlay.addEventListener("click",function(){
+                playSingleTrack(i);
+            });
+        let trackSetSwitch = cE("label","trackSetSwitch");
+            let trackSetCheckBox = cE("input",null,null,"type","checkbox");
+                trackSetCheckBox.checked = true;
+            let trackSetSlider = cE("span","trackSetSlider");
+        trackSetSwitch.append(trackSetCheckBox,trackSetSlider);
+        let trackSetVolumeKey = cE("div","trackSetVolumeKey","Volume");
+        let trackSetVolume = cE("input","trackSetVolume",null,"id","trackSetVolume"+i);
+        trackSetVolume.type = "range";
+        trackSetVolume.max = 1;
+        trackSetVolume.min = 0;
+        trackSetVolume.step = "any";
+        trackSetVolume.value = volume[i];
+        trackSetVolume.addEventListener("change",function(){
+            volume[i] = this.value;
+        })
+        trackSetDiv.append(trackSetNum,trackSetIcon,trackSetPlay,trackSetSwitch,trackSetVolumeKey,trackSetVolume);
+        document.getElementById("trackSettingListDiv").appendChild(trackSetDiv);
+    }
+
+}
+
+
 // save to local storage
 function saveBeatToLocalStorage() {
     let beatString = JSON.stringify(state);

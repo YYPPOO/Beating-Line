@@ -39,7 +39,7 @@ input[type="range"] {
     -moz-appearance: none;
     overflow: hidden;     /* 限定範圍 */
     height: 10px;
-    width: 100px;
+    width: 120px;
     outline: none;      /* 避免點選會有藍線或虛線 */
     border-radius: 5px;
     background: #3f4a5a;
@@ -80,11 +80,10 @@ input[type="range"]::-moz-range-track{
     background-color: #3f4a5a;
 }
 
-
-/* input[type="range"]::-moz-range-progress{
+input[type="range"]::-moz-range-progress{
     height:10px;
     background:#aaaaaa;
-} */
+}
 
 input[type="range"]::-moz-focus-outer{
     border:none;    /* 去除 focus 時候的外框虛線 */
@@ -269,14 +268,15 @@ input[type="range"]::-moz-focus-outer{
 /* section ---------------------------------------*/
 section {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .padDiv {
     display: grid;
     grid-template-columns: 55px repeat(8,30px);
     grid-template-rows: repeat(9,30px);
-    grid-gap: 5px 5px;
+    grid-gap: 2px 2px;
     align-items: center;
     margin: 20px 10px;
 }
@@ -417,6 +417,98 @@ section {
         transform: scale(1,1);
         opacity: 1;
     }
+}
+
+/* track setting */
+.trackSettingListDiv {
+    display: grid;
+    grid-template-columns: repeat(4,200px);
+    grid-template-rows: repeat(2,auto);
+    grid-gap: 30px 50px;
+}
+
+.trackSetDiv {
+    display: grid;
+    grid-template-columns: 10px repeat(6,30px);
+    grid-template-rows: repeat(2,30px);
+    grid-template-areas:
+        "number icon . . play switch switch"
+        "volumeKey volumeKey volumeKey volume volume volume volume";
+    grid-gap: 3px 3px;
+    justify-items: flex-start;
+    align-items: center;
+}
+
+.trackSetNum {
+    grid-area: number;
+    font-size: 12px;
+}
+
+.trackSetIcon {
+    grid-area: icon;
+    width: 30px;
+}
+
+.trackSetPlay {
+    grid-area: play;
+    width: 25px;
+}
+
+.trackSetSwitch {
+    grid-area: switch;
+    display: block;
+    position: relative;
+    width: 44px;
+    height: 24px;
+}
+
+.trackSetSwitch input {
+    visibility: hidden;
+}
+
+.trackSetSlider {
+    position: absolute;
+    cursor: pointer;
+    border-radius: 12px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #3f4a5a;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.trackSetSlider::before {
+    position: absolute;
+    content: "";
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    top: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.trackSetSwitch input:checked + .trackSetSlider {
+    background-color: #4D99CC;
+}
+
+.trackSetSwitch input:checked + .trackSetSlider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+}
+
+.trackSetVolumeKey {
+    grid-area: volumeKey;
+    justify-self: flex-start;
+}
+
+.trackSetVolume {
+    grid-area: volume;
 }
 
 #container>img{
