@@ -6,6 +6,7 @@ let totalVolume = 1;
 let playingList = [];
 let lastSelect;
 let timerId;
+let metronome = false;
 
 let t = 60/bpm/4;
 let p=0;
@@ -106,7 +107,9 @@ function init() {
         "sound/4tom0.wav",
         "sound/5clap0.wav",
         "sound/6conga0.wav",
-        "sound/7atm0.wav"
+        "sound/7atm0.wav",
+        "sound/metronome0.wav",
+        "sound/metronome1.wav"
         ],
         finishedLoading
         );
@@ -175,6 +178,9 @@ function finishedLoading(bufferList) {
         } else {
             timerId = setInterval(function(){
                 playByPoint(bufferList,p);
+                if(metronome && p%4==0){
+                    playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
+                }
                 p++;
             },15000/bpm);
             playing = true;
@@ -258,6 +264,10 @@ function finishedLoading(bufferList) {
     document.getElementById("play").addEventListener("click",play);
     // document.getElementById("clear").addEventListener("click",clear);
     document.getElementById("clear").addEventListener("click",function(){alert("Clear the Beat?!",false,clear)});
+    document.getElementById("metronome").addEventListener("click",function(){
+        this.classList.toggle("metronomeOn");
+        metronome = !metronome;
+    })
     document.getElementById("bpm").addEventListener("change",function(){
         console.log(this.value);
         bpm = this.value;
