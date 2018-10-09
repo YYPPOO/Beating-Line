@@ -35,7 +35,7 @@ nav .nav {
     cursor: pointer;
 }
 .metronome:hover {
-    background-color: #555555;
+    filter: brightness(1.5);
 }
 
 .metronomeOn {
