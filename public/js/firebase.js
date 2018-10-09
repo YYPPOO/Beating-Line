@@ -331,6 +331,7 @@ function showUserBeatList(userBeatList,uid) {
                         state = response.beat;
                         bpm = response.bpm;
                         beatName = response.beatName;
+                        volume = response.volume;
                     }
                     beatId = i;
                     document.getElementById("bpm").value = bpm;
