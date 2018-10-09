@@ -5,6 +5,7 @@ let bpm = 120;
 let totalVolume = 1;
 let playingList = [];
 let lastSelect;
+let timerId;
 
 let t = 60/bpm/4;
 let p=0;
@@ -164,16 +165,15 @@ function playByPoint(soundList,p){
 
 function finishedLoading(bufferList) {
 
-    let intervalID;
     soundList = bufferList;
     
     let play = function(e) {
         if(playing) {
-            clearInterval(intervalID);
+            clearInterval(timerId);
             playing = false;
             document.getElementById("play").textContent = "Beat!";
         } else {
-            intervalID = setInterval(function(){
+            timerId = setInterval(function(){
                 playByPoint(bufferList,p);
                 p++;
             },15000/bpm);
@@ -181,11 +181,12 @@ function finishedLoading(bufferList) {
             document.getElementById("stop").removeEventListener("click",stop);
             document.getElementById("stop").addEventListener("click",stop);
             document.getElementById("play").textContent = "Pause";
+            saveBeatToLocalStorage();
         }
     }
 
     let stop = function(e) {
-        clearInterval(intervalID);
+        clearInterval(timerId);
         console.log(playingList);
         playingList.forEach(function(item){
             item.gain.value = 0;
@@ -200,8 +201,8 @@ function finishedLoading(bufferList) {
     }
 
     let reset = function() {
-        clearInterval(intervalID);
-        intervalID = setInterval(function(){
+        clearInterval(timerId);
+        timerId = setInterval(function(){
             playByPoint(bufferList,p);
             p++;
         },15000/bpm);
@@ -236,10 +237,11 @@ function finishedLoading(bufferList) {
                 state = response.beat;
                 bpm = response.bpm;
                 beatName = response.beatName;
+                volume = response.volume;
             }
             document.getElementById("bpm").value = bpm;
             decideLength(mediaQuery);
-            createTrackSetting()
+            createTrackSetting();
         })
         .catch(error => {
             console.error("Load beat error:",error)
@@ -270,12 +272,59 @@ function finishedLoading(bufferList) {
         })
     });
 
+    let keyPlay = function(i){
+        playSound(soundList[i],context.currentTime,totalVolume);
+        if(playing) {
+            state[i][p%length-1] = true;
+            padList[i][p%length-1].classList.toggle("b"+i,true);
+        }
+    }
+    window.onkeydown = function(e) {
+        console.log(e.keyCode);
+        switch(e.keyCode) {
+            case 66: //b
+                keyPlay(0);
+                break;
+            case 67: //c
+                keyPlay(0);
+                break;
+            case 78: //n
+                keyPlay(0);
+                break;
+            case 86: //v
+                keyPlay(0);
+                break;
+            case 68: //d
+                keyPlay(1);
+                break;
+            case 70: //f
+                keyPlay(1);
+                break;
+            case 72: //h
+                keyPlay(1);
+                break;
+            case 74: //j
+                keyPlay(1);
+                break;
+            case 65: //a
+                keyPlay(2);
+                break;
+            case 83: //s
+                keyPlay(2);
+                break;
+            case 90: //z
+                keyPlay(2);
+                break;
+            case 88: //x
+                keyPlay(2);
+                break;
+        }
+    }
+
     // document.getElementById("save").addEventListener("click",saveBeat);
 
     // decideLengthB(mediaB);
     // createPad(bufferList);
-
-
 
     // document.getElementById("bpm").addEventListener("change",reset);
 //   // Create two sources and play them both together.
@@ -401,7 +450,6 @@ function createPad(soundList){
                 padList[i][j].classList.toggle("b"+i);
                 lastSelect==i || handleSelect(i);
                 lastSelect = i;
-                saveBeatToLocalStorage();
             })
             state[i][j] && padList[i][j].classList.add("b"+i);
             padDiv.appendChild(padList[i][j]);
@@ -452,20 +500,21 @@ function createTrackSetting() {
     for(let i=0;i<8;i++){
         let trackSetDiv = cE("div","trackSetDiv",null,"id","trackSetDiv"+i);
             trackSetDiv.addEventListener("click",function(){
-                playSound(soundList[i],context.currentTime,volume[i]);
+                !playing && playSound(soundList[i],context.currentTime,volume[i]);
                 lastSelect==i || handleSelect(i);
                 lastSelect = i;
             })
         let trackSetNum = cE("div","trackSetNum",i+1);
         let trackSetIcon = cE("img","trackSetIcon",null,"src","img/track"+i+".svg");
-        let trackSetPlay = cE("img","trackSetPlay",null,"src","img/play.svg");
-            trackSetPlay.addEventListener("click",function(){
-                if(playing){
-                    stopSingleTrack();
-                } else {
-                    playSingleTrack(i);
-                }
-            });
+        // let trackSetPlay = cE("div","trackSetPlay");
+        //     trackSetPlay.addEventListener("click",function(){
+        //         if(this.classList.contains("trackSetStop")) {
+        //             stopSingleTrack(i);
+        //         } else {
+        //             playSingleTrack(i);
+        //         }
+        //         this.classList.toggle("trackSetStop");
+        //     });
         let trackSetSwitch = cE("label","trackSetSwitch");
             let trackSetCheckBox = cE("input",null,null,"type","checkbox");
                 trackSetCheckBox.checked = trackSwitch[i];
@@ -484,11 +533,38 @@ function createTrackSetting() {
         trackSetVolume.addEventListener("change",function(){
             volume[i] = this.value;
         })
-        trackSetDiv.append(trackSetNum,trackSetIcon,trackSetPlay,trackSetSwitch,trackSetVolumeKey,trackSetVolume);
+        trackSetDiv.append(trackSetNum,trackSetIcon,trackSetSwitch,trackSetVolumeKey,trackSetVolume);
         document.getElementById("trackSettingListDiv").appendChild(trackSetDiv);
     }
-
 }
+
+// function playSingleTrack(i) {
+//     if(playing) {
+//         clearInterval(timerId);
+//         timerId = setInterval(function(){
+//             let startTime = context.currentTime;
+//             state[i][p%length] && playSound(soundList[i],startTime+0.05,volume[i]);
+//             padList[i][p%length].classList.add("bOn");
+//             padList[i][(p+length-1)%length].classList.remove("bOn");
+//             p++;
+//         },15000/bpm);
+//     } else {
+//         timerId = setInterval(function(){
+//             let startTime = context.currentTime;
+//             state[i][p%length] && playSound(soundList[i],startTime+0.05,volume[i]);
+//             padList[i][p%length].classList.add("bOn");
+//             padList[i][(p+length-1)%length].classList.remove("bOn");
+//             p++;
+//         },15000/bpm)
+//         // playing = true;
+//     }
+// }
+
+// function stopSingleTrack(i) {
+//     if(playing) {
+
+//     }
+// }
 
 
 // save to local storage
