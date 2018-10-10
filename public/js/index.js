@@ -215,7 +215,7 @@ function finishedLoading(bufferList) {
     }
 
     let clear = function() {
-        playing && stop();
+        // playing && stop();
         for(let i=0;i<trackQty;i++){
             for(let j=0;j<length;j++){
                 if(state[i][j]){
@@ -285,13 +285,22 @@ function finishedLoading(bufferList) {
     let keyPlay = function(i){
         playSound(soundList[i],context.currentTime,totalVolume);
         if(playing) {
-            state[i][p%length-1] = true;
-            padList[i][p%length-1].classList.toggle("b"+i,true);
+            state[i][(p+length-1)%length] = true;
+            padList[i][(p+length-1)%length].classList.toggle("b"+i,true);
         }
     }
     window.onkeydown = function(e) {
         console.log(e.keyCode);
         switch(e.keyCode) {
+            case 32: //" "
+                play();
+                break;
+            case 27: //esc
+                stop();
+                break;
+            case 46: //delete
+                e.ctrlKey && clear();
+                break;
             case 66: //b
                 keyPlay(0);
                 break;
