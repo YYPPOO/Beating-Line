@@ -19,15 +19,31 @@ let showUserPic = function(data){
 };
 
 function alert(text, boolean, cb) {
+    document.activeElement.blur();
     let lastSheild = document.querySelector(".shield");
         lastSheild && lastSheild.parentNode.removeChild(lastSheild);
     let lastAlert = document.querySelector(".alert");
         lastAlert && lastAlert.parentNode.removeChild(lastAlert);
     
     let closeAlert = function() {
+        document.removeEventListener("keydown",handleAlertKeyPress);
         mySheild.parentNode.removeChild(mySheild);
 		myAlert.parentNode.removeChild(myAlert);
     }
+    let handleAlertKeyPress = function(e) {
+        e.stopImmediatePropagation();
+        switch(e.keyCode) {
+            case 32: //" "
+                myAlertBtn.click();
+                break;
+            case 13: //enter
+                myAlertBtn.click();
+                break;
+            case 27: //esc
+                closeAlert();
+                break;
+        }
+    };
 
 	let mySheild = cE("div", "shield");
 	mySheild.addEventListener('click',closeAlert)
@@ -35,17 +51,18 @@ function alert(text, boolean, cb) {
 	let myAlertImg = cE("img","alertImg","","src", boolean ? "img/checked.svg" : "img/warning.svg");
 	let myAlertText = cE('div', "alertText", text);
 	let myAlertBtnDiv = cE("div","alertBtnDiv");
-	let myAlertBtn = cE('button', "alertBtn", "Okay");
+    let myAlertBtn = cE('button', "alertBtn", "Okay");
 	myAlertBtn.addEventListener('click', function () {
         closeAlert();
 		cb && cb();
     });
+    document.addEventListener("keydown",handleAlertKeyPress);
     myAlertBtnDiv.appendChild(myAlertBtn);
     if(cb) {
         let myAlertBtn2 = cE('button', "alertCancel", "Cancel");
         myAlertBtn2.addEventListener('click',closeAlert);
         myAlertBtnDiv.appendChild(myAlertBtn2);
     }
-	myAlert.append(myAlertImg, myAlertText, myAlertBtnDiv);
+    myAlert.append(myAlertImg, myAlertText, myAlertBtnDiv);
 	document.body.append(mySheild, myAlert);
 }
