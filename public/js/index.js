@@ -6,7 +6,6 @@ let totalVolume = 1;
 let playingList = [];
 let lastSelect;
 let timerId;
-let metronome = false;
 
 let t = 60/bpm/4;
 let p=0;
@@ -14,6 +13,8 @@ let length = 16;
 let trackQty = 8;
 let bit = 16;
 let playing = false;
+let metronome = false;
+let kbMode = false;
 
 let soundList = [];
 
@@ -180,6 +181,10 @@ function finishedLoading(bufferList) {
                 playByPoint(bufferList,p);
                 if(metronome && p%4==0){
                     playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
+                    document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
+                }
+                if(kbMode && p%4==0){
+                    document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
                 }
                 p++;
             },15000/bpm);
@@ -199,7 +204,7 @@ function finishedLoading(bufferList) {
         })
         playing = false;
         for (let i=0;i<8;i++){
-            padList[i][(p-1)%length].classList.remove("bOn");
+            padList[i][(p+length-1)%length].classList.remove("bOn");
         }
         p=0;
         document.getElementById("stop").removeEventListener("click",stop);
@@ -210,6 +215,13 @@ function finishedLoading(bufferList) {
         clearInterval(timerId);
         timerId = setInterval(function(){
             playByPoint(bufferList,p);
+            if(metronome && p%4==0){
+                playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
+                document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
+            }
+            if(kbMode && p%4==0){
+                document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
+            }
             p++;
         },15000/bpm);
     }
@@ -265,8 +277,12 @@ function finishedLoading(bufferList) {
     // document.getElementById("clear").addEventListener("click",clear);
     document.getElementById("clear").addEventListener("click",function(){alert("Clear the Beat?!",false,clear)});
     document.getElementById("metronome").addEventListener("click",function(){
-        this.classList.toggle("metronomeOn");
         metronome = !metronome;
+        this.classList.toggle("metronomeOn",metronome);
+    })
+    document.getElementById("kbMode").addEventListener("click",function(){
+        kbMode = !kbMode;
+        this.classList.toggle("kbModeOn",kbMode);
     })
     document.getElementById("bpm").addEventListener("change",function(){
         console.log(this.value);
@@ -283,13 +299,23 @@ function finishedLoading(bufferList) {
     });
 
     let keyPlay = function(i){
-        playSound(soundList[i],context.currentTime,totalVolume);
-        if(playing) {
+        playSound(soundList[i],context.currentTime,volume[i]);
+        if(playing && kbMode) {
             state[i][(p+length-1)%length] = true;
             padList[i][(p+length-1)%length].classList.toggle("b"+i,true);
         }
     }
+    let toggleTrackSwitch = function(i){
+        trackSwitch[i] = !trackSwitch[i];
+        document.getElementById("trackSwitch"+i).checked = trackSwitch[i];
+    }
     window.onkeydown = function(e) {
+        if(document.activeElement == document.getElementById("bpm")){
+            if(e.keyCode==13) {
+                document.getElementById("bpm").blur();
+            }
+            return;
+        }
         console.log(e.keyCode);
         switch(e.keyCode) {
             case 32: //" "
@@ -300,6 +326,41 @@ function finishedLoading(bufferList) {
                 break;
             case 46: //delete
                 e.ctrlKey && clear();
+                e.shiftKey && clear();
+                break;
+            // case 220: //"\"
+            case 57: //9
+                metronome = !metronome;
+                document.getElementById("metronome").classList.toggle("metronomeOn",metronome);
+                break;
+            // case 13: //enter
+            case 48: //0
+                kbMode = !kbMode;
+                document.getElementById("kbMode").classList.toggle("kbModeOn",kbMode);
+                break;
+            case 49: //1
+                toggleTrackSwitch(0);
+                break;
+            case 50: //2
+                toggleTrackSwitch(1);
+                break;
+            case 51: //3
+                toggleTrackSwitch(2);
+                break;
+            case 52: //4
+                toggleTrackSwitch(3);
+                break;
+            case 53: //5
+                toggleTrackSwitch(4);
+                break;
+            case 54: //6
+                toggleTrackSwitch(5);
+                break;
+            case 55: //7
+                toggleTrackSwitch(6);
+                break;
+            case 56: //8
+                toggleTrackSwitch(7);
                 break;
             case 66: //b
                 keyPlay(0);
@@ -325,17 +386,68 @@ function finishedLoading(bufferList) {
             case 74: //j
                 keyPlay(1);
                 break;
-            case 65: //a
-                keyPlay(2);
-                break;
             case 83: //s
-                keyPlay(2);
-                break;
-            case 90: //z
                 keyPlay(2);
                 break;
             case 88: //x
                 keyPlay(2);
+                break;
+            case 75: //k
+                keyPlay(2);
+                break;
+            case 77: //m
+                keyPlay(2);
+                break;
+            case 65: //a
+                keyPlay(3);
+                break;
+            case 90: //z
+                keyPlay(3);
+                break;
+            case 76: //l
+                keyPlay(3);
+                break;
+            case 188: //,
+                keyPlay(3);
+                break;
+            case 71: //g
+                keyPlay(4);
+                break;
+            case 84: //t
+                keyPlay(4);
+                break;
+            case 69: //e
+                keyPlay(5);
+                break;
+            case 82: //r
+                keyPlay(5);
+                break;
+            case 89: //y
+                keyPlay(5);
+                break;
+            case 85: //u
+                keyPlay(5);
+                break;
+            case 81: //q
+                keyPlay(6);
+                break;
+            case 87: //w
+                keyPlay(6);
+                break;
+            case 73: //i
+                keyPlay(6);
+                break;
+            case 79: //o
+                keyPlay(6);
+                break;
+            case 80: //p
+                keyPlay(7);
+                break;
+            case 186: //;
+                keyPlay(7);
+                break;
+            case 190: //.
+                keyPlay(7);
                 break;
         }
     }
@@ -536,6 +648,7 @@ function createTrackSetting() {
         //     });
         let trackSetSwitch = cE("label","trackSetSwitch");
             let trackSetCheckBox = cE("input",null,null,"type","checkbox");
+                trackSetCheckBox.id = "trackSwitch"+i;
                 trackSetCheckBox.checked = trackSwitch[i];
                 trackSetCheckBox.addEventListener("change",function(){
                     trackSwitch[i] = this.checked;
