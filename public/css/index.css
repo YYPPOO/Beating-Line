@@ -27,18 +27,19 @@ nav .nav {
     margin: 5px;
     width: 30px;
     border-radius: 5px;
-}
-
-.metronome {
-    background-color: #3f4a5a;
     border: solid 1px #777777;
     cursor: pointer;
 }
-.metronome:hover {
+
+.metronome, .kbMode {
+    background-color: #3f4a5a;
+}
+
+.nav img:hover {
     filter: brightness(1.5);
 }
 
-.metronomeOn {
+.metronomeOn, .kbModeOn {
     background-color: #4D99CC;
 }
 
