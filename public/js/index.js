@@ -12,6 +12,7 @@ let t = 60/bpm/4;
 let totalLength = 32;
 let length = 16;
 let page = 0;
+let pagePlaying = 0;
 
 let p=0;
 let playing = false;
@@ -61,6 +62,7 @@ state = rhythm1;
 let trackName = ["Kick","Snare","Close Hat","Open Hat","Tom","Clap","Conga","Atm"];
 let trackList = [];
 let padList = [[],[],[],[],[],[],[],[]];
+let pointNumberList = [];
 
 let play;
 let stop;
@@ -194,21 +196,40 @@ function finishedLoading(bufferList) {
             timerId = setInterval(function(){
                 playByPoint(bufferList,p);
                 if(p%length==0) {
-                    pageList[page] && pageList[page].classList.remove("pageNow");
-                    page=(p%totalLength)/length;
-                    for(let i=0;i<trackQty;i++){
-                        padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
-                        for(let j=0;j<length;j++){
-                            padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
-                        }
-                        // padList[i][(p-1)%totalLength-page*length] && padList[i][(p-1)%totalLength-page*length].classList.remove("bOn");
+                    if (pageList[pagePlaying]){
+                        autoPage && pageList[page].classList.remove("pageNow");
+                        pageList[pagePlaying].classList.remove("pagePlaying");
                     }
-                    pageList[page] && pageList[page].classList.add("pageNow");
+                    pagePlaying=(p%totalLength)/length;
+
+                    // auto turn page part
+                    if (autoPage) {
+                        page=pagePlaying;
+                        for(let i=0;i<trackQty;i++){
+                            padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
+                            for(let j=0;j<length;j++){
+                                padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
+                            }
+                        }
+                        for(let j=0;j<length;j+=4){
+                            pointNumberList[j].textContent = ((j+page*length)/4)+1;
+                        }
+                    }
+
+                    // change page button
+                    if(pageList[pagePlaying]) {
+                        autoPage && pageList[pagePlaying].classList.add("pageNow");
+                        pageList[pagePlaying].classList.add("pagePlaying");
+                    }
                 }
+
+                // metronome sound
                 if(metronome && p%4==0){
                     playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
                     document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
                 }
+
+                // kb mode
                 if(kbMode && p%4==0){
                     document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
                 }
@@ -225,17 +246,27 @@ function finishedLoading(bufferList) {
     stop = function(e) {
         clearInterval(timerId);
         console.log(playingList);
+
+        // turn off audios
         playingList.forEach(function(item){
             item.gain.value = 0;
         })
+
         playing = false;
+        autoPage = true;
+        pageList[pagePlaying] && pageList[pagePlaying].classList.remove("pagePlaying");
+        
+        // turn off the "On" blocks
         if(Math.floor((p-1)%totalLength/length)==page){
             for (let i=0;i<8;i++){
                 padList[i][(p+length-1)%length].classList.remove("bOn");
                 // padList[i][(p+totalLength-1)%totalLength].classList.remove("bOn");
             }
         }
+
         p=0;
+
+        // set buttons
         document.getElementById("stop").removeEventListener("click",stop);
         document.getElementById("play").textContent = "Beat!";
     }
@@ -244,13 +275,44 @@ function finishedLoading(bufferList) {
         clearInterval(timerId);
         timerId = setInterval(function(){
             playByPoint(bufferList,p);
-            if(metronome && p%4==0){
-                playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
-                document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
-            }
-            if(kbMode && p%4==0){
-                document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
-            }
+                if(p%length==0) {
+                    if (pageList[pagePlaying]){
+                        autoPage && pageList[page].classList.remove("pageNow");
+                        pageList[pagePlaying].classList.remove("pagePlaying");
+                    }
+                    pagePlaying=(p%totalLength)/length;
+
+                    // auto turn page part
+                    if (autoPage) {
+                        page=pagePlaying;
+                        for(let i=0;i<trackQty;i++){
+                            padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
+                            for(let j=0;j<length;j++){
+                                padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
+                            }
+                        }
+                        for(let j=0;j<length;j+=4){
+                            pointNumberList[j].textContent = ((j+page*length)/4)+1;
+                        }
+                    }
+
+                    // change page button
+                    if(pageList[pagePlaying]) {
+                        autoPage && pageList[pagePlaying].classList.add("pageNow");
+                        pageList[pagePlaying].classList.add("pagePlaying");
+                    }
+                }
+
+                // metronome sound
+                if(metronome && p%4==0){
+                    playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
+                    document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
+                }
+
+                // kb mode
+                if(kbMode && p%4==0){
+                    document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
+                }
             p++;
         },15000/bpm);
     }
@@ -259,10 +321,10 @@ function finishedLoading(bufferList) {
         // playing && stop();
         for(let i=0;i<trackQty;i++){
             for(let j=0;j<totalLength;j++){
-                if(state[i][j]){
-                    state[i][j] = 0;
-                    padList[i][j].classList.remove("b"+i);
-                }
+                state[i][j] = 0;
+            }
+            for(let j=0;j<length;j++){
+                padList[i][j].classList.remove("b"+i);
             }
         }
     }
@@ -340,7 +402,7 @@ function finishedLoading(bufferList) {
         playSound(soundList[i],context.currentTime,volume[i]);
         if(playing && kbMode) {
             state[i][(p+totalLength-1)%totalLength] = true;
-            padList[i][(p+totalLength-1)%totalLength].classList.toggle("b"+i,true);
+            padList[i][(p+totalLength-1)%totalLength-page*length].classList.toggle("b"+i,true);
         }
     }
     let toggleTrackSwitch = function(i){
@@ -628,7 +690,8 @@ function createPad(){
     }
     padDiv.appendChild(cE("div"));
     for(let j=0;j<length;j++){
-        padDiv.appendChild(cE("div",j%4?"pointNumber":"pointNumberP",j%4?(j%4)+1:(j/4)+1));
+        pointNumberList[j] = cE("div",j%4?"pointNumber":"pointNumberP",j%4?(j%4)+1:((j+page*length)/4)+1);
+        padDiv.appendChild(pointNumberList[j]);
     }
 
     function cancelSelect(){
@@ -650,6 +713,7 @@ function createPageButton() {
         pageList[m] = cE("div","pageButton");
         m==page && pageList[m].classList.add("pageNow");
         pageList[m].addEventListener("click",function(){
+            if(playing) {autoPage = false;}
             if(Math.floor((p-1)%totalLength/length)==page){
                 console.log(p,p%totalLength,page);
                 for(let i=0;i<trackQty;i++){
@@ -659,11 +723,14 @@ function createPageButton() {
             page=m;
             for(let i=0;i<trackQty;i++){
                 for(let j=0;j<length;j++){
-                    padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
+                    padList[i][j].classList.toggle("b"+i,state[i][j+page*length]);
                 }
                 if(Math.floor((p-1)%totalLength/length)==page){
                     padList[i][(p-1)%length].classList.add("bOn");
                 }
+            }
+            for(let j=0;j<length;j+=4){
+                pointNumberList[j].textContent = ((j+page*length)/4)+1;
             }
             for(let n=0;n<totalPage;n++){
                 pageList[n].classList.toggle("pageNow",n==m);

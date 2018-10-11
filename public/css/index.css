@@ -384,6 +384,7 @@ section {
 /* page button */
 .pageDiv {
     display: flex;
+    align-items: center;
 }
 
 .pageButton {
@@ -399,7 +400,7 @@ section {
 }
 
 .pagePlaying {
-    border: solid 3px white;
+    border: solid 1px white;
 }
 
 /* track setting */
