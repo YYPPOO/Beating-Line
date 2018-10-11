@@ -15,6 +15,7 @@ let page = 0;
 
 let p=0;
 let playing = false;
+let autoPage = true;
 let metronome = false;
 let kbMode = false;
 
@@ -174,9 +175,9 @@ function playByPoint(soundList,p){
     for (let i=0;i<8;i++){
         if(trackSwitch[i]) {
             state[i][p%totalLength] && playSound(soundList[i],startTime+0.05,volume[i]);
-            padList[i][p%totalLength-page*length].classList.add("bOn");
+            padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
         }
-        padList[i][(p+totalLength-1)%totalLength].classList.remove("bOn");
+        padList[i][(p+totalLength-1)%totalLength-page*length] && padList[i][(p+totalLength-1)%totalLength-page*length].classList.remove("bOn");
     }
 }
 
@@ -192,7 +193,18 @@ function finishedLoading(bufferList) {
         } else {
             timerId = setInterval(function(){
                 playByPoint(bufferList,p);
-                if(p%length==0)
+                if(p%length==0) {
+                    pageList[page] && pageList[page].classList.remove("pageNow");
+                    page=(p%totalLength)/length;
+                    for(let i=0;i<trackQty;i++){
+                        padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
+                        for(let j=0;j<length;j++){
+                            padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
+                        }
+                        // padList[i][(p-1)%totalLength-page*length] && padList[i][(p-1)%totalLength-page*length].classList.remove("bOn");
+                    }
+                    pageList[page] && pageList[page].classList.add("pageNow");
+                }
                 if(metronome && p%4==0){
                     playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
                     document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
@@ -217,8 +229,11 @@ function finishedLoading(bufferList) {
             item.gain.value = 0;
         })
         playing = false;
-        for (let i=0;i<8;i++){
-            padList[i][(p+totalLength-1)%totalLength].classList.remove("bOn");
+        if(Math.floor((p-1)%totalLength/length)==page){
+            for (let i=0;i<8;i++){
+                padList[i][(p+length-1)%length].classList.remove("bOn");
+                // padList[i][(p+totalLength-1)%totalLength].classList.remove("bOn");
+            }
         }
         p=0;
         document.getElementById("stop").removeEventListener("click",stop);
@@ -584,7 +599,7 @@ BufferLoader.prototype.load = function() {
 
 // create pad --------------------------------------------------------------
 function createPad(){
-
+    page=Math.floor((p%totalLength)/length);
     let padDiv = document.getElementById("padDiv");
         padDiv.style = "grid-template-columns: 40px repeat("+length+",30px);"
     for(let i=0;i<trackQty;i++){
@@ -635,10 +650,19 @@ function createPageButton() {
         pageList[m] = cE("div","pageButton");
         m==page && pageList[m].classList.add("pageNow");
         pageList[m].addEventListener("click",function(){
+            if(Math.floor((p-1)%totalLength/length)==page){
+                console.log(p,p%totalLength,page);
+                for(let i=0;i<trackQty;i++){
+                    padList[i][(p+length-1)%length].classList.remove("bOn");
+                }
+            }
             page=m;
             for(let i=0;i<trackQty;i++){
                 for(let j=0;j<length;j++){
                     padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
+                }
+                if(Math.floor((p-1)%totalLength/length)==page){
+                    padList[i][(p-1)%length].classList.add("bOn");
                 }
             }
             for(let n=0;n<totalPage;n++){
