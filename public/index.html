@@ -26,8 +26,9 @@
     </header>
     <nav>
         <div class="nav">
+            <img class="kbMode" id="kbMode" src="img/kbMode0.svg" />
             <img class="metronome" id="metronome" src="img/metronome.svg" />
-            <input type="number" min="30" max="240" step="5" id="bpm">
+            <input type="number" min="30" max="240" step="5" id="bpm" list="bpmList"/>
             <!-- <select name="bpm">
                 <option value="60">60</option>
                 <option value="80">80</option>
@@ -35,14 +36,14 @@
                 <option value="120">120</option>
                 <option value="150">150</option>
             </select> -->
-            <span>Volume</span>
-            <input type="range" value="1" min="0" max="1" step="any" id="totalVolume">
+            <!-- <span>Volume</span> -->
+            <img class="volume volumeOn" id="mute" src="img/volume3.svg" />
+            <input type="range" value="1" min="0" max="0.999" step="any" id="totalVolume">
         </div>
         <div class="nav">
             <button class="play" id="play">Beat !</button>
             <button class="stop" id="stop">Stop</button>
             <button class="clear" id="clear">Clear</button>
-            <img class="kbMode" id="kbMode" src="img/kbMode0.svg" />
         </div>
         <!-- <div class="nav">
             <label class="switch" id="metroSwitch">
@@ -67,6 +68,7 @@
     <section>
         <div class="visual"></div>
         <div class="padDiv" id="padDiv"></div>
+        <div class="pageDiv" id="pageDiv"></div>
         <div class="trackSettingListDiv" id="trackSettingListDiv"></div>
     </section>
     <div>

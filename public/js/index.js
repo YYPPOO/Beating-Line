@@ -1,29 +1,37 @@
 // states --------------------------------------------------------------------------
 let context;
 let bufferLoader;
+
 let bpm = 120;
 let totalVolume = 1;
-let playingList = [];
-let lastSelect;
-let timerId;
 
-let t = 60/bpm/4;
-let p=0;
-let length = 16;
 let trackQty = 8;
 let bit = 16;
+let t = 60/bpm/4;
+
+let totalLength = 32;
+let length = 16;
+let page = 0;
+
+let p=0;
 let playing = false;
 let metronome = false;
 let kbMode = false;
 
+let playingList = [];
 let soundList = [];
+let pageList = [];
+
+let lastSelect;
+let timerId;
 
 let volume = [1,1,1,1,1,1,1,1];
 let trackSwitch = [true,true,true,true,true,true,true,true];
+
 let state = [];
 for(let i=0;i<trackQty;i++) {
     state[i] = [];
-    for(let j=0;j<length;j++) {
+    for(let j=0;j<totalLength;j++) {
         state[i].push(0);
     }
 }
@@ -53,24 +61,29 @@ let trackName = ["Kick","Snare","Close Hat","Open Hat","Tom","Clap","Conga","Atm
 let trackList = [];
 let padList = [[],[],[],[],[],[],[],[]];
 
+let play;
+let stop;
+
 function decideLength(media) {
     if(mediaQuery[0].matches) {
         length = 32;
         console.log("A",length);
         removePad();
-        createPad(soundList);
+        createPad();
         return;
     } else if(mediaQuery[1].matches) {
         length = 16;
         console.log("B",length);
         removePad();
-        createPad(soundList);
+        createPad();
+        createPageButton();
         return;
     } else {
         length = 8;
         console.log("C",length);
         removePad();
-        createPad(soundList);
+        createPad();
+        createPageButton();
         if(mediaQuery[2].matches) {
             document.getElementById("padDiv").style = "grid-template-columns: 30px repeat("+length+",30px);"
         }
@@ -160,10 +173,10 @@ function playByPoint(soundList,p){
     let startTime = context.currentTime;
     for (let i=0;i<8;i++){
         if(trackSwitch[i]) {
-            state[i][p%length] && playSound(soundList[i],startTime+0.05,volume[i]);
-            padList[i][p%length].classList.add("bOn");
+            state[i][p%totalLength] && playSound(soundList[i],startTime+0.05,volume[i]);
+            padList[i][p%totalLength-page*length].classList.add("bOn");
         }
-        padList[i][(p+length-1)%length].classList.remove("bOn");
+        padList[i][(p+totalLength-1)%totalLength].classList.remove("bOn");
     }
 }
 
@@ -171,7 +184,7 @@ function finishedLoading(bufferList) {
 
     soundList = bufferList;
     
-    let play = function(e) {
+    play = function(e) {
         if(playing) {
             clearInterval(timerId);
             playing = false;
@@ -179,6 +192,7 @@ function finishedLoading(bufferList) {
         } else {
             timerId = setInterval(function(){
                 playByPoint(bufferList,p);
+                if(p%length==0)
                 if(metronome && p%4==0){
                     playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
                     document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
@@ -196,7 +210,7 @@ function finishedLoading(bufferList) {
         }
     }
 
-    let stop = function(e) {
+    stop = function(e) {
         clearInterval(timerId);
         console.log(playingList);
         playingList.forEach(function(item){
@@ -204,7 +218,7 @@ function finishedLoading(bufferList) {
         })
         playing = false;
         for (let i=0;i<8;i++){
-            padList[i][(p+length-1)%length].classList.remove("bOn");
+            padList[i][(p+totalLength-1)%totalLength].classList.remove("bOn");
         }
         p=0;
         document.getElementById("stop").removeEventListener("click",stop);
@@ -229,7 +243,7 @@ function finishedLoading(bufferList) {
     let clear = function() {
         // playing && stop();
         for(let i=0;i<trackQty;i++){
-            for(let j=0;j<length;j++){
+            for(let j=0;j<totalLength;j++){
                 if(state[i][j]){
                     state[i][j] = 0;
                     padList[i][j].classList.remove("b"+i);
@@ -290,19 +304,28 @@ function finishedLoading(bufferList) {
         playing && reset();
         localStorage.setItem("bpm",bpm);
     });
-    
+
+    // document.getElementById("mute").
+    document.getElementById("mute").addEventListener("click",function(){
+        document.getElementById("totalVolume").value = Number(!totalVolume);
+        totalVolume = Number(!totalVolume);
+        this.classList.toggle("volumeOn",!!totalVolume);
+        this.src = "img/volume"+Math.round(totalVolume)*3+".svg";
+    })
     document.getElementById("totalVolume").addEventListener("change",function(){
         totalVolume = this.value;
         playingList.forEach(function(item){
             item.gain.value = totalVolume;
         })
+        document.getElementById("mute").src = "img/volume"+Math.floor(this.value*4)+".svg";
+        document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
     });
 
     let keyPlay = function(i){
         playSound(soundList[i],context.currentTime,volume[i]);
         if(playing && kbMode) {
-            state[i][(p+length-1)%length] = true;
-            padList[i][(p+length-1)%length].classList.toggle("b"+i,true);
+            state[i][(p+totalLength-1)%totalLength] = true;
+            padList[i][(p+totalLength-1)%totalLength].classList.toggle("b"+i,true);
         }
     }
     let toggleTrackSwitch = function(i){
@@ -317,8 +340,10 @@ function finishedLoading(bufferList) {
             return;
         }
         console.log(e.keyCode);
+        e.preventDefault();
         switch(e.keyCode) {
             case 32: //" "
+                document.activeElement.blur();
                 play();
                 break;
             case 27: //esc
@@ -558,11 +583,11 @@ BufferLoader.prototype.load = function() {
 }
 
 // create pad --------------------------------------------------------------
-function createPad(soundList){
+function createPad(){
 
     let padDiv = document.getElementById("padDiv");
         padDiv.style = "grid-template-columns: 40px repeat("+length+",30px);"
-    for(let i=0;i<8;i++){
+    for(let i=0;i<trackQty;i++){
         trackList[i] = cE("div","track");
         trackNumber = cE("div","trackNumber",i+1);
         trackIcon = cE("img","trackIcon","","src","img/track"+i+".svg")
@@ -576,13 +601,13 @@ function createPad(soundList){
         for(let j=0;j<length;j++){
             padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
             padList[i][j].addEventListener("click",function(){
-                state[i][j] = !state[i][j];
-                state[i][j] && !playing && playSound(soundList[i],context.currentTime,volume[i]);
+                state[i][j+page*length] = !state[i][j+page*length];
+                state[i][j+page*length] && !playing && playSound(soundList[i],context.currentTime,volume[i]);
                 padList[i][j].classList.toggle("b"+i);
                 lastSelect==i || handleSelect(i);
                 lastSelect = i;
             })
-            state[i][j] && padList[i][j].classList.add("b"+i);
+            state[i][j+page*length] && padList[i][j].classList.add("b"+i);
             padDiv.appendChild(padList[i][j]);
         }
     }
@@ -590,8 +615,6 @@ function createPad(soundList){
     for(let j=0;j<length;j++){
         padDiv.appendChild(cE("div",j%4?"pointNumber":"pointNumberP",j%4?(j%4)+1:(j/4)+1));
     }
-
-
 
     function cancelSelect(){
         console.log("body clicked");
@@ -604,6 +627,26 @@ function createPad(soundList){
 
     document.getElementById("background").removeEventListener("click",cancelSelect);
     document.getElementById("background").addEventListener("click",cancelSelect);
+}
+
+function createPageButton() {
+    let totalPage = totalLength/length;
+    for(let m=0;m<totalPage;m++) {
+        pageList[m] = cE("div","pageButton");
+        m==page && pageList[m].classList.add("pageNow");
+        pageList[m].addEventListener("click",function(){
+            page=m;
+            for(let i=0;i<trackQty;i++){
+                for(let j=0;j<length;j++){
+                    padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
+                }
+            }
+            for(let n=0;n<totalPage;n++){
+                pageList[n].classList.toggle("pageNow",n==m);
+            }
+        })
+        document.getElementById("pageDiv").appendChild(pageList[m]);
+    }
 }
 
 function handleSelect(s){
@@ -624,6 +667,10 @@ function removePad() {
     let padDiv = document.getElementById("padDiv");
     while (padDiv.hasChildNodes()) {
         padDiv.removeChild(padDiv.firstChild);
+    }
+    let pageDiv = document.getElementById("pageDiv");
+    while (pageDiv.hasChildNodes()) {
+        pageDiv.removeChild(pageDiv.firstChild);
     }
 }
 
