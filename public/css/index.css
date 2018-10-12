@@ -296,10 +296,26 @@ section {
 
 canvas {
     position: absolute;
-    transform: translateX(22px);
+    transform: translateX(22.5px);
     border-radius: 5px;
     z-index: -1;
     opacity: 1;
+}
+
+/* @media (max-width:1200px) and (min-width:650px) {
+    canvas {
+        transform: initial;
+    }
+}
+@media (max-width:650px) {
+    canvas {
+        transform: initial;
+    }
+}*/
+@media (max-width:400px) {
+    canvas {
+        transform: translateX(16px);
+    }
 }
 
 .padDiv {
