@@ -1,6 +1,7 @@
 // states --------------------------------------------------------------------------
 let context;
 let bufferLoader;
+let analyser;
 
 let bpm = 120;
 let totalVolume = 1;
@@ -113,6 +114,11 @@ function init() {
     // Fix up prefixing
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     context = new AudioContext();
+    analyser = context.createAnalyser();
+    analyser.fftSize = 512;
+    let bufferLength = analyser.fftSize;
+    let dataArray = new Uint8Array(bufferLength);
+    analyser.getByteTimeDomainData(dataArray);
 
     bufferLoader = new BufferLoader(
         context,
@@ -170,6 +176,45 @@ function init() {
         alert("The Feature Is Comming Soon.");
     });
 
+
+    let canvas = document.getElementById("visual");
+    let canvasCtx = canvas.getContext("2d");
+    // draw an oscilloscope of the current audio source
+    function draw() {
+
+        drawVisual = requestAnimationFrame(draw);
+
+        analyser.getByteTimeDomainData(dataArray);
+
+
+        canvasCtx.fillStyle = "#0f1a2a";
+        // canvasCtx.fillStyle = "black";
+        canvasCtx.fillRect(0, 0, 1115, 275);
+
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeStyle = "#4d99cc";
+
+        canvasCtx.beginPath();
+
+        let sliceWidth = 1115 * 1.0 / bufferLength;
+        let x = 0;
+
+        for(let i=0;i<bufferLength;i++) {
+            let v = dataArray[i] / 128.0;
+            let y = v * 275/2;
+            if(i === 0) {
+                canvasCtx.moveTo(x, y);
+            } else {
+                canvasCtx.lineTo(x, y);
+            }
+            x += sliceWidth;
+        }
+
+        canvasCtx.lineTo(canvas.width, canvas.height/2);
+        canvasCtx.stroke();
+    };
+
+    draw();
 }
 
 function playByPoint(soundList,p){
@@ -575,11 +620,12 @@ function finishedLoading(bufferList) {
 function playSound(buffer,time,volume) {
     let source = context.createBufferSource(); // creates a sound source
     let gain = context.createGain();
+
     source.buffer = buffer;                    // tell the source which sound to play
     source.connect(gain);       // connect the source to the context's destination (the speakers)
-    gain.connect(context.destination);
-    // gain.gain.value = document.getElementById("totalVolume").value;
+    gain.connect(analyser);
     gain.gain.value = totalVolume*volume;
+    analyser.connect(context.destination);
     source.start(time);                           // play the source now
     // source.stop(time+source.buffer.duration);
     // console.log(gain);

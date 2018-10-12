@@ -291,6 +291,15 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
+}
+
+canvas {
+    position: absolute;
+    transform: translateX(22px);
+    border-radius: 5px;
+    z-index: -1;
+    opacity: 1;
 }
 
 .padDiv {
@@ -300,6 +309,7 @@ section {
     grid-gap: 5px 5px;
     align-items: center;
     margin: 0 10px;
+    opacity: 0.9;
 }
 
 .track {
