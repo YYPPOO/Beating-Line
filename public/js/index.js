@@ -2,6 +2,7 @@
 let context;
 let bufferLoader;
 let analyser;
+let analyserFilter;
 let drawVisualId;
 
 let bpm = 120;
@@ -239,6 +240,7 @@ function finishedLoading(bufferList) {
                 p++;
             },15000/bpm);
             playing = true;
+            draw();
             document.getElementById("stop").removeEventListener("click",stop);
             document.getElementById("stop").addEventListener("click",stop);
             document.getElementById("play").textContent = "Pause";
@@ -252,7 +254,7 @@ function finishedLoading(bufferList) {
 
         // turn off audios
         playingList.forEach(function(item){
-            item.gain.value = 0;
+            item.gain.setTargetAtTime(0, context.currentTime,0.5);
         })
 
         playing = false;
@@ -392,7 +394,7 @@ function finishedLoading(bufferList) {
         this.classList.toggle("volumeOn",!!totalVolume);
         this.src = "img/volume"+Math.round(totalVolume)*3+".svg";
     })
-    document.getElementById("totalVolume").addEventListener("change",function(){
+    document.getElementById("totalVolume").addEventListener("input",function(){
         totalVolume = this.value;
         playingList.forEach(function(item){
             item.gain.value = totalVolume;
@@ -402,7 +404,7 @@ function finishedLoading(bufferList) {
     });
 
 
-    
+
     let keyPlay = function(i){
         playSound(soundList[i],context.currentTime,volume[i]);
         if(playing && kbMode) {
@@ -560,12 +562,19 @@ function finishedLoading(bufferList) {
     }
 
 
-    // beating line
+    // beating line setting
     analyser = context.createAnalyser();
     analyser.fftSize = 256;
+    analyser.maxDecibels = -90;
+    analyser.minDecibels = -100;
+    analyser.smoothingTimeConstant = 0;
+    analyserFilter = context.createBiquadFilter();
+    analyserFilter.type = "lowpass";
+    analyserFilter.frequency.value = 2000;
+    analyserFilter.connect(analyser);
     let bufferLength = analyser.fftSize;
     let dataArray = new Uint8Array(bufferLength);
-    analyser.getByteTimeDomainData(dataArray);
+    // analyser.getByteTimeDomainData(dataArray);
     
     let canvas = document.getElementById("visual");
     let canvasCtx = canvas.getContext("2d");
@@ -587,30 +596,36 @@ function finishedLoading(bufferList) {
         analyser.getByteTimeDomainData(dataArray);
 
 
-        canvasCtx.fillStyle = "#0f1a2a";
+        canvasCtx.fillStyle = "rgba(15,26,42,0.1)";
+        // canvasCtx.fillStyle = "#0f1a2a";
         // canvasCtx.fillStyle = "black";
         canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-        canvasCtx.lineWidth = 2;
-        canvasCtx.strokeStyle = "#4d99cc";
-
+        //"#4d99cc";
+        
         canvasCtx.beginPath();
-
+        
         let sliceWidth = canvas.width * 1.0 / bufferLength;
-        let x = 0;
-        canvasCtx.moveTo(x, dataArray[0]/128.0*canvas.height/2);
-
-        for(let i=1;i<bufferLength;i++) {
+        let x = sliceWidth/2;
+        // canvasCtx.moveTo(x, dataArray[0]/128.0*canvas.height/2);
+        
+        let amp=0
+        for(let i=0;i<bufferLength;i++) {
             let v = dataArray[i] / 128.0;
             let y = v * canvas.height/2;
+            // canvasCtx.moveTo(x, canvas.height/2);
             canvasCtx.lineTo(x, y);
             x += sliceWidth;
+            amp+=v;
         }
 
-        canvasCtx.lineTo(canvas.width, canvas.height/2);
+        canvasCtx.lineWidth = 3;
+        // canvasCtx.strokeStyle = "rgba(77,153,204,"+(1-Math.pow(((amp-bufferLength)/256-1),10))+")"
+        canvasCtx.strokeStyle = "rgba(77,153,204,"+((amp==bufferLength?0:1))+")"
+
+        // canvasCtx.lineTo(canvas.width, canvas.height/2);
         canvasCtx.stroke();
     };
-    draw();
 
 }
 
@@ -621,9 +636,10 @@ function playSound(buffer,time,volume) {
 
     source.buffer = buffer;                    // tell the source which sound to play
     source.connect(gain);       // connect the source to the context's destination (the speakers)
-    gain.connect(analyser);
+    gain.connect(analyserFilter);
     gain.gain.value = totalVolume*volume;
-    analyser.connect(context.destination);
+    gain.connect(context.destination);
+    // analyserFilter.connect(context.destination);
     source.start(time);                           // play the source now
     // source.stop(time+source.buffer.duration);
     // console.log(gain);
@@ -635,7 +651,7 @@ function playSound(buffer,time,volume) {
         playingList.splice(playingList.indexOf(gain),1);
     };
 
-                                                // note: on older systems, may have to use deprecated noteOn(time);
+    // note: on older systems, may have to use deprecated noteOn(time);
 }
 // let dogBarkingBuffer = null;
 // // Fix up prefixing
@@ -844,7 +860,7 @@ function createTrackSetting() {
         trackSetVolume.min = 0;
         trackSetVolume.step = "any";
         trackSetVolume.value = volume[i];
-        trackSetVolume.addEventListener("change",function(){
+        trackSetVolume.addEventListener("input",function(){
             volume[i] = this.value;
         })
         trackSetDiv.append(trackSetNum,trackSetIcon,trackSetSwitch,trackSetVolumeKey,trackSetVolume);
