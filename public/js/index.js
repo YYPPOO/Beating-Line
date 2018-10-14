@@ -22,6 +22,7 @@ let playing = false;
 let autoPage = true;
 let metronome = false;
 let kbMode = false;
+let visualMode = 0;
 
 let playingList = [];
 let soundList = [];
@@ -240,7 +241,7 @@ function finishedLoading(bufferList) {
                 p++;
             },15000/bpm);
             playing = true;
-            draw();
+            // draw();
             document.getElementById("stop").removeEventListener("click",stop);
             document.getElementById("stop").addEventListener("click",stop);
             document.getElementById("play").textContent = "Pause";
@@ -372,6 +373,7 @@ function finishedLoading(bufferList) {
     document.getElementById("play").addEventListener("click",play);
     // document.getElementById("clear").addEventListener("click",clear);
     document.getElementById("clear").addEventListener("click",function(){alert("Clear the Beat?!",false,clear)});
+    
     document.getElementById("metronome").addEventListener("click",function(){
         metronome = !metronome;
         this.classList.toggle("metronomeOn",metronome);
@@ -402,6 +404,10 @@ function finishedLoading(bufferList) {
         document.getElementById("mute").src = "img/volume"+Math.floor(this.value*4)+".svg";
         document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
     });
+    document.getElementById("visualSwitch").addEventListener("click",function(){
+        visualMode = (visualMode+1)%3;
+        this.classList.toggle("visualSwitchOn",visualMode);
+    })
 
 
 
@@ -446,6 +452,10 @@ function finishedLoading(bufferList) {
             case 48: //0
                 kbMode = !kbMode;
                 document.getElementById("kbMode").classList.toggle("kbModeOn",kbMode);
+                break;
+            case 192: //`
+                visualMode = (visualMode+1)%3;
+                document.getElementById("visualSwitch").classList.toggle("visualSwitchOn",visualMode);
                 break;
             case 49: //1
                 toggleTrackSwitch(0);
@@ -507,37 +517,38 @@ function finishedLoading(bufferList) {
             case 77: //m
                 keyPlay(2);
                 break;
-            case 65: //a
-                keyPlay(3);
-                break;
             case 90: //z
-                keyPlay(3);
-                break;
-            case 76: //l
                 keyPlay(3);
                 break;
             case 188: //,
                 keyPlay(3);
                 break;
             case 71: //g
-                keyPlay(4);
+                keyPlay(5);
                 break;
             case 84: //t
                 keyPlay(4);
                 break;
-            case 69: //e
-                keyPlay(5);
-                break;
             case 82: //r
-                keyPlay(5);
+                keyPlay(4);
                 break;
             case 89: //y
+                keyPlay(4);
+                break;
+            case 65: //a
                 keyPlay(5);
                 break;
-            case 85: //u
+            case 76: //l
                 keyPlay(5);
                 break;
             case 81: //q
+                keyPlay(5);
+                break;
+            case 69: //e
+                keyPlay(6);
+                break;
+
+            case 85: //u
                 keyPlay(6);
                 break;
             case 87: //w
@@ -547,17 +558,17 @@ function finishedLoading(bufferList) {
                 keyPlay(6);
                 break;
             case 79: //o
-                keyPlay(6);
+                keyPlay(7);
                 break;
             case 80: //p
                 keyPlay(7);
                 break;
-            case 186: //;
-                keyPlay(7);
-                break;
-            case 190: //.
-                keyPlay(7);
-                break;
+            // case 186: //;
+            //     keyPlay(7);
+            //     break;
+            // case 190: //.
+            //     keyPlay(7);
+            //     break;
         }
     }
 
@@ -567,10 +578,11 @@ function finishedLoading(bufferList) {
     analyser.fftSize = 256;
     analyser.maxDecibels = -90;
     analyser.minDecibels = -100;
-    analyser.smoothingTimeConstant = 0;
+    analyser.smoothingTimeConstant = 1;
     analyserFilter = context.createBiquadFilter();
     analyserFilter.type = "lowpass";
     analyserFilter.frequency.value = 2000;
+    // analyserFilter.Q.value = 0.1;
     analyserFilter.connect(analyser);
     let bufferLength = analyser.fftSize;
     let dataArray = new Uint8Array(bufferLength);
@@ -580,6 +592,12 @@ function finishedLoading(bufferList) {
     let canvasCtx = canvas.getContext("2d");
     // draw an oscilloscope of the current audio source
     function draw() {
+        drawVisualId = requestAnimationFrame(draw);
+        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // if(!visualMode){
+        //     return;
+        // }
         if(mediaQuery[0].matches) {
             canvas.width = 1115;
         } else if(mediaQuery[1].matches) {
@@ -591,15 +609,12 @@ function finishedLoading(bufferList) {
         }
         canvas.height = mediaQuery[2].matches?254:275;
 
-        drawVisualId = requestAnimationFrame(draw);
-
         analyser.getByteTimeDomainData(dataArray);
 
 
         canvasCtx.fillStyle = "rgba(15,26,42,0.1)";
         // canvasCtx.fillStyle = "#0f1a2a";
         // canvasCtx.fillStyle = "black";
-        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
         //"#4d99cc";
         
@@ -613,7 +628,7 @@ function finishedLoading(bufferList) {
         for(let i=0;i<bufferLength;i++) {
             let v = dataArray[i] / 128.0;
             let y = v * canvas.height/2;
-            // canvasCtx.moveTo(x, canvas.height/2);
+            visualMode==2 && canvasCtx.moveTo(x, canvas.height/2);
             canvasCtx.lineTo(x, y);
             x += sliceWidth;
             amp+=v;
@@ -621,12 +636,12 @@ function finishedLoading(bufferList) {
 
         canvasCtx.lineWidth = 3;
         // canvasCtx.strokeStyle = "rgba(77,153,204,"+(1-Math.pow(((amp-bufferLength)/256-1),10))+")"
-        canvasCtx.strokeStyle = "rgba(77,153,204,"+((amp==bufferLength?0:1))+")"
+        canvasCtx.strokeStyle = "rgba(77,153,204,"+(visualMode && amp!==bufferLength?1:0)+")"
 
         // canvasCtx.lineTo(canvas.width, canvas.height/2);
         canvasCtx.stroke();
     };
-
+    draw();
 }
 
 
@@ -748,7 +763,22 @@ function createPad(){
             padDiv.appendChild(padList[i][j]);
         }
     }
-    padDiv.appendChild(cE("div"));
+
+    let funcBtn = cE("div","funcBtn","▼");
+    let funcDiv = cE("div","funcDiv pointNumberP");
+    let func = [];
+    func[0] = cE("div","funcItem","Keyboard Description");
+    func[1] = cE("div","funcItem","Track Setting");
+    funcDiv.addEventListener("mouseover",function(){
+        func[0].classList.add("funcItemShow");
+        func[1].classList.add("funcItemShow");
+    })
+    funcDiv.addEventListener("mouseout",function(){
+        func[0].classList.remove("funcItemShow");
+        func[1].classList.remove("funcItemShow");
+    })
+    funcDiv.append(funcBtn);
+    padDiv.appendChild(funcDiv);
     for(let j=0;j<length;j++){
         pointNumberList[j] = cE("div",j%4?"pointNumber":"pointNumberP",j%4?(j%4)+1:((j+page*length)/4)+1);
         padDiv.appendChild(pointNumberList[j]);
