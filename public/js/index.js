@@ -406,6 +406,7 @@ function finishedLoading(bufferList) {
     });
     document.getElementById("visualSwitch").addEventListener("click",function(){
         visualMode = (visualMode+1)%3;
+        this.src = "img/visual"+visualMode+".svg";
         this.classList.toggle("visualSwitchOn",visualMode);
     })
 
@@ -454,8 +455,10 @@ function finishedLoading(bufferList) {
                 document.getElementById("kbMode").classList.toggle("kbModeOn",kbMode);
                 break;
             case 192: //`
-                visualMode = (visualMode+1)%3;
-                document.getElementById("visualSwitch").classList.toggle("visualSwitchOn",visualMode);
+                document.getElementById("visualSwitch").click();
+                // visualMode = (visualMode+1)%3;
+                // document.getElementById("visualSwitch").src = "img/visual"+visualMode+".svg";
+                // document.getElementById("visualSwitch").classList.toggle("visualSwitchOn",visualMode);
                 break;
             case 49: //1
                 toggleTrackSwitch(0);
