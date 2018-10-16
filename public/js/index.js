@@ -747,10 +747,21 @@ function createPad(){
         trackNumber = cE("div","trackNumber",i+1);
         trackIcon = cE("img","trackIcon","","src","img/track"+i+".svg")
         trackList[i].append(trackNumber,trackIcon);
-        trackList[i].addEventListener("click",function(){
+        trackList[i].addEventListener("mousedown",function(){
             playSound(soundList[i],context.currentTime,volume[i]);
-            lastSelect==i || handleSelect(i);
-            lastSelect = i;
+            this.classList.add("b"+i);
+            // document.getElementById("trackSetDiv"+s).classList.add("b"+s);
+            for(let j=0;j<length;j++){
+                padList[i][j].classList.add("bSelected");
+            }
+            // lastSelect==i || handleSelect(i);
+            // lastSelect = i;
+        })
+        trackList[i].addEventListener("mouseup",function(){
+            this.classList.remove("b"+i);
+            for(let j=0;j<length;j++){
+                padList[i][j].classList.remove("bSelected");
+            }
         })
         padDiv.appendChild(trackList[i]);
         for(let j=0;j<length;j++){
@@ -807,12 +818,15 @@ function createPageButton() {
         m==page && pageList[m].classList.add("pageNow");
         pageList[m].addEventListener("click",function(){
             if(playing) {autoPage = false;}
+
+            // when page is on playing, remove hit block
             if(Math.floor((p-1)%totalLength/length)==page){
                 console.log(p,p%totalLength,page);
                 for(let i=0;i<trackQty;i++){
                     padList[i][(p+length-1)%length].classList.remove("bOn");
                 }
             }
+
             page=m;
             for(let i=0;i<trackQty;i++){
                 for(let j=0;j<length;j++){
@@ -822,6 +836,8 @@ function createPageButton() {
                     padList[i][(p-1)%length].classList.add("bOn");
                 }
             }
+
+            // change point number
             for(let j=0;j<length;j+=4){
                 pointNumberList[j].textContent = ((j+page*length)/4)+1;
             }
@@ -836,10 +852,10 @@ function createPageButton() {
 function handleSelect(s){
     if(trackList[lastSelect]) {
         trackList[lastSelect].classList.remove("b"+lastSelect);
-        document.getElementById("trackSetDiv"+lastSelect).classList.remove("b"+lastSelect);
+        // document.getElementById("trackSetDiv"+lastSelect).classList.remove("b"+lastSelect);
     }
     trackList[s].classList.add("b"+s);
-    document.getElementById("trackSetDiv"+s).classList.add("b"+s);
+    // document.getElementById("trackSetDiv"+s).classList.add("b"+s);
     for(let j=0;j<length;j++){
         padList[lastSelect] && padList[lastSelect][j].classList.remove("bSelected");
         // if(!state[s][j]) 
@@ -861,13 +877,31 @@ function removePad() {
 function createTrackSetting() {
     for(let i=0;i<8;i++){
         let trackSetDiv = cE("div","trackSetDiv",null,"id","trackSetDiv"+i);
-            trackSetDiv.addEventListener("click",function(){
-                !playing && playSound(soundList[i],context.currentTime,volume[i]);
-                lastSelect==i || handleSelect(i);
-                lastSelect = i;
+            trackSetDiv.addEventListener("mousedown",function(){
+                playSound(soundList[i],context.currentTime,volume[i]);
+                this.classList.add("b"+i);
+                trackList[i].classList.add("b"+i);
+                for(let j=0;j<length;j++){
+                    padList[i][j].classList.add("bSelected");
+                }
             })
-        let trackSetNum = cE("div","trackSetNum",i+1);
-        let trackSetIcon = cE("img","trackSetIcon",null,"src","img/track"+i+".svg");
+            trackSetDiv.addEventListener("mouseup",function(){
+                this.classList.remove("b"+i);
+                trackList[i].classList.remove("b"+i);
+                for(let j=0;j<length;j++){
+                    padList[i][j].classList.remove("bSelected");
+                }
+            })
+        let trackSetVolume = cE("input","trackSetVolume",null,"id","trackSetVolume"+i);
+            trackSetVolume.type = "range";
+            trackSetVolume.max = 1;
+            trackSetVolume.min = 0;
+            trackSetVolume.step = "any";
+            trackSetVolume.value = volume[i];
+            trackSetVolume.addEventListener("input",function(){
+                volume[i] = this.value;
+            })
+
         // let trackSetPlay = cE("div","trackSetPlay");
         //     trackSetPlay.addEventListener("click",function(){
         //         if(this.classList.contains("trackSetStop")) {
@@ -885,18 +919,11 @@ function createTrackSetting() {
                     trackSwitch[i] = this.checked;
                 })
             let trackSetSlider = cE("span","trackSetSlider");
-        trackSetSwitch.append(trackSetCheckBox,trackSetSlider);
-        let trackSetVolumeKey = cE("div","trackSetVolumeKey","Volume");
-        let trackSetVolume = cE("input","trackSetVolume",null,"id","trackSetVolume"+i);
-        trackSetVolume.type = "range";
-        trackSetVolume.max = 1;
-        trackSetVolume.min = 0;
-        trackSetVolume.step = "any";
-        trackSetVolume.value = volume[i];
-        trackSetVolume.addEventListener("input",function(){
-            volume[i] = this.value;
-        })
-        trackSetDiv.append(trackSetNum,trackSetIcon,trackSetSwitch,trackSetVolumeKey,trackSetVolume);
+            trackSetSwitch.append(trackSetCheckBox,trackSetSlider);
+        // let trackSetVolumeKey = cE("div","trackSetVolumeKey","Volume");
+        let trackSetNum = cE("div","trackSetNum",i+1);
+        let trackSetIcon = cE("img","trackSetIcon",null,"src","img/track"+i+".svg");
+        trackSetDiv.append(trackSetVolume,trackSetSwitch,trackSetNum,trackSetIcon);
         document.getElementById("trackSettingListDiv").appendChild(trackSetDiv);
     }
 }
