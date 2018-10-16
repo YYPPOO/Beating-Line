@@ -25,9 +25,17 @@
     </header>
     <nav>
         <div class="nav">
+            <button class="play" id="play"><img id="playImg" src="img/play.svg"/></button>
+            <button class="stop" id="stop"><img src="img/stop.svg"/></button>
+            <img class="volume volumeOn" id="mute" src="img/volume3.svg" />
+            <input type="range" value="1" min="0" max="0.999" step="any" id="totalVolume">
+        </div>
+        <div class="nav">
+            <img class="visualSwitch" id="visualSwitch" src="img/visual0.svg" />
             <img class="kbMode" id="kbMode" src="img/kbMode0.svg" />
             <img class="metronome" id="metronome" src="img/metronome.svg" />
             <input type="number" min="30" max="240" step="5" id="bpm" list="bpmList"/>
+            <img src="img/clear.svg" class="clear" id="clear"/>
             <!-- <select name="bpm">
                 <option value="60">60</option>
                 <option value="80">80</option>
@@ -36,15 +44,8 @@
                 <option value="150">150</option>
             </select> -->
             <!-- <span>Volume</span> -->
-            <img class="volume volumeOn" id="mute" src="img/volume3.svg" />
-            <input type="range" value="1" min="0" max="0.999" step="any" id="totalVolume">
         </div>
-        <div class="nav">
-            <img class="visualSwitch" id="visualSwitch" src="img/visual0.svg" />
-            <button class="play" id="play">Beat&nbsp;!</button>
-            <button class="stop" id="stop">Stop</button>
-            <button class="clear" id="clear">Clear</button>
-        </div>
+
         <!-- <div class="nav">
             <label class="switch" id="metroSwitch">
                 <input type="checkbox">
