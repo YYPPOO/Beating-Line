@@ -223,3 +223,7 @@ footer {
         transform: rotate(0deg);
     }
 }
+
+.privacy {
+    padding: 10px 50px;
+}
