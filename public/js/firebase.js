@@ -244,6 +244,12 @@ function popUpLogIn() {
     let mySignButton =  cE("button","","Sign Up");
         mySignButton.addEventListener("click",signUp);
 
+    let myPolicyDiv = cE("div","policyDiv");
+    let myPolicyCheck = cE("input","policyCheck",null,"type","checkbox");
+    let myPolicyText = cE("span","policyText");
+        myPolicyText.innerHTML = "I accept <a class='logInText' target='_blank' href='terms.html'>Terms</a> and <a class='logInText' target='_blank' href='privacy.html'>Privacy Policy</a>.";
+        myPolicyDiv.append(myPolicyCheck,myPolicyText);
+
     //是那個ＯＲ分格線
 	let myHrDiv = cE("div","divideLine");
 		let myLine =  cE("span","hrLine");
@@ -278,7 +284,7 @@ function popUpLogIn() {
 
     myAlertBtnDiv.append(myFB,myG);
 
-    myLogInDiv.append(myLogoImg,myNameInput,myEmailInput,myPasswordInput/*,mySignInText*/,mySignLink,myForget,mySignButton,myHrDiv,myAlertBtnDiv);
+    myLogInDiv.append(myLogoImg,myNameInput,myEmailInput,myPasswordInput/*,mySignInText*/,mySignLink,myForget,mySignButton,myPolicyDiv,myHrDiv,myAlertBtnDiv);
     myLogIn.appendChild(myLogInDiv);
     // myForget.style.display = "none";
 
