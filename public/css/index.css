@@ -3,6 +3,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 20px;
 }
 
 @media (max-width:650px) {
@@ -15,7 +16,7 @@ nav .nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 10px 0;
+    margin: 10px 10px;
 }
 
 .nav input {
@@ -23,19 +24,24 @@ nav .nav {
     border-radius: 5px;
 }
 
-.nav img {
+.nav>img {
     margin: 5px;
     width: 30px;
     border-radius: 5px;
-    border: solid 1px #777777;
+    /* border: solid 1px #777777; */
     cursor: pointer;
 }
 
-.metronome, .kbMode, .volume, .visualSwitch {
+.nav>button {
+    border: 0px;
+    width: 60px;
+}
+
+.metronome, .kbMode, .volume, .visualSwitch, .clear {
     background-color: #3f4a5a;
 }
 
-.nav img:hover {
+.nav>img:hover, .nav>button:hover {
     filter: brightness(1.5);
 }
 
@@ -51,14 +57,31 @@ nav .nav {
 }
 
 #play {
+    /* background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url(../img/play.svg); */
     background-color: #4D99CC;
 }
+
+.nav>button>img {
+    width: 29px;
+    height: 29px;
+}
+/* 
+#stop {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url(../img/stop.svg);
+} */
 
 input[type="range"] {
     position: relative;
     -webkit-appearance: none;
     -moz-appearance: none;
-    overflow: hidden;     /* 限定範圍 */
+    /* overflow: visible; */
+    overflow: hidden;
     height: 10px;
     width: 100px;
     outline: none;      /* 避免點選會有藍線或虛線 */
@@ -70,10 +93,35 @@ input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 10px;
     height: 10px;
-    background: #ffffff;
-    border-radius: 50%;
+    background: #4D99CC;
+    border-radius: 5px;
     transition: .2s;
+    box-shadow: -50px 0 0 45px #4D99CC;
 }
+
+/* input[type="range"]::-webkit-slider-runnable-track:hover>#thumb{
+    transform: scale(1.5,1.5);
+    background-color: #ffffff;
+} */
+
+input[type="range"]::-webkit-slider-thumb:hover,
+input[type="range"]::-webkit-slider-thumb:active,
+input[type="range"]::-webkit-slider-thumb:focus{
+    background-color: #ffffff !important;
+}
+
+/* input[type="range"]::-webkit-slider-thumb::before {
+    position: absolute;
+    top: 0px;
+    width: 2000%;
+    height: 1000%;
+    left: -197px;
+    background-color: #aaaaaa;
+    content:"-";
+    pointer-events: none;
+    transition:.2s;
+    z-index: 1;
+} */
 
 input[type="range"]::-moz-range-thumb {
     width: 10px;
@@ -82,18 +130,6 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 50%;
     transition: .2s;
     border: none;
-}
-
-input[type="range"]::-webkit-slider-thumb:before {
-    position: absolute;
-    top: 0px;
-    width: 200px;          /* 長度很長沒關係，因為剛剛有用 overflow:hidden 了 */
-    height: 10px;
-    left: -197px;
-    background: #aaaaaa;
-    content:"";
-    pointer-events: none;   /* 讓滑鼠可以點擊穿透偽元素，不然會點不到下面 */
-    transition:.2s;
 }
 
 input[type="range"]::-moz-range-track{
@@ -459,7 +495,7 @@ canvas {
     display: grid;
     grid-template-columns: repeat(8,auto);
     /* grid-template-rows: repeat(2,auto); */
-    grid-gap: 0 30px;
+    grid-gap: 0 35px;
     justify-content: center;
     justify-items: center;
     align-items: center;
@@ -468,17 +504,17 @@ canvas {
 
 .trackSetDiv {
     display: grid;
-    grid-template-columns: 15px 30px;
+    grid-template-columns: 10px 30px;
     grid-template-rows: 100px 30px 30px;
     grid-template-areas:
         "volume volume"
         "switch switch"
         "number icon";
-    grid-gap: 5px 0px;
+    grid-gap: 10px 0px;
     justify-items: center;
     align-items: center;
     border-radius: 5px;
-    padding: 10px;
+    padding: 5px;
     background-color: #333333;
 }
 
@@ -487,9 +523,46 @@ canvas {
 } */
 
 .trackSetVolume {
-    transform: rotateZ(270deg);
     grid-area: volume;
-    justify-self: flex-end;
+    transform: rotate(270deg);
+    transform-origin: center;
+}
+
+/* .trackSetVolume::-webkit-slider-thumb:hover{
+    background-color: #ffffff;
+} */
+
+#trackSetVolume0::-webkit-slider-thumb {
+    background: #41d841;
+    box-shadow: -50px 0 0 45px #41d841;
+}
+#trackSetVolume1::-webkit-slider-thumb {
+    background: #d65d5d;
+    box-shadow: -50px 0 0 45px #d65d5d;
+}
+#trackSetVolume2::-webkit-slider-thumb {
+    background: #e2e228;
+    box-shadow: -50px 0 0 45px #e2e228;
+}
+#trackSetVolume3::-webkit-slider-thumb {
+    background: #ec7310;
+    box-shadow: -50px 0 0 45px #ec7310;
+}
+#trackSetVolume4::-webkit-slider-thumb {
+    background: #87cefa;
+    box-shadow: -50px 0 0 45px #87cefa;
+}
+#trackSetVolume5::-webkit-slider-thumb {
+    background: #58ffff;
+    box-shadow: -50px 0 0 45px #58ffff;
+}
+#trackSetVolume6::-webkit-slider-thumb {
+    background: #f3b272;
+    box-shadow: -50px 0 0 45px #f3b272;
+}
+#trackSetVolume7::-webkit-slider-thumb {
+    background: #ac25ac;
+    box-shadow: -50px 0 0 45px #ac25ac;
 }
 
 /* .trackSetPlay {
@@ -507,12 +580,22 @@ canvas {
 
 .trackSetSwitch {
     grid-area: switch;
+    width: 30px;
+    height: 30px;
+    background-color: #3f4a5a;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+/* .trackSetSwitch {
+    grid-area: switch;
     display: block;
     position: relative;
     width: 44px;
     height: 24px;
-}
+} origin*/
 
+/* 
 .trackSetSwitch input {
     visibility: hidden;
 }
@@ -551,7 +634,7 @@ canvas {
     -webkit-transform: translateX(20px);
     -ms-transform: translateX(20px);
     transform: translateX(20px);
-}
+} */
 
 .trackSetNum {
     grid-area: number;
@@ -566,44 +649,39 @@ canvas {
 
 @media (max-width:1200px) and (min-width:650px) {
     .trackSettingListDiv {
-        grid-template-columns: repeat(2,200px);
-        grid-template-rows: repeat(4,auto);
+        grid-gap: 0 5px;
     }
 }
 @media (max-width:650px) {
     .trackSettingListDiv {
-        grid-template-columns: 320px;
-        grid-template-rows: repeat(8,auto);
-        grid-gap: 5px 0px;
+        /* grid-template-columns: 320px;
+        grid-template-rows: repeat(8,auto); */
+        grid-gap: 0px 5px;
         /* justify-content: flex-start; */
-        margin: 0px auto;
     }
     .trackSetDiv {
-        grid-template-columns: 10px 30px 45px 80px 100px;
-        grid-template-rows: 30px;
+        grid-template-columns: 30px;
+        /* grid-template-rows: 30px; */
         grid-template-areas:
-            "number icon switch volumeKey volume";
-        grid-gap: 0px 5px;
+            "volume"
+            "switch"
+            "icon";
+        padding: 5px 0;
         justify-items: center;
-    }
-}
-@media (max-width:400px) {
-    .trackSettingListDiv {
-        grid-template-columns: 286px;
-    }
-    .trackSetDiv {
-        grid-template-columns: 30px 45px 70px 100px;
-        grid-template-areas:
-            "icon switch volumeKey volume";
-        grid-gap: 0px 5px;
-        justify-items: center;
-    }
-    .trackSetVolumeKey {
-        font-size: 14px;
     }
     .trackSetNum {
         display: none;
     }
+}
+@media (max-width:400px) {
+    .trackSettingListDiv {
+        grid-gap: 0 2px;
+    }
+    .trackSetDiv {
+        grid-template-columns: 30px;
+        justify-items: center;
+    }
+
 }
 
 .b0 {
