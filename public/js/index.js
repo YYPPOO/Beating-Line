@@ -822,9 +822,24 @@ function createPad(){
     funcBtn.addEventListener("click",function(){
         funcItemDiv.classList.toggle("funcItemDivOn");
     })
-    // func[0].addEventListener("click",function(){
-
-    // })
+    func[0].addEventListener("click",function(){
+        funcItemDiv.classList.remove("funcItemDivOn");
+        document.getElementById("trackSettingListDiv").style = "display:grid;";
+        document.getElementById("kbCtrlDiv").style = "display:none;";
+        document.getElementById("drumPadDiv").style = "display:none;";
+    })
+    func[1].addEventListener("click",function(){
+        funcItemDiv.classList.remove("funcItemDivOn");
+        document.getElementById("trackSettingListDiv").style = "display:none;";
+        document.getElementById("kbCtrlDiv").style = "display:flex;";
+        document.getElementById("drumPadDiv").style = "display:none;";
+    })
+    func[2].addEventListener("click",function(){
+        funcItemDiv.classList.remove("funcItemDivOn");
+        document.getElementById("trackSettingListDiv").style = "display:none;";
+        document.getElementById("kbCtrlDiv").style = "display:none;";
+        document.getElementById("drumPadDiv").style = "display:grid;";
+    })
     funcItemDiv.append(func[0],func[1],func[2]);
     funcDiv.append(funcBtn,funcItemDiv);
     padDiv.appendChild(funcDiv);
@@ -1016,7 +1031,8 @@ function createTrackSetting() {
         //         this.classList.toggle("trackSetStop");
         //     });
 
-        let trackSetSwitch = cE("div","trackSetSwitch b"+i,null,"id","trackSwitch"+i);
+        let trackSetSwitch = cE("div","trackSetSwitch",null,"id","trackSwitch"+i);
+            trackSetSwitch.classList.toggle("b"+i,trackSwitch[i]);
             trackSetSwitch.addEventListener("touchstart",function(e){
                 e.preventDefault();
                 e.stopPropagation();
