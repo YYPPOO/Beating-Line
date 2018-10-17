@@ -84,9 +84,9 @@ input[type="range"] {
     overflow: hidden;
     height: 10px;
     width: 100px;
-    outline: none;      /* 避免點選會有藍線或虛線 */
+    outline: transparent;
     border-radius: 5px;
-    border: none;
+    border: transparent;
     background: #3f4a5a;
     touch-action: none;
 }
@@ -108,7 +108,10 @@ input[type="range"]::-webkit-slider-thumb {
 
 input[type="range"]::-webkit-slider-thumb:hover,
 input[type="range"]::-webkit-slider-thumb:active,
-input[type="range"]::-webkit-slider-thumb:focus{
+input[type="range"]::-webkit-slider-thumb:focus,
+input[type="range"]::-moz-range-thumb:hover,
+input[type="range"]::-moz-range-thumb:active,
+input[type="range"]::-moz-range-thumb:focus{
     background-color: #ffffff !important;
 }
 
@@ -158,7 +161,7 @@ input[type="range"]::-moz-focus-outer{
     left: -200px;
     transition: left 0.5s;
     background-color: #3f4a5a;
-    z-index: 20;
+    z-index: 10;
     display: grid;
     grid-template-columns: 120px;
     grid-template-rows: repeat(6,60px) 1fr 20px;
@@ -178,6 +181,7 @@ input[type="range"]::-moz-focus-outer{
     top: 0px;
     left: 0px;
     opacity: 0;
+    z-index: 8;
 }
 
 .sideNav>#closeNav {
@@ -291,7 +295,7 @@ input[type="range"]::-moz-focus-outer{
     border:1px solid #ffffff;
     background-color: #3f4a5a;
     color: white;
-    z-index: 100;
+    z-index: 60;
 }
 
 @media (max-width:375px) {
@@ -336,7 +340,7 @@ canvas {
     position: absolute;
     transform: translateX(22.5px);
     border-radius: 5px;
-    z-index: -1;
+    z-index: 0;
     opacity: 1;
 }
 
@@ -359,11 +363,11 @@ canvas {
 .padDiv {
     display: grid;
     grid-template-columns: 40px repeat(8,30px);
-    grid-template-rows: repeat(9,30px);
+    grid-template-rows: repeat(8,30px) 10px;
     grid-gap: 5px 5px;
     align-items: center;
-    margin: 0 10px;
-    opacity: 0.8;
+    margin: 0 10px 15px;
+    z-index: 2;
 }
 
 .track {
@@ -389,7 +393,7 @@ canvas {
     .padDiv {
         grid-template-columns: repeat(8,30px);
         grid-gap: 2px 2px;
-        margin: 0 auto;
+        margin: 0 auto 15px;
     }
     .trackNumber {
         display: none;
@@ -399,29 +403,40 @@ canvas {
     }
 }
 
+.funcBtn {
+    cursor: pointer;
+    font-size: 12px;
+    padding: 10px 0;
+    margin: 3px 0;
+}
 .funcDiv {
     cursor: pointer;
+    position: relative;
 }
-.funcDiv:hover {
-    transform: scale(1.3,1.3);
-}
-/* .funcDiv::before {
-    content: "▼";
-    text-align: center;
-    font-size: 12px;
-    font-weight: bold;
-    font-family: "arial", "sans-serif";
-    align-self: flex-start;
-    color: #ffffff;
-} */
-.funcItem {
-    /* display: none; */
-    transform: translate(1,0);
+.funcItemDiv {
+    background-color: #333333;
+    border-radius: 5px;
+    text-align: left;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    font-weight: initial;
+    transform: scale(1,0);
+    transform-origin: top;
     transition: all 0.2s;
+    padding: 10px;
 }
-.funcItemShow {
-    /* display: block; */
-    transform: translate(1,1);
+
+.funcItemDivOn{
+    transform: scale(1,1);
+}
+
+.funcItem {
+    background-color: #4D99CC;
+    border: 0px;
+    font-size: 16px;
+    width: 150px;
+    margin-bottom: 10px;
 }
 
 .pointNumber {
@@ -441,12 +456,17 @@ canvas {
     color: #ffffff;
 }
 
+.pointNumberOn {
+    background: #4d99cc;
+}
+
 .b {
     background-color: #333333;
     border-radius: 5px;
     width: 30px;
     height: 30px;
     transition: all 0.1s;
+    opacity: 0.8;
 }
 
 .bp {
@@ -455,6 +475,7 @@ canvas {
     width: 30px;
     height: 30px;
     transition: all 0.1s;
+    opacity: 0.8;
 }
 
 .bOn {
@@ -497,11 +518,12 @@ canvas {
     display: grid;
     grid-template-columns: repeat(8,auto);
     /* grid-template-rows: repeat(2,auto); */
-    grid-gap: 0 35px;
+    grid-gap: 0 15px;
     justify-content: center;
     justify-items: center;
     align-items: center;
     margin-bottom: 20px;
+    touch-action: none;
 }
 
 .trackSetDiv {
@@ -518,7 +540,7 @@ canvas {
     border-radius: 5px;
     padding: 10px 30px 10px 20px;
     background-color: #333333;
-    touch-action: manipulation;
+    touch-action: none;
 }
 
 /* .trackSetVolumeKey {
@@ -535,37 +557,86 @@ canvas {
     background-color: #ffffff;
 } */
 
-#trackSetVolume0::-webkit-slider-thumb {
+#trackSetVolume0::-webkit-slider-thumb{
+    background: #41d841;
+    width: 15px;
+    /* border: 0px; */
+    box-shadow: -50px 0 0 45px #41d841;
+}
+#trackSetVolume0::-moz-range-thumb{
+/* #trackSetVolume0::-moz-range-progress { */
     background: #41d841;
     box-shadow: -50px 0 0 45px #41d841;
 }
 #trackSetVolume1::-webkit-slider-thumb {
     background: #d65d5d;
+    width: 15px;
+    /* border: 0px; */
     box-shadow: -50px 0 0 45px #d65d5d;
+}
+#trackSetVolume1::-moz-range-thumb,
+#trackSetVolume1::-moz-range-progress {
+    background: #d65d5d;
 }
 #trackSetVolume2::-webkit-slider-thumb {
     background: #e2e228;
+    width: 15px;
+    /* border: 0px; */
     box-shadow: -50px 0 0 45px #e2e228;
+}
+#trackSetVolume2::-moz-range-thumb,
+#trackSetVolume2::-moz-range-progress {
+    background: #e2e228;
 }
 #trackSetVolume3::-webkit-slider-thumb {
     background: #ec7310;
+    width: 15px;
+    /* border: 0px; */
     box-shadow: -50px 0 0 45px #ec7310;
+}
+#trackSetVolume3::-moz-range-thumb,
+#trackSetVolume3::-moz-range-progress {
+    background: #ec7310;
 }
 #trackSetVolume4::-webkit-slider-thumb {
     background: #87cefa;
+    width: 15px;
+    /* border: 0px; */
     box-shadow: -50px 0 0 45px #87cefa;
+}
+#trackSetVolume4::-moz-range-thumb,
+#trackSetVolume4::-moz-range-progress {
+    background: #87cefa;
 }
 #trackSetVolume5::-webkit-slider-thumb {
     background: #58ffff;
+    width: 15px;
+    /* border: 0px; */
     box-shadow: -50px 0 0 45px #58ffff;
+}
+#trackSetVolume5::-moz-range-thumb,
+#trackSetVolume5::-moz-range-progress {
+    background: #58ffff;
 }
 #trackSetVolume6::-webkit-slider-thumb {
     background: #f3b272;
+    width: 15px;
+    /* border: 0px; */
     box-shadow: -50px 0 0 45px #f3b272;
+}
+#trackSetVolume6::-moz-range-thumb,
+#trackSetVolume6::-moz-range-progress {
+    background: #f3b272;
 }
 #trackSetVolume7::-webkit-slider-thumb {
     background: #ac25ac;
+    width: 15px;
+    /* border: 0px; */
     box-shadow: -50px 0 0 45px #ac25ac;
+}
+#trackSetVolume7::-moz-range-thumb,
+#trackSetVolume7::-moz-range-progress {
+    background: #ac25ac;
 }
 
 /* .trackSetPlay {
@@ -655,7 +726,7 @@ canvas {
         grid-gap: 0 5px;
     }
     .trackSetDiv {
-        padding: 5px 15px;
+        padding: 5px 15px 5px 5px;
     }
 }
 @media (max-width:650px) {
