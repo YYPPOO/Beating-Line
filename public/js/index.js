@@ -101,7 +101,7 @@ function decideLength(media) {
 let mediaQuery = [
     window.matchMedia("(min-width: 1200px)"),
     window.matchMedia("(min-width: 650px)"),
-    window.matchMedia("(max-width: 400px)")
+    window.matchMedia("(max-width: 375px)")
 ];
 for(let i=0;i<mediaQuery.length;i++){
     mediaQuery[i].addListener(decideLength);
@@ -757,11 +757,30 @@ function createPad(){
             // lastSelect==i || handleSelect(i);
             // lastSelect = i;
         })
+        trackList[i].addEventListener("touchstart",function(e){
+            e.preventDefault();
+            playSound(soundList[i],context.currentTime,volume[i]);
+            this.classList.add("b"+i);
+            // document.getElementById("trackSetDiv"+s).classList.add("b"+s);
+            for(let j=0;j<length;j++){
+                padList[i][j].classList.add("bSelected");
+            }
+            // lastSelect==i || handleSelect(i);
+            // lastSelect = i;
+        })
         trackList[i].addEventListener("mouseup",function(){
             this.classList.remove("b"+i);
             for(let j=0;j<length;j++){
                 padList[i][j].classList.remove("bSelected");
             }
+        })
+        trackList[i].addEventListener("touchend",function(e){
+            e.preventDefault();
+            this.classList.remove("b"+i);
+            for(let j=0;j<length;j++){
+                padList[i][j].classList.remove("bSelected");
+            }
+            
         })
         padDiv.appendChild(trackList[i]);
         for(let j=0;j<length;j++){
@@ -877,28 +896,38 @@ function removePad() {
 function createTrackSetting() {
     for(let i=0;i<8;i++){
         let trackSetDiv = cE("div","trackSetDiv",null,"id","trackSetDiv"+i);
-            trackSetDiv.addEventListener("click",function(){
+            trackSetDiv.addEventListener("mousedown",function(){
                 playSound(soundList[i],context.currentTime,volume[i]);
                 this.classList.add("b"+i);
                 trackList[i].classList.add("b"+i);
                 for(let j=0;j<length;j++){
                     padList[i][j].classList.add("bSelected");
                 }
-                setTimeout(function(){
-                    trackSetDiv.classList.remove("b"+i);
-                    trackList[i].classList.remove("b"+i);
-                    for(let j=0;j<length;j++){
-                        padList[i][j].classList.remove("bSelected");
-                    }
-                },100);
             })
-            // trackSetDiv.addEventListener("mouseup",function(){
-            //     this.classList.remove("b"+i);
-            //     trackList[i].classList.remove("b"+i);
-            //     for(let j=0;j<length;j++){
-            //         padList[i][j].classList.remove("bSelected");
-            //     }
-            // })
+            trackSetDiv.addEventListener("touchstart",function(e){
+                e.preventDefault();
+                playSound(soundList[i],context.currentTime,volume[i]);
+                this.classList.add("b"+i);
+                trackList[i].classList.add("b"+i);
+                for(let j=0;j<length;j++){
+                    padList[i][j].classList.add("bSelected");
+                }
+            })
+            trackSetDiv.addEventListener("mouseup",function(){
+                this.classList.remove("b"+i);
+                trackList[i].classList.remove("b"+i);
+                for(let j=0;j<length;j++){
+                    padList[i][j].classList.remove("bSelected");
+                }
+            })
+            trackSetDiv.addEventListener("touchend",function(e){
+                e.preventDefault();
+                this.classList.remove("b"+i);
+                trackList[i].classList.remove("b"+i);
+                for(let j=0;j<length;j++){
+                    padList[i][j].classList.remove("bSelected");
+                }
+            })
         let trackSetVolume = cE("input","trackSetVolume",null,"id","trackSetVolume"+i);
             trackSetVolume.type = "range";
             trackSetVolume.max = 1;
@@ -907,15 +936,13 @@ function createTrackSetting() {
             trackSetVolume.value = volume[i];
             trackSetVolume.addEventListener("input",function(e){
                 volume[i] = this.value;
-                console.log(this.value);
+                // console.log(this.value);
                 // e.preventDefault();
             })
-            trackSetVolume.addEventListener("click",function(e){
+            trackSetVolume.addEventListener("touchstart",function(e){
                 e.stopPropagation();
+                console.log(this.value);
             })
-            // trackSetVolume.addEventListener("touchstart",function(e){
-            //     console.log(this.value);
-            // })
 
         // let trackSetPlay = cE("div","trackSetPlay");
         //     trackSetPlay.addEventListener("click",function(){
@@ -928,7 +955,14 @@ function createTrackSetting() {
         //     });
 
         let trackSetSwitch = cE("div","trackSetSwitch b"+i,null,"id","trackSwitch"+i);
-            trackSetSwitch.addEventListener("click",function(e){
+            trackSetSwitch.addEventListener("touchstart",function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                trackSwitch[i] = !trackSwitch[i];
+                this.classList.toggle("b"+i,trackSwitch[i]);
+                // e.stopImmediatePropagation();
+            })
+            trackSetSwitch.addEventListener("mousedown",function(e){
                 trackSwitch[i] = !trackSwitch[i];
                 this.classList.toggle("b"+i,trackSwitch[i]);
                 e.stopPropagation();
