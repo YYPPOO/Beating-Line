@@ -3,7 +3,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px;
+    margin: 10px;
 }
 
 @media (max-width:650px) {
@@ -86,7 +86,9 @@ input[type="range"] {
     width: 100px;
     outline: none;      /* 避免點選會有藍線或虛線 */
     border-radius: 5px;
+    border: none;
     background: #3f4a5a;
+    touch-action: none;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -292,7 +294,7 @@ input[type="range"]::-moz-focus-outer{
     z-index: 100;
 }
 
-@media (max-width:400px) {
+@media (max-width:375px) {
     .naming{
         width: 75%;
     }
@@ -348,7 +350,7 @@ canvas {
         transform: initial;
     }
 }*/
-@media (max-width:400px) {
+@media (max-width:375px) {
     canvas {
         transform: translateX(16px);
     }
@@ -383,7 +385,7 @@ canvas {
     font-family: "arial", "sans-serif";
 }
 
-@media (max-width:400px) {
+@media (max-width:375px) {
     .padDiv {
         grid-template-columns: repeat(8,30px);
         grid-gap: 2px 2px;
@@ -505,17 +507,18 @@ canvas {
 .trackSetDiv {
     display: grid;
     grid-template-columns: 10px 30px;
-    grid-template-rows: 100px 30px 30px;
+    grid-template-rows: 120px 30px 50px;
     grid-template-areas:
-        "volume volume"
-        "switch switch"
+        ". volume"
+        ". switch"
         "number icon";
     grid-gap: 10px 0px;
     justify-items: center;
     align-items: center;
     border-radius: 5px;
-    padding: 5px;
+    padding: 10px 30px 10px 20px;
     background-color: #333333;
+    touch-action: manipulation;
 }
 
 /* .trackSetVolumeKey {
@@ -651,6 +654,9 @@ canvas {
     .trackSettingListDiv {
         grid-gap: 0 5px;
     }
+    .trackSetDiv {
+        padding: 5px 15px;
+    }
 }
 @media (max-width:650px) {
     .trackSettingListDiv {
@@ -677,7 +683,7 @@ canvas {
         display: none;
     }
 }
-@media (max-width:400px) {
+@media (max-width:375px) {
     .trackSettingListDiv {
         grid-gap: 2px 2px;
     }
@@ -770,9 +776,9 @@ canvas {
 }
 
 
-@media (min-width:1200px) and (min-height:700px),
-(max-width:1200px) and (min-width:650px) and (min-height:860px),
-(max-width:650px) and (min-height:830px){
+@media (min-width:1200px) and (min-height:800px),
+(max-width:1200px) and (min-width:650px) and (min-height:800px),
+(max-width:650px) and (min-height:800px){
     footer {
         position: absolute;
         bottom: 0;
