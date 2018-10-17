@@ -721,12 +721,44 @@ canvas {
     width: 30px;
 }
 
+.kbCtrlDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.kbImgDiv {
+    width: 750px;
+    height: 300px;
+    background-image: url("../img/kb.svg");
+    background-position: center;
+    background-size: contain;
+    margin: 20px;
+}
+.kbText {
+    display: flex;
+    justify-content: center;
+}
+.kbKey {
+    text-align: start;
+    line-height: 30px;
+    margin: 10px;
+}
+.kbAction {
+    text-align: start;
+    line-height: 30px;
+    margin: 10px;
+}
+
 @media (max-width:1200px) and (min-width:650px) {
     .trackSettingListDiv {
         grid-gap: 0 5px;
     }
     .trackSetDiv {
         padding: 5px 15px 5px 5px;
+    }
+    .kbImgDiv {
+        width: 600px;
+        height: 240px;
     }
 }
 @media (max-width:650px) {
@@ -752,6 +784,10 @@ canvas {
     /* .trackSetVolume */
     .trackSetNum {
         display: none;
+    }
+    .kbImgDiv {
+        width: 320px;
+        height: 128px;
     }
 }
 @media (max-width:375px) {

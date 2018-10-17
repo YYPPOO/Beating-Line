@@ -71,7 +71,42 @@
         <canvas id="visual" class="visual"></canvas>
         <div class="padDiv" id="padDiv"></div>
         <div class="pageDiv" id="pageDiv"></div>
-        <div class="trackSettingListDiv" id="trackSettingListDiv"></div>
+        <div class="trackSettingListDiv" id="trackSettingListDiv" style="display:none;"></div>
+        <div class="kbCtrlDiv" id="kbCtrlDiv" style="display:none;">
+            <div class="kbImgDiv" id="kbImgDiv"></div>
+            <div class="kbText">
+                <div class="kbKey">
+                    Key<br/>
+                    Space<br/>
+                    Esc<br/>
+                    Ctrl + Del<br/>
+                    1~8<br/>
+                    Shift + 1~8<br/>
+                    Ctrl + 1~8<br/>
+                    `<br/>
+                    9<br/>
+                    0<br/>
+                    -/=<br/>
+                    Shift + -/=<br/>
+                </div>
+                <div class="kbAction">
+                    Action<br/>
+                    Play / Pause<br/>
+                    Stop<br/>
+                    Clear<br/>
+                    Switch Track<br/>
+                    Switch Other Tracks<br/>
+                    Delete Track<br/>
+                    Toggle Beating Line<br/>
+                    Toggle Keyboard Record<br/>
+                    Toggle Metronome<br/>
+                    Adjust Volume<br/>
+                    Adjust BPM<br/>
+                </div>
+            </div>
+            <!-- <img src="img/kb.svg" id="kbImg" /> -->
+        </div>
+        <div class="drumPadDiv" id="drumPadDiv" style="display:none;"></div>
     </section>
 
     <div>
@@ -89,9 +124,9 @@
                 <img src="img/track7.svg"/> -->
             </div>
         </div>
-    <footer>
+    <!-- <footer>
         by YYPPOO | contact@beatingline.com
-    </footer>
+    </footer> -->
     <div id="background"></div>
     <script src="js/lib.js" text/javascript></script>
     <script src="js/index.js" text/javascript></script>
