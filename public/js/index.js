@@ -424,9 +424,15 @@ function finishedLoading(bufferList) {
         document.getElementById("trackSwitch"+i).classList.toggle("b"+i,trackSwitch[i]);
     }
     window.onkeydown = function(e) {
-        if(document.activeElement == document.getElementById("bpm")){
+        // if(document.activeElement == document.getElementById("bpm")){
+        //     if(e.keyCode==13) {
+        //         document.getElementById("bpm").blur();
+        //     }
+        //     return;
+        // }
+        if(document.activeElement.tagName == "INPUT"){
             if(e.keyCode==13) {
-                document.getElementById("bpm").blur();
+                document.activeElement.blur();
             }
             return;
         }
@@ -445,12 +451,12 @@ function finishedLoading(bufferList) {
                 e.shiftKey && clear();
                 break;
             // case 220: //"\"
-            case 57: //9
+            case 48: //0
                 metronome = !metronome;
                 document.getElementById("metronome").classList.toggle("metronomeOn",metronome);
                 break;
             // case 13: //enter
-            case 48: //0
+            case 57: //9
                 kbMode = !kbMode;
                 document.getElementById("kbMode").classList.toggle("kbModeOn",kbMode);
                 break;
@@ -797,20 +803,30 @@ function createPad(){
         }
     }
 
-    let funcBtn = cE("div","funcBtn","▼");
-    let funcDiv = cE("div","funcDiv pointNumberP");
+    let funcDiv = cE("div");
+    let funcBtn = cE("div","funcBtn pointNumberP","▼");
+    let funcItemDiv = cE("div","funcItemDiv");
     let func = [];
-    func[0] = cE("div","funcItem","Keyboard Description");
-    func[1] = cE("div","funcItem","Track Setting");
+    func[0] = cE("button","funcItem","Track Setting");
+    func[1] = cE("button","funcItem","Keyboard Control");
+    func[2] = cE("button","funcItem","Drum Pad");
+
     funcDiv.addEventListener("mouseover",function(){
-        func[0].classList.add("funcItemShow");
-        func[1].classList.add("funcItemShow");
+        funcBtn.style.transform = "scale(1.3,1.3)";
+        funcItemDiv.classList.toggle("funcItemDivOn",true);
     })
     funcDiv.addEventListener("mouseout",function(){
-        func[0].classList.remove("funcItemShow");
-        func[1].classList.remove("funcItemShow");
+        funcBtn.style.transform = "initial";
+        funcItemDiv.classList.toggle("funcItemDivOn",false);
     })
-    funcDiv.append(funcBtn);
+    funcBtn.addEventListener("click",function(){
+        funcItemDiv.classList.toggle("funcItemDivOn");
+    })
+    // func[0].addEventListener("click",function(){
+
+    // })
+    funcItemDiv.append(func[0],func[1],func[2]);
+    funcDiv.append(funcBtn,funcItemDiv);
     padDiv.appendChild(funcDiv);
     for(let j=0;j<length;j++){
         pointNumberList[j] = cE("div",j%4?"pointNumber":"pointNumberP",j%4?(j%4)+1:((j+page*length)/4)+1);
@@ -893,56 +909,102 @@ function removePad() {
     }
 }
 
+function addHitEventHandler(element,i) {
+    element.addEventListener("mousedown",function(){
+        playSound(soundList[i],context.currentTime,volume[i]);
+        element.parentNode.classList.add("b"+i);
+        trackList[i].classList.add("b"+i);
+        for(let j=0;j<length;j++){
+            padList[i][j].classList.add("bSelected");
+        }
+    })
+    element.addEventListener("touchstart",function(e){
+        e.preventDefault();
+        playSound(soundList[i],context.currentTime,volume[i]);
+        element.parentNode.classList.add("b"+i);
+        trackList[i].classList.add("b"+i);
+        for(let j=0;j<length;j++){
+            padList[i][j].classList.add("bSelected");
+        }
+    })
+    element.addEventListener("mouseup",function(){
+        element.parentNode.classList.remove("b"+i);
+        trackList[i].classList.remove("b"+i);
+        for(let j=0;j<length;j++){
+            padList[i][j].classList.remove("bSelected");
+        }
+    })
+    element.addEventListener("touchend",function(e){
+        e.preventDefault();
+        element.parentNode.classList.remove("b"+i);
+        trackList[i].classList.remove("b"+i);
+        for(let j=0;j<length;j++){
+            padList[i][j].classList.remove("bSelected");
+        }
+    })
+}
+
 function createTrackSetting() {
     for(let i=0;i<8;i++){
         let trackSetDiv = cE("div","trackSetDiv",null,"id","trackSetDiv"+i);
-            trackSetDiv.addEventListener("mousedown",function(){
-                playSound(soundList[i],context.currentTime,volume[i]);
-                this.classList.add("b"+i);
-                trackList[i].classList.add("b"+i);
-                for(let j=0;j<length;j++){
-                    padList[i][j].classList.add("bSelected");
-                }
-            })
-            trackSetDiv.addEventListener("touchstart",function(e){
-                e.preventDefault();
-                playSound(soundList[i],context.currentTime,volume[i]);
-                this.classList.add("b"+i);
-                trackList[i].classList.add("b"+i);
-                for(let j=0;j<length;j++){
-                    padList[i][j].classList.add("bSelected");
-                }
-            })
-            trackSetDiv.addEventListener("mouseup",function(){
-                this.classList.remove("b"+i);
-                trackList[i].classList.remove("b"+i);
-                for(let j=0;j<length;j++){
-                    padList[i][j].classList.remove("bSelected");
-                }
-            })
-            trackSetDiv.addEventListener("touchend",function(e){
-                e.preventDefault();
-                this.classList.remove("b"+i);
-                trackList[i].classList.remove("b"+i);
-                for(let j=0;j<length;j++){
-                    padList[i][j].classList.remove("bSelected");
-                }
-            })
+            // trackSetDiv.addEventListener("mousedown",function(){
+            //     playSound(soundList[i],context.currentTime,volume[i]);
+            //     this.classList.add("b"+i);
+            //     trackList[i].classList.add("b"+i);
+            //     for(let j=0;j<length;j++){
+            //         padList[i][j].classList.add("bSelected");
+            //     }
+            // })
+            // trackSetDiv.addEventListener("touchmove",function(e){
+                // e.preventDefault();
+            //     playSound(soundList[i],context.currentTime,volume[i]);
+            //     this.classList.add("b"+i);
+            //     trackList[i].classList.add("b"+i);
+            //     for(let j=0;j<length;j++){
+            //         padList[i][j].classList.add("bSelected");
+            //     }
+            // })
+            // trackSetDiv.addEventListener("mouseup",function(){
+            //     this.classList.remove("b"+i);
+            //     trackList[i].classList.remove("b"+i);
+            //     for(let j=0;j<length;j++){
+            //         padList[i][j].classList.remove("bSelected");
+            //     }
+            // })
+            // trackSetDiv.addEventListener("touchend",function(e){
+            //     e.preventDefault();
+            //     this.classList.remove("b"+i);
+            //     trackList[i].classList.remove("b"+i);
+            //     for(let j=0;j<length;j++){
+            //         padList[i][j].classList.remove("bSelected");
+            //     }
+            // })
         let trackSetVolume = cE("input","trackSetVolume",null,"id","trackSetVolume"+i);
             trackSetVolume.type = "range";
             trackSetVolume.max = 1;
             trackSetVolume.min = 0;
             trackSetVolume.step = "any";
             trackSetVolume.value = volume[i];
+            // trackSetVolume.addEventListener("touchstart",function(e){
+                // e.stopPropagation();
+                // e.preventDefault();
+                // e.stopImmediatePropagation();
+            // })
+            // trackSetVolume.addEventListener("mousedown",function(e){
+            //         e.stopPropagation();
+            //         console.log(this.value);
+            //     })
             trackSetVolume.addEventListener("input",function(e){
+                // alert(this.value);
                 volume[i] = this.value;
+                // e.stopPropagation();
                 // console.log(this.value);
                 // e.preventDefault();
             })
-            trackSetVolume.addEventListener("touchstart",function(e){
-                e.stopPropagation();
-                console.log(this.value);
-            })
+            // trackSetVolume.addEventListener("touchend",function(e){
+            //     this.blur();
+            //     console.log(this.value);
+            // })
 
         // let trackSetPlay = cE("div","trackSetPlay");
         //     trackSetPlay.addEventListener("click",function(){
@@ -980,7 +1042,9 @@ function createTrackSetting() {
 
         // let trackSetVolumeKey = cE("div","trackSetVolumeKey","Volume");
         let trackSetNum = cE("div","trackSetNum",i+1);
+        addHitEventHandler(trackSetNum,i);
         let trackSetIcon = cE("img","trackSetIcon",null,"src","img/track"+i+".svg");
+        addHitEventHandler(trackSetIcon,i);
         trackSetDiv.append(trackSetVolume,trackSetSwitch,trackSetNum,trackSetIcon);
         document.getElementById("trackSettingListDiv").appendChild(trackSetDiv);
     }
