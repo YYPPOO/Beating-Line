@@ -421,7 +421,36 @@ function finishedLoading(bufferList) {
         playSound(soundList[i],context.currentTime,volume[i]);
         if(playing && kbMode) {
             state[i][(p+totalLength-1)%totalLength] = true;
-            padList[i][(p+totalLength-1)%totalLength-page*length].classList.toggle("b"+i,true);
+            if(((p+totalLength-1)%totalLength-page*length) >= 0 || ((p+totalLength-1)%totalLength-page*length) < length){
+                padList[i][(p+totalLength-1)%totalLength-page*length].classList.toggle("b"+i,true);
+            }
+        }
+    }
+    let deleteTrack = function(i){
+        for(let j=0;j<totalLength;j++){
+            state[i][j] = false;
+            if(j<length) {
+                padList[i][j].classList.remove("b"+i);
+            }
+        }
+    }
+    let toggleOtherTrack = function(i){
+        let sum=0
+        for(let k=0;k<trackQty;k++){
+            if(trackSwitch[k]) {
+                sum++;
+            }
+        }
+        if(sum==1 && trackSwitch[i]){
+            for(let k=0;k<trackQty;k++){
+                trackSwitch[k] = true;
+                document.getElementById("trackSwitch"+k).classList.toggle("b"+k,true);
+            }
+        } else {
+            for(let k=0;k<trackQty;k++){
+                trackSwitch[k] = (k==i);
+                document.getElementById("trackSwitch"+k).classList.toggle("b"+k,k==i);
+            }
         }
     }
     let toggleTrackSwitch = function(i){
@@ -472,28 +501,76 @@ function finishedLoading(bufferList) {
                 // document.getElementById("visualSwitch").classList.toggle("visualSwitchOn",visualMode);
                 break;
             case 49: //1
-                toggleTrackSwitch(0);
+                if(e.ctrlKey){
+                    deleteTrack(0);
+                } else if(e.shiftKey){
+                    toggleOtherTrack(0);
+                } else {
+                    toggleTrackSwitch(0);
+                }
                 break;
             case 50: //2
-                toggleTrackSwitch(1);
+                if(e.ctrlKey){
+                    deleteTrack(1);
+                } else if(e.shiftKey){
+                    toggleOtherTrack(1);
+                } else {
+                    toggleTrackSwitch(1);
+                }
                 break;
             case 51: //3
-                toggleTrackSwitch(2);
+                if(e.ctrlKey){
+                    deleteTrack(2);
+                } else if(e.shiftKey){
+                    toggleOtherTrack(2);
+                } else {
+                    toggleTrackSwitch(2);
+                }
                 break;
             case 52: //4
-                toggleTrackSwitch(3);
+                if(e.ctrlKey){
+                    deleteTrack(3);
+                } else if(e.shiftKey){
+                    toggleOtherTrack(3);
+                } else {
+                    toggleTrackSwitch(3);
+                }
                 break;
             case 53: //5
-                toggleTrackSwitch(4);
+                if(e.ctrlKey){
+                    deleteTrack(4);
+                } else if(e.shiftKey){
+                    toggleOtherTrack(4);
+                } else {
+                    toggleTrackSwitch(4);
+                }
                 break;
             case 54: //6
-                toggleTrackSwitch(5);
+                if(e.ctrlKey){
+                    deleteTrack(5);
+                } else if(e.shiftKey){
+                    toggleOtherTrack(5);
+                } else {
+                    toggleTrackSwitch(5);
+                }
                 break;
             case 55: //7
-                toggleTrackSwitch(6);
+                if(e.ctrlKey){
+                    deleteTrack(6);
+                } else if(e.shiftKey){
+                    toggleOtherTrack(6);
+                } else {
+                    toggleTrackSwitch(6);
+                }
                 break;
             case 56: //8
-                toggleTrackSwitch(7);
+                if(e.ctrlKey){
+                    deleteTrack(7);
+                } else if(e.shiftKey){
+                    toggleOtherTrack(7);
+                } else {
+                    toggleTrackSwitch(7);
+                }
                 break;
             case 66: //b
                 keyPlay(0);
@@ -812,7 +889,7 @@ function createPad(){
     let funcBtn = cE("div","funcBtn pointNumberP","☰","id","funcBtn");
     let funcItemDiv = cE("div","funcItemDiv");
     let func = [];
-    func[0] = cE("button","funcItem","Track Setting");
+    func[0] = cE("button","funcItem","Track Volume");
     func[1] = cE("button","funcItem","Keyboard Control");
     func[2] = cE("button","funcItem","Drum Pad");
 
@@ -943,6 +1020,12 @@ function addHitEventHandler(element,i,parent) {
         for(let j=0;j<length;j++){
             padList[i][j].classList.add("bSelected");
         }
+        if(playing && kbMode) {
+            state[i][(p+totalLength-1)%totalLength] = true;
+            if(((p+totalLength-1)%totalLength-page*length) >= 0 || ((p+totalLength-1)%totalLength-page*length) < length){
+                padList[i][(p+totalLength-1)%totalLength-page*length].classList.toggle("b"+i,true);
+            }
+        }
     })
     element.addEventListener("touchstart",function(e){
         e.preventDefault();
@@ -951,6 +1034,12 @@ function addHitEventHandler(element,i,parent) {
         trackList[i].classList.add("b"+i);
         for(let j=0;j<length;j++){
             padList[i][j].classList.add("bSelected");
+        }
+        if(playing && kbMode) {
+            state[i][(p+totalLength-1)%totalLength] = true;
+            if(((p+totalLength-1)%totalLength-page*length) >= 0 || ((p+totalLength-1)%totalLength-page*length) < length){
+                padList[i][(p+totalLength-1)%totalLength-page*length].classList.toggle("b"+i,true);
+            }
         }
     })
     element.addEventListener("mouseup",function(){
