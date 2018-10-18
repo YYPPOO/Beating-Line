@@ -163,8 +163,8 @@ input[type="range"]::-moz-focus-outer{
     background-color: #333333;
     z-index: 10;
     display: grid;
-    grid-template-columns: 120px;
-    grid-template-rows: repeat(6,60px) 1fr 20px;
+    grid-template-columns: 150px;
+    grid-template-rows: repeat(6,50px) 1fr 20px;
     justify-content: center;
     justify-items: center;
     align-items: center;
@@ -199,7 +199,7 @@ input[type="range"]::-moz-focus-outer{
 }
 
 .beatListBtn {
-    align-self: flex-end;
+    /* align-self: flex-end; */
     background-color: #4D99CC;
 }
 
@@ -215,7 +215,7 @@ input[type="range"]::-moz-focus-outer{
     overflow: auto;
     justify-self: flex-start;
     align-self: flex-start;
-    width: 130px;
+    width: 160px;
     transform: translate(0,-50%) scale(1,0);
     transition: all 0.3s;
 }
@@ -386,9 +386,9 @@ canvas {
     margin: 0;
 }
 
-.trackNumber {
+/* .trackNumber {
     font-family: "arial", "sans-serif";
-}
+} */
 
 @media (max-width:375px) {
     .padDiv {
@@ -404,11 +404,11 @@ canvas {
     }
 }
 
-.funcBtn {
+#funcBtn {
     cursor: pointer;
-    font-size: 12px;
-    padding: 10px 0;
-    margin: 3px 0;
+    font-size: 16px;
+    padding: 10px 0 0;
+    /* margin: 3px 0; */
 }
 .funcDiv {
     cursor: pointer;
@@ -419,7 +419,7 @@ canvas {
     border-radius: 5px;
     text-align: left;
     position: absolute;
-    height: 257px;
+    height: 258px;
     top: 143px;
     /* bottom: 0; */
     display: flex;
@@ -441,13 +441,13 @@ canvas {
     border: 0px;
     font-size: 16px;
     width: 150px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .pointNumber {
     text-align: center;
     font-size: 12px;
-    font-family: "arial", "sans-serif";
+    /* font-family: "arial", "sans-serif"; */
     align-self: flex-start;
     color: #777777;
 }
@@ -456,7 +456,7 @@ canvas {
     text-align: center;
     font-size: 12px;
     font-weight: bold;
-    font-family: "arial", "sans-serif";
+    /* font-family: "arial", "sans-serif"; */
     align-self: flex-start;
     color: #ffffff;
 }
@@ -528,7 +528,7 @@ canvas {
     justify-content: center;
     justify-items: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin: 20px 0;
     touch-action: none;
 }
 
@@ -755,6 +755,43 @@ canvas {
     font-size: 20px;
     color: #ffffff;
     font-weight: bold;
+}
+
+.drumPadDiv {
+    display: grid;
+    grid-template-columns: repeat(4,135px);
+    grid-template-rows: repeat(2,135px);
+    grid-gap: 30px 30px;
+    margin: 20px 0;
+}
+
+.drumPad {
+    display: grid;
+    grid-template-columns: 45px 8px 30px 80px;
+    grid-template-rows: 90px 30px;
+    grid-template-areas: 
+        ". . . ."
+        ". number icon name";
+    align-items: flex-start;
+    background-color: #333333;
+    border-radius: 10px;
+    touch-action: none;
+}
+.drumPad>span {
+    grid-area: number;
+    font-size: 12px;
+}
+.drumPad>img {
+    grid-area: icon;
+    width: 30px;
+    margin: 0 auto;
+}
+.drumPad>div {
+    display: none;
+    grid-area: name;
+    font-size: 12px;
+    align-self: center;
+    margin-left: 5px;
 }
 
 @media (max-width:1200px) and (min-width:650px) {

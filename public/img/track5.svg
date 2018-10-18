@@ -5,7 +5,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" 
     width="100" height="100">
 
-<path d="M85 60 L75 30 A5 5,30 0 0 67 35 l3 5 l-20 -20 A5 5,0 0 0 43 27 L63 47 l-30 -30 A5 5,0 0 0 26 24 L56 54 L31 29 A5 5,0 0 0 24 36 L49 61 L32 43 A5 5,0 0 0 25 51 l30 30 A15 10,145 0 0 85 60" stroke="white" stroke-width="3" fill="#3f4a5a"/>
+<path d="M85 60 L75 30 A5 5,30 0 0 67 35 l3 5 l-20 -20 A5 5,0 0 0 43 27 L63 47 l-30 -30 A5 5,0 0 0 26 24 L56 54 L31 29 A5 5,0 0 0 24 36 L49 61 L32 43 A5 5,0 0 0 25 51 l30 30 A15 10,145 0 0 85 60" stroke="white" stroke-width="3" fill="none"/>
 
 <!-- <text x="0" y="115" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Rena</text><text x="0" y="120" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text> -->
 </svg>
