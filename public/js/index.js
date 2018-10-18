@@ -496,9 +496,36 @@ function finishedLoading(bufferList) {
                 break;
             case 192: //`
                 document.getElementById("visualSwitch").click();
-                // visualMode = (visualMode+1)%3;
-                // document.getElementById("visualSwitch").src = "img/visual"+visualMode+".svg";
-                // document.getElementById("visualSwitch").classList.toggle("visualSwitchOn",visualMode);
+                break;
+            case 189: //-
+                if(e.shiftKey){
+                    document.getElementById("bpm").stepDown();
+                    bpm = document.getElementById("bpm").value;
+                    playing && reset();
+                } else {
+                    document.getElementById("totalVolume").stepDown();
+                    totalVolume = document.getElementById("totalVolume").value;
+                    playingList.forEach(function(item){
+                        item.gain.value = totalVolume;
+                    })
+                    document.getElementById("mute").src = "img/volume"+Math.floor(totalVolume*4)+".svg";
+                    document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
+                }
+                break;
+            case 187: //=
+                if(e.shiftKey){
+                    document.getElementById("bpm").stepUp();
+                    bpm = document.getElementById("bpm").value;
+                    playing && reset();
+                } else {
+                    document.getElementById("totalVolume").stepUp();
+                    totalVolume = document.getElementById("totalVolume").value;
+                    playingList.forEach(function(item){
+                        item.gain.value = totalVolume;
+                    })
+                    document.getElementById("mute").src = "img/volume"+Math.floor(totalVolume*4)+".svg";
+                    document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
+                }
                 break;
             case 49: //1
                 if(e.ctrlKey){
