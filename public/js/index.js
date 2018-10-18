@@ -410,6 +410,11 @@ function finishedLoading(bufferList) {
         this.classList.toggle("visualSwitchOn",visualMode);
     })
 
+    for(let i=0;i<trackQty;i++) {
+        let drumPad = document.getElementById("drumPad"+i);
+        addHitEventHandler(drumPad,i,false);
+    }
+
 
 
     let keyPlay = function(i){
@@ -854,17 +859,17 @@ function createPad(){
         padDiv.appendChild(pointNumberList[j]);
     }
 
-    function cancelSelect(){
-        console.log("body clicked");
-        trackList[lastSelect] && trackList[lastSelect].classList.remove("b"+lastSelect);
-        for(let j=0;j<length;j++){
-            padList[lastSelect] && padList[lastSelect][j].classList.remove("bSelected");
-        }
-        lastSelect = null;
-    }
+    // function cancelSelect(){
+    //     console.log("body clicked");
+    //     trackList[lastSelect] && trackList[lastSelect].classList.remove("b"+lastSelect);
+    //     for(let j=0;j<length;j++){
+    //         padList[lastSelect] && padList[lastSelect][j].classList.remove("bSelected");
+    //     }
+    //     lastSelect = null;
+    // }
 
-    document.getElementById("background").removeEventListener("click",cancelSelect);
-    document.getElementById("background").addEventListener("click",cancelSelect);
+    // document.getElementById("background").removeEventListener("click",cancelSelect);
+    // document.getElementById("background").addEventListener("click",cancelSelect);
 }
 
 function createPageButton() {
@@ -930,10 +935,10 @@ function removePad() {
     }
 }
 
-function addHitEventHandler(element,i) {
+function addHitEventHandler(element,i,parent) {
     element.addEventListener("mousedown",function(){
         playSound(soundList[i],context.currentTime,volume[i]);
-        element.parentNode.classList.add("b"+i);
+        parent?element.parentNode.classList.add("b"+i):element.classList.add("b"+i);
         trackList[i].classList.add("b"+i);
         for(let j=0;j<length;j++){
             padList[i][j].classList.add("bSelected");
@@ -942,14 +947,14 @@ function addHitEventHandler(element,i) {
     element.addEventListener("touchstart",function(e){
         e.preventDefault();
         playSound(soundList[i],context.currentTime,volume[i]);
-        element.parentNode.classList.add("b"+i);
+        parent?element.parentNode.classList.add("b"+i):element.classList.add("b"+i);
         trackList[i].classList.add("b"+i);
         for(let j=0;j<length;j++){
             padList[i][j].classList.add("bSelected");
         }
     })
     element.addEventListener("mouseup",function(){
-        element.parentNode.classList.remove("b"+i);
+        parent?element.parentNode.classList.remove("b"+i):element.classList.remove("b"+i);
         trackList[i].classList.remove("b"+i);
         for(let j=0;j<length;j++){
             padList[i][j].classList.remove("bSelected");
@@ -957,7 +962,7 @@ function addHitEventHandler(element,i) {
     })
     element.addEventListener("touchend",function(e){
         e.preventDefault();
-        element.parentNode.classList.remove("b"+i);
+        parent?element.parentNode.classList.remove("b"+i):element.classList.remove("b"+i);
         trackList[i].classList.remove("b"+i);
         for(let j=0;j<length;j++){
             padList[i][j].classList.remove("bSelected");
@@ -1064,9 +1069,9 @@ function createTrackSetting() {
 
         // let trackSetVolumeKey = cE("div","trackSetVolumeKey","Volume");
         let trackSetNum = cE("div","trackSetNum",i+1);
-        addHitEventHandler(trackSetNum,i);
+        addHitEventHandler(trackSetNum,i,true);
         let trackSetIcon = cE("img","trackSetIcon",null,"src","img/track"+i+".svg");
-        addHitEventHandler(trackSetIcon,i);
+        addHitEventHandler(trackSetIcon,i,true);
         trackSetDiv.append(trackSetVolume,trackSetSwitch,trackSetNum,trackSetIcon);
         document.getElementById("trackSettingListDiv").appendChild(trackSetDiv);
     }
