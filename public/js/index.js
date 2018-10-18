@@ -804,7 +804,7 @@ function createPad(){
     }
 
     let funcDiv = cE("div");
-    let funcBtn = cE("div","funcBtn pointNumberP","▼");
+    let funcBtn = cE("div","funcBtn pointNumberP","☰");
     let funcItemDiv = cE("div","funcItemDiv");
     let func = [];
     func[0] = cE("button","funcItem","Track Setting");
@@ -840,9 +840,14 @@ function createPad(){
         document.getElementById("kbCtrlDiv").style = "display:none;";
         document.getElementById("drumPadDiv").style = "display:grid;";
     })
-    funcItemDiv.append(func[0],func[1],func[2]);
+    funcItemDiv.append(func[0],func[2]);
+    if(mediaQuery[0].matches || mediaQuery[1].matches){
+        funcItemDiv.append(func[1]);
+    }
     funcDiv.append(funcBtn,funcItemDiv);
     padDiv.appendChild(funcDiv);
+    // padDiv.appendChild(funcDiv);
+    // padDiv.appendChild(funcItemDiv);
     for(let j=0;j<length;j++){
         pointNumberList[j] = cE("div",j%4?"pointNumber":"pointNumberP",j%4?(j%4)+1:((j+page*length)/4)+1);
         padDiv.appendChild(pointNumberList[j]);
