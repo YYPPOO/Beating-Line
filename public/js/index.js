@@ -804,7 +804,7 @@ function createPad(){
     }
 
     let funcDiv = cE("div");
-    let funcBtn = cE("div","funcBtn pointNumberP","☰");
+    let funcBtn = cE("div","funcBtn pointNumberP","☰","id","funcBtn");
     let funcItemDiv = cE("div","funcItemDiv");
     let func = [];
     func[0] = cE("button","funcItem","Track Setting");
@@ -819,7 +819,8 @@ function createPad(){
         funcBtn.style.transform = "initial";
         funcItemDiv.classList.toggle("funcItemDivOn",false);
     })
-    funcBtn.addEventListener("click",function(){
+    funcBtn.addEventListener("touchstart",function(e){
+        e.preventDefault();
         funcItemDiv.classList.toggle("funcItemDivOn");
     })
     func[0].addEventListener("click",function(){
