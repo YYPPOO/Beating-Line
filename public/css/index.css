@@ -761,17 +761,17 @@ canvas {
     display: grid;
     grid-template-columns: repeat(4,135px);
     grid-template-rows: repeat(2,135px);
-    grid-gap: 30px 30px;
+    grid-gap: 20px 20px;
     margin: 20px 0;
 }
 
 .drumPad {
     display: grid;
-    grid-template-columns: 45px 8px 30px 80px;
+    grid-template-columns: 45px 8px 30px;
     grid-template-rows: 90px 30px;
     grid-template-areas: 
-        ". . . ."
-        ". number icon name";
+        ". . ."
+        ". number icon";
     align-items: flex-start;
     background-color: #333333;
     border-radius: 10px;
@@ -836,6 +836,49 @@ canvas {
     .kbImgDiv {
         width: 320px;
         height: 128px;
+    }
+    
+    .drumPadDiv {
+        grid-template-columns: repeat(2,135px);
+        grid-template-rows: repeat(4,70px);
+        grid-gap: 10px 10px;
+        grid-auto-flow: column;
+    }
+
+    .drumPad {
+        grid-template-columns: 45px 8px 30px;
+        grid-template-rows: 30px 30px;
+        grid-template-areas: 
+            ". . ."
+            ". number icon";
+        align-items: flex-start;
+        background-color: #333333;
+        border-radius: 10px;
+        touch-action: none;
+    }
+    #drumPad0 {
+        order: 1;
+    }
+    #drumPad1 {
+        order: 2;
+    }
+    #drumPad2 {
+        order: 3;
+    }
+    #drumPad3 {
+        order: 4;
+    }
+    #drumPad4 {
+        order: 5;
+    }
+    #drumPad5 {
+        order: 6;
+    }
+    #drumPad6 {
+        order: 7;
+    }
+    #drumPad7 {
+        order: 8;
     }
 }
 @media (max-width:375px) {
