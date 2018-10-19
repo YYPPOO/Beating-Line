@@ -472,7 +472,7 @@ function finishedLoading(bufferList) {
         }
         console.log(e.keyCode);
         e.preventDefault();
-        switch(e.keyCode) {
+        switch(e.which) {
             case 32: //" "
                 document.activeElement.blur();
                 play();
@@ -497,6 +497,21 @@ function finishedLoading(bufferList) {
             case 192: //`
                 document.getElementById("visualSwitch").click();
                 break;
+            case 173: //-
+                if(e.shiftKey){
+                    document.getElementById("bpm").stepDown();
+                    bpm = document.getElementById("bpm").value;
+                    playing && reset();
+                } else {
+                    document.getElementById("totalVolume").stepDown();
+                    totalVolume = document.getElementById("totalVolume").value;
+                    playingList.forEach(function(item){
+                        item.gain.value = totalVolume;
+                    })
+                    document.getElementById("mute").src = "img/volume"+Math.floor(totalVolume*4)+".svg";
+                    document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
+                }
+                break;
             case 189: //-
                 if(e.shiftKey){
                     document.getElementById("bpm").stepDown();
@@ -504,6 +519,21 @@ function finishedLoading(bufferList) {
                     playing && reset();
                 } else {
                     document.getElementById("totalVolume").stepDown();
+                    totalVolume = document.getElementById("totalVolume").value;
+                    playingList.forEach(function(item){
+                        item.gain.value = totalVolume;
+                    })
+                    document.getElementById("mute").src = "img/volume"+Math.floor(totalVolume*4)+".svg";
+                    document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
+                }
+                break;
+            case 61: //=
+                if(e.shiftKey){
+                    document.getElementById("bpm").stepUp();
+                    bpm = document.getElementById("bpm").value;
+                    playing && reset();
+                } else {
+                    document.getElementById("totalVolume").stepUp();
                     totalVolume = document.getElementById("totalVolume").value;
                     playingList.forEach(function(item){
                         item.gain.value = totalVolume;
