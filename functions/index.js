@@ -165,6 +165,9 @@ app.post("/exe/saveBeat", (req, res) => {
 						db.ref("/userData/"+newBeat.author).once("value",(snapshot) =>{
 							let userBeats = {};
 							userBeats = snapshot.val();
+							if(!userBeats.beats){
+								userBeats.beats = {};
+							}
 							userBeats.beats[key] = newBeat.beatName;
 							db.ref("/userData/"+newBeat.author).update(userBeats,(error) => {
 								if(error) {
@@ -197,6 +200,9 @@ app.post("/exe/saveBeat", (req, res) => {
 				db.ref("/userData/"+newBeat.author).once("value",(snapshot) =>{
 					let userBeats = {};
 					userBeats = snapshot.val();
+					if(!userBeats.beats){
+						userBeats.beats = {};
+					}
 					console.log(userBeats);
 					userBeats.beats[key] = newBeat.beatName;
 					db.ref("/userData/"+newBeat.author).update(userBeats,(error) => {
@@ -246,6 +252,9 @@ app.post("/exe/saveAsNewBeat", (req, res) => {
 			db.ref("/userData/"+newBeat.author).once("value",(snapshot) =>{
 				let userBeats = {};
 				userBeats = snapshot.val();
+				if(!userBeats.beats){
+					userBeats.beats = {};
+				}
 				userBeats.beats[key] = newBeat.beatName;
 				db.ref("/userData/"+newBeat.author).update(userBeats,(error) => {
 					if(error) {
