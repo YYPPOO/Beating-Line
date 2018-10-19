@@ -370,7 +370,8 @@ function finishedLoading(bufferList) {
     }
 
     // set button feature -------------------------------------------------------------
-    document.getElementById("play").addEventListener("click",play);
+    let playBtn = document.getElementById("play");
+    playBtn.addEventListener("click",play);
     // document.getElementById("clear").addEventListener("click",clear);
     document.getElementById("clear").addEventListener("click",function(){alert("Clear the Beat?!",false,clear)});
     
@@ -382,32 +383,36 @@ function finishedLoading(bufferList) {
         kbMode = !kbMode;
         this.classList.toggle("kbModeOn",kbMode);
     })
-    document.getElementById("bpm").addEventListener("change",function(){
+    let bpmBtn = document.getElementById("bpm");
+    bpmBtn.addEventListener("change",function(){
         console.log(this.value);
         bpm = this.value;
         playing && reset();
         localStorage.setItem("bpm",bpm);
     });
 
-    // document.getElementById("mute").
-    document.getElementById("mute").addEventListener("click",function(){
-        document.getElementById("totalVolume").value = Number(!totalVolume);
+    let muteBtn = document.getElementById("mute");
+    let totalVolumeBtn = document.getElementById("totalVolume")
+    muteBtn.addEventListener("click",function(){
+        totalVolumeBtn.value = Number(!totalVolume);
         totalVolume = Number(!totalVolume);
         this.classList.toggle("volumeOn",!!totalVolume);
         this.src = "img/volume"+Math.round(totalVolume)*3+".svg";
     })
-    document.getElementById("totalVolume").addEventListener("input",function(){
+    totalVolumeBtn.addEventListener("input",function(){
         totalVolume = this.value;
         playingList.forEach(function(item){
             item.gain.value = totalVolume;
         })
-        document.getElementById("mute").src = "img/volume"+Math.floor(this.value*4)+".svg";
-        document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
+        muteBtn.src = "img/volume"+Math.floor(this.value*4)+".svg";
+        muteBtn.classList.toggle("volumeOn",totalVolume>0.01);
     });
+
     document.getElementById("visualSwitch").addEventListener("click",function(){
         visualMode = (visualMode+1)%3;
         this.src = "img/visual"+visualMode+".svg";
         this.classList.toggle("visualSwitchOn",visualMode);
+        // vusualMode && draw();
     })
 
     for(let i=0;i<trackQty;i++) {
@@ -417,13 +422,25 @@ function finishedLoading(bufferList) {
 
 
 
-    let keyPlay = function(i){
+    let keyHit = function(i){
         playSound(soundList[i],context.currentTime,volume[i]);
+        trackList[i].classList.add("b"+i);
+        document.getElementById("drumPad"+i).classList.add("b"+i);
+        for(let j=0;j<length;j++){
+            padList[i][j].classList.add("bSelected");
+        }
         if(playing && kbMode) {
             state[i][(p+totalLength-1)%totalLength] = true;
             if(((p+totalLength-1)%totalLength-page*length) >= 0 || ((p+totalLength-1)%totalLength-page*length) < length){
                 padList[i][(p+totalLength-1)%totalLength-page*length].classList.toggle("b"+i,true);
             }
+        }
+    }
+    let keyUp = function(i){
+        trackList[i].classList.remove("b"+i);
+        document.getElementById("drumPad"+i).classList.remove("b"+i);
+        for(let j=0;j<length;j++){
+            padList[i][j].classList.remove("bSelected");
         }
     }
     let deleteTrack = function(i){
@@ -457,20 +474,29 @@ function finishedLoading(bufferList) {
         trackSwitch[i] = !trackSwitch[i];
         document.getElementById("trackSwitch"+i).classList.toggle("b"+i,trackSwitch[i]);
     }
+    let stepUpDown = function(plus,shift){
+        if(shift){
+            plus? bpmBtn.stepUp() : bpmBtn.stepDown();
+            bpm = bpmBtn.value;
+            playing && reset();
+        } else {
+            plus? totalVolumeBtn.stepUp() : totalVolumeBtn.stepDown();
+            totalVolume = totalVolumeBtn.value;
+            playingList.forEach(function(item){
+                item.gain.value = totalVolume;
+            })
+            muteBtn.src = "img/volume"+Math.floor(totalVolume*4)+".svg";
+            muteBtn.classList.toggle("volumeOn",totalVolume>0.01);
+        }
+    }
     window.onkeydown = function(e) {
-        // if(document.activeElement == document.getElementById("bpm")){
-        //     if(e.keyCode==13) {
-        //         document.getElementById("bpm").blur();
-        //     }
-        //     return;
-        // }
         if(document.activeElement.tagName == "INPUT"){
             if(e.keyCode==13) {
                 document.activeElement.blur();
             }
             return;
         }
-        console.log(e.keyCode);
+        console.log(e.which);
         e.preventDefault();
         switch(e.which) {
             case 32: //" "
@@ -498,64 +524,16 @@ function finishedLoading(bufferList) {
                 document.getElementById("visualSwitch").click();
                 break;
             case 173: //-
-                if(e.shiftKey){
-                    document.getElementById("bpm").stepDown();
-                    bpm = document.getElementById("bpm").value;
-                    playing && reset();
-                } else {
-                    document.getElementById("totalVolume").stepDown();
-                    totalVolume = document.getElementById("totalVolume").value;
-                    playingList.forEach(function(item){
-                        item.gain.value = totalVolume;
-                    })
-                    document.getElementById("mute").src = "img/volume"+Math.floor(totalVolume*4)+".svg";
-                    document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
-                }
+                stepUpDown(false,e.shiftKey);
                 break;
             case 189: //-
-                if(e.shiftKey){
-                    document.getElementById("bpm").stepDown();
-                    bpm = document.getElementById("bpm").value;
-                    playing && reset();
-                } else {
-                    document.getElementById("totalVolume").stepDown();
-                    totalVolume = document.getElementById("totalVolume").value;
-                    playingList.forEach(function(item){
-                        item.gain.value = totalVolume;
-                    })
-                    document.getElementById("mute").src = "img/volume"+Math.floor(totalVolume*4)+".svg";
-                    document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
-                }
+                stepUpDown(false,e.shiftKey);
                 break;
             case 61: //=
-                if(e.shiftKey){
-                    document.getElementById("bpm").stepUp();
-                    bpm = document.getElementById("bpm").value;
-                    playing && reset();
-                } else {
-                    document.getElementById("totalVolume").stepUp();
-                    totalVolume = document.getElementById("totalVolume").value;
-                    playingList.forEach(function(item){
-                        item.gain.value = totalVolume;
-                    })
-                    document.getElementById("mute").src = "img/volume"+Math.floor(totalVolume*4)+".svg";
-                    document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
-                }
+                stepUpDown(true,e.shiftKey);
                 break;
             case 187: //=
-                if(e.shiftKey){
-                    document.getElementById("bpm").stepUp();
-                    bpm = document.getElementById("bpm").value;
-                    playing && reset();
-                } else {
-                    document.getElementById("totalVolume").stepUp();
-                    totalVolume = document.getElementById("totalVolume").value;
-                    playingList.forEach(function(item){
-                        item.gain.value = totalVolume;
-                    })
-                    document.getElementById("mute").src = "img/volume"+Math.floor(totalVolume*4)+".svg";
-                    document.getElementById("mute").classList.toggle("volumeOn",totalVolume>0.01);
-                }
+                stepUpDown(true,e.shiftKey);
                 break;
             case 49: //1
                 if(e.ctrlKey){
@@ -630,93 +608,174 @@ function finishedLoading(bufferList) {
                 }
                 break;
             case 66: //b
-                keyPlay(0);
+                keyHit(0);
                 break;
             case 67: //c
-                keyPlay(0);
+                keyHit(0);
                 break;
             case 78: //n
-                keyPlay(0);
+                keyHit(0);
                 break;
             case 86: //v
-                keyPlay(0);
+                keyHit(0);
                 break;
             case 68: //d
-                keyPlay(1);
+                keyHit(1);
                 break;
             case 70: //f
-                keyPlay(1);
+                keyHit(1);
                 break;
             case 72: //h
-                keyPlay(1);
+                keyHit(1);
                 break;
             case 74: //j
-                keyPlay(1);
+                keyHit(1);
                 break;
             case 83: //s
-                keyPlay(2);
+                keyHit(2);
                 break;
             case 88: //x
-                keyPlay(2);
+                keyHit(2);
                 break;
             case 75: //k
-                keyPlay(2);
+                keyHit(2);
                 break;
             case 77: //m
-                keyPlay(2);
+                keyHit(2);
                 break;
             case 90: //z
-                keyPlay(3);
+                keyHit(3);
                 break;
             case 188: //,
-                keyPlay(3);
+                keyHit(3);
                 break;
             case 71: //g
-                keyPlay(5);
+                keyHit(5);
                 break;
             case 84: //t
-                keyPlay(4);
+                keyHit(4);
                 break;
             case 82: //r
-                keyPlay(4);
+                keyHit(4);
                 break;
             case 89: //y
-                keyPlay(4);
+                keyHit(4);
                 break;
             case 65: //a
-                keyPlay(5);
+                keyHit(5);
                 break;
             case 76: //l
-                keyPlay(5);
+                keyHit(5);
                 break;
             case 81: //q
-                keyPlay(5);
+                keyHit(5);
                 break;
             case 69: //e
-                keyPlay(6);
+                keyHit(6);
                 break;
-
             case 85: //u
-                keyPlay(6);
+                keyHit(6);
                 break;
             case 87: //w
-                keyPlay(6);
+                keyHit(6);
                 break;
             case 73: //i
-                keyPlay(6);
+                keyHit(6);
                 break;
             case 79: //o
-                keyPlay(7);
+                keyHit(7);
                 break;
             case 80: //p
-                keyPlay(7);
+                keyHit(7);
                 break;
-            // case 186: //;
-            //     keyPlay(7);
-            //     break;
-            // case 190: //.
-            //     keyPlay(7);
-            //     break;
+        }
+    }
+    window.onkeyup = function(e) {
+        if(document.activeElement.tagName == "INPUT"){return;}
+        console.log(e.which);
+        e.preventDefault();
+        switch(e.which) {
+            case 66: //b
+                keyUp(0);
+                break;
+            case 67: //c
+                keyUp(0);
+                break;
+            case 78: //n
+                keyUp(0);
+                break;
+            case 86: //v
+                keyUp(0);
+                break;
+            case 68: //d
+                keyUp(1);
+                break;
+            case 70: //f
+                keyUp(1);
+                break;
+            case 72: //h
+                keyUp(1);
+                break;
+            case 74: //j
+                keyUp(1);
+                break;
+            case 83: //s
+                keyUp(2);
+                break;
+            case 88: //x
+                keyUp(2);
+                break;
+            case 75: //k
+                keyUp(2);
+                break;
+            case 77: //m
+                keyUp(2);
+                break;
+            case 90: //z
+                keyUp(3);
+                break;
+            case 188: //,
+                keyUp(3);
+                break;
+            case 71: //g
+                keyUp(5);
+                break;
+            case 84: //t
+                keyUp(4);
+                break;
+            case 82: //r
+                keyUp(4);
+                break;
+            case 89: //y
+                keyUp(4);
+                break;
+            case 65: //a
+                keyUp(5);
+                break;
+            case 76: //l
+                keyUp(5);
+                break;
+            case 81: //q
+                keyUp(5);
+                break;
+            case 69: //e
+                keyUp(6);
+                break;
+            case 85: //u
+                keyUp(6);
+                break;
+            case 87: //w
+                keyUp(6);
+                break;
+            case 73: //i
+                keyUp(6);
+                break;
+            case 79: //o
+                keyUp(7);
+                break;
+            case 80: //p
+                keyUp(7);
+                break;
         }
     }
 
@@ -784,6 +843,7 @@ function finishedLoading(bufferList) {
 
         canvasCtx.lineWidth = 3;
         // canvasCtx.strokeStyle = "rgba(77,153,204,"+(1-Math.pow(((amp-bufferLength)/256-1),10))+")"
+        // canvasCtx.strokeStyle = "rgba(77,153,204,"+(amp!==bufferLength?1:0)+")"
         canvasCtx.strokeStyle = "rgba(77,153,204,"+(visualMode && amp!==bufferLength?1:0)+")"
 
         // canvasCtx.lineTo(canvas.width, canvas.height/2);
