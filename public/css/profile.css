@@ -1,4 +1,8 @@
 
+header {
+    grid-template-columns: 40px 220px 40px;
+}
+
 input {
     margin: 5px;
     border-radius: 5px;

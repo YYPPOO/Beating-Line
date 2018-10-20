@@ -19,16 +19,21 @@ button {
     cursor: pointer;
 }
 
+button:hover {
+    filter: brightness(1.2);
+}
+
 header {
     background-color: #111111;
     display: grid;
-    grid-template-columns: 40px auto 40px;
-    justify-content: space-between;
+    grid-template-columns: 40px 1080px 40px;
+    justify-content: center;
+    justify-items: center;
     align-items: center;
-    padding: 10px;
+    height: 60px;
 }
 
-header img {
+header img, header a {
     height: 40px;
     border-radius: 3px;
     cursor: pointer;
@@ -45,7 +50,21 @@ footer {
     z-index: -1;
     transform: translate(0,200px);
 }
-
+@media (max-width:1200px) and (min-width:650px) {
+    header {
+        grid-template-columns: 40px 520px 40px;
+    }
+}
+@media (max-width:650px) {
+    header {
+        grid-template-columns: 40px 240px 40px;
+    }
+}
+@media (max-width:375px) {
+    header {
+        grid-template-columns: 40px 210px 40px;
+    }
+}
 
 /* #background {
     position:fixed;

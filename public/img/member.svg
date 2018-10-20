@@ -4,12 +4,15 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" 
     width="100" height="100">
-    <rect x="2.5" y="2.5" rx="10" ry="10" width="95" height="95" stroke="#ffffff" stroke-width="5" fill="#3F4A5A" />
+    <!-- <rect x="2.5" y="2.5" rx="10" ry="10" width="95" height="95" stroke="#ffffff" stroke-width="5" fill="#3F4A5A" /> -->
+    <rect x="0" y="0" rx="10" ry="10" width="100" height="100" stroke="none" fill="#3f4a5a" />
     <!-- <circle fill="#3F4A5A" cx="50" cy="50" r="47" stroke="white" stroke-width="5"/> -->
     <!-- <path d="M2.5 50 H18 Q19 50, 20 50 L29 46 Q30 45, 31 46 L40 64 Q41 65, 42 64 L51 19 Q52 18, 53 19 L62 82 Q63 83, 64 82 L73 51 Q74 50, 75 50 H97.5 V10 Q97.5 2.5, 90 2.5 H10 Q2.5 2.5, 2.5 10 Z" fill="#3F4A5A" stroke="white" stroke-width="5" /> -->
-    <circle fill="#0F1A2A" cx="50" cy="40" r="18" stroke="white" stroke-width="5"/>
+    <circle fill="none" cx="50" cy="40" r="18" stroke="#aaaaaa" stroke-width="5"/>
+    <!-- <circle fill="#0F1A2A" cx="50" cy="40" r="18" stroke="white" stroke-width="5"/> -->
     <!-- <path d="M13 78 A40 40,60 0 1 87 78 A47 47,169 0 1 13 78" fill="#0F1A2A" stroke="white" stroke-width="5"/> -->
-    <path d="M15 97.5 A35 35,0 0 1 85 97.5 Z" fill="#0F1A2A" stroke="white" stroke-width="5"/>
+    <path d="M15 100 A35 35,0 0 1 85 100" fill="none" stroke="#aaaaaa" stroke-width="5"/>
+    <!-- <path d="M15 97.5 A35 35,0 0 1 85 97.5 Z" fill="#0F1A2A" stroke="white" stroke-width="5"/> -->
     <!-- <path d="M0 50 H18 Q19 50, 20 50 L29 46 Q30 45, 31 46 L40 64 Q41 65, 42 64 L51 19 Q52 18, 53 19 L62 82 Q63 83, 64 82 L73 51 Q74 50, 75 50 H100 V10 Q100 0, 90 0 H10 Q0 0, 0 10 Z" fill="#3F4A5A" stroke="white" stroke-width="5" />
     <path d="M0 50 H18 Q19 50, 20 50 L29 46 Q30 45, 31 46 L40 64 Q41 65, 42 64 L51 19 Q52 18, 53 19 L62 82 Q63 83, 64 82 L73 51 Q74 50, 75 50 H100 V90 Q100 100, 90 100 H10 Q0 100, 0 90 Z" fill="#0F1A2A" stroke="white" stroke-width="5" /> -->
 </svg>

@@ -18,10 +18,10 @@
 </head>
 <body>
     <header>
-        <img class="logo" id="icon" src="img/icon.svg" alt="logo"/>
+        <a href="index.html"><img class="logo" id="icon" src="img/icon.svg" alt="logo"/></a>
         <a href="index.html"><img class="logo" src="img/logo.svg" alt="logo"/></a>
-        <!-- <div class="title">Beating Line</div> -->
-        <img class="memberIcon" src="img/member.svg" alt="Member"/>
+        <img class="menu" id="menu" src="img/menu.svg" alt="Menu"/>
+        <!-- <img class="memberIcon" src="img/member.svg" alt="Member"/> -->
     </header>
     <nav>
         <div class="nav">
@@ -59,7 +59,11 @@
     </nav>
     <div class="sideNav" id="sideNav">
         <img id="closeNav" src="img/close.svg" alt="close"/>
-        <div></div>
+        <div class="sideNavUserDiv">
+            <img class="memberIcon sideNavUserPic" src="img/member.svg" alt="Member"/>
+            <!-- <div class="sideNavUserHi">Hello,</div> -->
+            <div class="sideNavUserName" id="memberName">Sign In/Up</div>
+        </div>
         <button class="sideNavButton" id="save">Save Beat</button>
         <button class="sideNavButton" id="saveAs">Save As</button>
         <button class="sideNavButton" id="download">Download</button>

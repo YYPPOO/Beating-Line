@@ -45,7 +45,7 @@ nav .nav {
 }
 
 .nav>img:hover, .nav>button:hover {
-    filter: brightness(1.5);
+    filter: brightness(1.2);
 }
 
 .metronomeOn, .kbModeOn, .volumeOn, .visualSwitchOn {
@@ -166,23 +166,23 @@ input[type="range"]::-moz-focus-outer{
 .sideNav {
     width: 200px;
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
     position: fixed;
     top: 0px;
-    left: -200px;
-    transition: left 0.5s;
+    right: -200px;
+    transition: right 0.5s;
     background-color: #333333;
     z-index: 10;
     display: grid;
     grid-template-columns: 150px;
-    grid-template-rows: repeat(6,50px) 1fr 20px;
+    grid-template-rows: 100px repeat(5,50px) 1fr 20px;
     justify-content: center;
     justify-items: center;
     align-items: center;
 }
 
 .sideNavShow {
-    left: 0px;
+    right: 0px;
 }
 
 .navShield {
@@ -201,6 +201,19 @@ input[type="range"]::-moz-focus-outer{
     height: 30px;
     top: 10px;
     right: 10px;
+    cursor: pointer;
+}
+
+.sideNavUserDiv {
+    justify-self: flex-start;
+}
+.sideNavUserPic {
+    width: 40px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.sideNavUserName {
+    color: #aaaaaa;
     cursor: pointer;
 }
 
@@ -389,7 +402,11 @@ canvas {
     border-radius: 5px;
     justify-content: flex-end;
     background-color: #333333;
+    cursor: pointer;
 }
+/* .track:hover {
+    filter: brightness(1.2);
+} */
 
 .trackIcon {
     width: 30px;
@@ -433,25 +450,30 @@ canvas {
 }
 
 .pointNumberOn {
-    background: #4d99cc;
+    background-color: #dddddd;
+    color: #ffffff;
 }
 
-.b {
+.b, .bp {
     background-color: #333333;
     border-radius: 5px;
     width: 30px;
     height: 30px;
     transition: all 0.1s;
     opacity: 0.8;
+    cursor: pointer;
+}
+.b:hover, .bp:hover {
+    filter: brightness(1.2);
 }
 
 .bp {
     background-color: #555555;
-    border-radius: 5px;
+    /* border-radius: 5px;
     width: 30px;
     height: 30px;
     transition: all 0.1s;
-    opacity: 0.8;
+    opacity: 0.8; */
 }
 
 .bOn {

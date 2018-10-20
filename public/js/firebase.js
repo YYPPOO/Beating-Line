@@ -12,6 +12,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         // console.log('登入id',authStatus().uid);
 
         showUserPic(user);
+        document.getElementById("memberName").textContent = "Hello, "+user.displayName;
         getUserBeatList(user.uid);
         console.log("Log in with "+user.providerData[0].providerId);
         // clickProfile = goToProfile;
