@@ -71,50 +71,13 @@
         <canvas id="visual" class="visual"></canvas>
         <div class="padDiv" id="padDiv"></div>
         <div class="pageDiv" id="pageDiv"></div>
-        <div class="trackSettingListDiv" id="trackSettingListDiv" style="display:none;"></div>
-        <div class="kbCtrlDiv" id="kbCtrlDiv" style="display:none;">
-            <div class="kbImgDiv" id="kbImgDiv"></div>
-            <div class="kbText">
-                <div class="kbKey">
-                    <div class="kbKeyKey">
-                        Key
-                    </div>
-                    Space<br/>
-                    Esc<br/>
-                    1~8<br/>
-                    Shift + 1~8<br/>
-                    Ctrl + 1~8<br/>
-                    `<br/>
-                    9<br/>
-                    0<br/>
-                    -<br/>
-                    =<br/>
-                    Shift + -<br/>
-                    Shift + =<br/>
-                    Ctrl + Del<br/>
-                </div>
-                <div class="kbAction">
-                    <div class="kbKeyKey">
-                        Action
-                    </div>
-                    Play / Pause<br/>
-                    Stop<br/>
-                    Switch Track<br/>
-                    Switch Other Tracks<br/>
-                    Delete Track<br/>
-                    Toggle Beating Line<br/>
-                    Toggle Keyboard Record<br/>
-                    Toggle Metronome<br/>
-                    Volume Down<br/>
-                    Volume Up<br/>
-                    BPM Down<br/>
-                    BPM Up<br/>
-                    Clear<br/>
-                </div>
-            </div>
-            <!-- <img src="img/kb.svg" id="kbImg" /> -->
+        <div class="funcBtnDiv" id="funcBtnDiv">
+            <button class="func" id="func0">Track Volume</button>
+            <button class="func" id="func1">Drum Pad</button>
+            <button class="func" id="func2">Keyboard Control</button>
         </div>
-        <div class="drumPadDiv" id="drumPadDiv" style="display:none;">
+        <div class="funcItem trackSettingListDiv" id="trackSettingListDiv"></div>
+        <div class="funcItem drumPadDiv" id="drumPadDiv">
             <div class="drumPad" id="drumPad4">
                 <span>5</span>
                 <img src="img/track4.svg" alt="Tom-Tom">
@@ -155,6 +118,48 @@
                 <img src="img/track3.svg" alt="Open Hi-Hat">
                 <div>Open Hi-Hat</div>
             </div>
+        </div>
+        <div class="funcItem kbCtrlDiv" id="kbCtrlDiv">
+            <div class="kbImgDiv" id="kbImgDiv"></div>
+            <div class="kbText">
+                <div class="kbKey">
+                    <div class="kbKeyKey">
+                        Key
+                    </div>
+                    Space<br/>
+                    Esc<br/>
+                    1~8<br/>
+                    Shift + 1~8<br/>
+                    Ctrl + 1~8<br/>
+                    `<br/>
+                    9<br/>
+                    0<br/>
+                    -<br/>
+                    =<br/>
+                    Shift + -<br/>
+                    Shift + =<br/>
+                    Ctrl + Del<br/>
+                </div>
+                <div class="kbAction">
+                    <div class="kbKeyKey">
+                        Action
+                    </div>
+                    Play / Pause<br/>
+                    Stop<br/>
+                    Switch Track<br/>
+                    Switch Other Tracks<br/>
+                    Delete Track<br/>
+                    Toggle Beating Line<br/>
+                    Toggle Keyboard Record<br/>
+                    Toggle Metronome<br/>
+                    Volume Down<br/>
+                    Volume Up<br/>
+                    BPM Down<br/>
+                    BPM Up<br/>
+                    Clear<br/>
+                </div>
+            </div>
+            <!-- <img src="img/kb.svg" id="kbImg" /> -->
         </div>
     </section>
 

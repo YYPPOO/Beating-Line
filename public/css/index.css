@@ -6,17 +6,20 @@ nav {
     margin: 10px;
 }
 
-@media (max-width:650px) {
-    nav {
-        flex-direction: column;
-    }
-}
-
 nav .nav {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 10px 10px;
+}
+
+@media (max-width:650px) {
+    nav {
+        flex-direction: column-reverse;
+    }
+    nav .nav {
+        margin: 5px 10px;
+    }
 }
 
 .nav input {
@@ -54,6 +57,7 @@ nav .nav {
     height: 20px;
     border: 0px;
     padding: 5px;
+    font-weight: bold;
 }
 
 #play {
@@ -65,8 +69,12 @@ nav .nav {
 }
 
 .nav>button>img {
-    width: 29px;
-    height: 29px;
+    margin-top: 2px;
+    width: 26px;
+    height: 26px;
+}
+#play>img {
+    margin-left: 3px;
 }
 /* 
 #stop {
@@ -159,7 +167,7 @@ input[type="range"]::-moz-focus-outer{
     width: 200px;
     height: 100%;
     overflow: hidden;
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: -200px;
     transition: left 0.5s;
@@ -407,47 +415,6 @@ canvas {
     }
 }
 
-#funcBtn {
-    cursor: pointer;
-    font-size: 16px;
-    padding: 10px 0 0;
-    /* margin: 3px 0; */
-}
-.funcDiv {
-    cursor: pointer;
-    /* position: relative; */
-}
-.funcItemDiv {
-    background-color: #333333;
-    border-radius: 10px;
-    text-align: left;
-    position: absolute;
-    height: 258px;
-    top: 143px;
-    /* bottom: 0; */
-    display: flex;
-    flex-direction: column;
-    font-weight: initial;
-    transform: scale(0,1);
-    transform-origin: left;
-    transition: all 0.2s;
-    padding: 10px;
-    z-index: 3;
-}
-
-.funcItemDivOn{
-    transform: scale(1,1);
-}
-
-.funcItem {
-    background-color: #3f4a5a;
-    /* background-color: #4D99CC; */
-    border: 0px;
-    font-size: 16px;
-    width: 150px;
-    margin-bottom: 15px;
-}
-
 .pointNumber {
     text-align: center;
     font-size: 12px;
@@ -523,10 +490,52 @@ canvas {
     border: solid 1px white;
 }
 
+
+/* #funcBtn {
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 0 0;
+    margin: 3px 0;
+}
+.funcDiv {
+    cursor: pointer;
+    position: relative;
+} */
+.funcBtnDiv {
+    /* background-color: #333333;
+    border-radius: 5px;
+    text-align: left;
+    position: absolute;
+    height: 258px;
+    top: 143px;
+    bottom: 0;
+    flex-direction: column;
+    transform: scale(0,1);
+    transform-origin: left;
+    transition: all 0.2s;
+    z-index: 3;
+    padding: 10px; */
+    display: flex;
+    font-weight: initial;
+}
+
+/* .funcItemDivOn{
+    transform: scale(1,1);
+} */
+
+.func {
+    background-color: #3f4a5a;
+    /* background-color: #4D99CC; */
+    border: 0px;
+    font-size: 16px;
+    width: 150px;
+    /* margin-bottom: 15px; */
+}
+
 /* track setting */
 .trackSettingListDiv {
     /* opacity: 0; */
-    display: grid;
+    display: none;
     grid-template-columns: repeat(8,auto);
     /* grid-template-rows: repeat(2,auto); */
     grid-gap: 0 15px;
@@ -733,9 +742,12 @@ canvas {
 }
 
 .kbCtrlDiv {
-    /* opacity: 0; */
-    display: flex;
+    /* display: flex;
     flex-direction: column;
+    align-items: center; */
+    display: none;
+    grid-template-columns: 800px 300px;
+    justify-items: center;
     align-items: center;
 }
 .kbImgDiv {
@@ -744,6 +756,7 @@ canvas {
     background-image: url("../img/kb.png");
     background-position: center;
     background-size: contain;
+    background-repeat: no-repeat;
     margin: 20px;
 }
 .kbText {
@@ -763,7 +776,7 @@ canvas {
 }
 
 .drumPadDiv {
-    display: grid;
+    display: none;
     grid-template-columns: repeat(4,135px);
     grid-template-rows: repeat(2,135px);
     grid-gap: 20px 20px;
@@ -799,6 +812,13 @@ canvas {
     margin-left: 5px;
 }
 
+.funcOn {
+    background-color: #4d99cc;
+}
+.funcItemOn {
+    display: grid;
+}
+
 @media (max-width:1200px) and (min-width:650px) {
     .trackSettingListDiv {
         grid-gap: 0 5px;
@@ -806,15 +826,22 @@ canvas {
     .trackSetDiv {
         padding: 5px 15px 5px 5px;
     }
+    .kbCtrlDiv {
+        grid-template-columns: 600px;
+    }
     .kbImgDiv {
         width: 600px;
         height: 240px;
     }
 }
 @media (max-width:650px) {
-    .funcItemDiv {
-        top: 202px;
+    .func {
+        width: 155px;
     }
+    #func2 {
+        display: none;
+    }
+
     .trackSettingListDiv {
         grid-template-columns: auto auto;
         grid-template-rows: repeat(4,auto);
@@ -824,7 +851,7 @@ canvas {
     .trackSetDiv {
         grid-template-columns: 30px 30px 80px;
         grid-template-rows: 30px;
-        grid-gap: 0px 5px;
+        grid-gap: 0px 4px;
         grid-template-areas:
             "icon switch volume";
         padding: 5px 5px;
@@ -838,22 +865,17 @@ canvas {
     .trackSetNum {
         display: none;
     }
-    .kbImgDiv {
-        width: 320px;
-        height: 128px;
-    }
     
     .drumPadDiv {
-        grid-template-columns: repeat(2,135px);
-        grid-template-rows: repeat(4,70px);
+        grid-template-columns: repeat(2,155px);
+        grid-template-rows: repeat(4,80px);
         grid-gap: 10px 10px;
         grid-auto-flow: column;
-        margin: 0;
     }
 
     .drumPad {
-        grid-template-columns: 45px 8px 30px;
-        grid-template-rows: 30px 30px;
+        grid-template-columns: 55px 8px 30px;
+        grid-template-rows: 40px 30px;
         grid-template-areas: 
             ". . ."
             ". number icon";
@@ -886,8 +908,20 @@ canvas {
     #drumPad7 {
         order: 8;
     }
+
+    .kbCtrlDiv {
+        grid-template-columns: 320px;
+    }
+    .kbImgDiv {
+        width: 320px;
+        height: 128px;
+    }
 }
 @media (max-width:375px) {
+    .func {
+        width: 140px;
+        margin: 5px 2.5px;
+    }
     .funcItemDiv {
         top: 204px;
         height: 235px;
@@ -896,7 +930,7 @@ canvas {
         grid-gap: 2px 2px;
     }
     .trackSetDiv {
-        grid-template-columns: 13px 30px 80px;
+        grid-template-columns: 10px 30px 80px;
         grid-gap: 0px 5px;
         grid-template-areas: "number switch volume";
         justify-items: center;
@@ -906,6 +940,14 @@ canvas {
     }
     .trackSetNum {
         display: block;
+    }
+    .drumPadDiv {
+        grid-template-columns: repeat(2,140px);
+        grid-template-rows: repeat(4,70px);
+        grid-gap: 5px 5px;
+    }
+    .kbCtrlDiv {
+        display: none;
     }
 }
 
