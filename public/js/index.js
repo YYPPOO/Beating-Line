@@ -142,8 +142,11 @@ function init() {
     document.querySelector(".memberIcon").addEventListener("click",function() {
         authStatus() ? goToProfile() : popUpLogIn();
     });
+    document.getElementById("memberName").addEventListener("click",function() {
+        authStatus() ? goToProfile() : popUpLogIn();
+    });
 
-    document.getElementById("icon").addEventListener("click",function(){
+    document.getElementById("menu").addEventListener("click",function(){
         document.getElementById("sideNav").classList.add("sideNavShow");
         let navShield = cE("div","navShield");
         document.body.appendChild(navShield);

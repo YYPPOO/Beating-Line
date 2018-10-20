@@ -10,10 +10,10 @@ firebase.auth().onAuthStateChanged(function(user) {
         console.log("成功以"+user.providerData[0].providerId+"登入");
         showUserData(user);
         showProfilePic(user);
-        showUserPic(user);
-        document.querySelector(".memberIcon").addEventListener("click",function(){
-            window.location = "/profile.html";
-        });
+        // showUserPic(user);
+        // document.querySelector(".memberIcon").addEventListener("click",function(){
+        //     window.location = "/profile.html";
+        // });
         document.getElementById("logout").addEventListener("click",function(){alert("Log out of your account?!",false,logout)});
 
     } else {
