@@ -797,6 +797,7 @@ function finishedLoading(bufferList) {
     
     let canvas = document.getElementById("visual");
     let canvasCtx = canvas.getContext("2d");
+    let step;
     // draw an oscilloscope of the current audio source
     function draw() {
         drawVisualId = requestAnimationFrame(draw);
@@ -807,12 +808,16 @@ function finishedLoading(bufferList) {
         // }
         if(mediaQuery[0].matches) {
             canvas.width = 1115;
+            step = 2;
         } else if(mediaQuery[1].matches) {
             canvas.width = 555;
+            step = 4;
         } else if(mediaQuery[2].matches) {
             canvas.width = 254;
+            step = 8;
         } else {
             canvas.width = 275;
+            step = 8;
         }
         canvas.height = mediaQuery[2].matches?254:275;
 
@@ -828,28 +833,63 @@ function finishedLoading(bufferList) {
         canvasCtx.beginPath();
         
         let sliceWidth = canvas.width * 1.0 / bufferLength;
-        let x = sliceWidth/2;
+        let x = 0;
+        // let x = sliceWidth/2;
         // canvasCtx.moveTo(x, dataArray[0]/128.0*canvas.height/2);
         
         let amp=0
-        for(let i=0;i<bufferLength;i++) {
+        for(let i=0;i<bufferLength;i+=step) {
             let v = dataArray[i] / 128.0;
             let y = v * canvas.height/2;
             visualMode==2 && canvasCtx.moveTo(x, canvas.height/2);
             canvasCtx.lineTo(x, y);
-            x += sliceWidth;
+            x += sliceWidth*step;
             amp+=v;
         }
+        visualMode==2 && canvasCtx.moveTo(canvas.width , canvas.height/2);
+        canvasCtx.lineTo(canvas.width, dataArray[bufferLength-1]/128*canvas.height/2);
 
         canvasCtx.lineWidth = 3;
         // canvasCtx.strokeStyle = "rgba(77,153,204,"+(1-Math.pow(((amp-bufferLength)/256-1),10))+")"
         // canvasCtx.strokeStyle = "rgba(77,153,204,"+(amp!==bufferLength?1:0)+")"
-        canvasCtx.strokeStyle = "rgba(77,153,204,"+(visualMode && amp!==bufferLength?1:0)+")"
+        canvasCtx.strokeStyle = "rgba(77,153,204,"+(visualMode && amp!==bufferLength/step?1:0)+")"
 
         // canvasCtx.lineTo(canvas.width, canvas.height/2);
         canvasCtx.stroke();
     };
     draw();
+
+    
+    // let funcDiv = cE("div");
+    // let funcBtn = cE("div","funcBtn pointNumberP","☰","id","funcBtn");
+    // let funcItemDiv = cE("div","funcItemDiv");
+    let func = [];
+    func[0] = document.getElementById("func0");
+    func[1] = document.getElementById("func1");
+    func[2] = document.getElementById("func2");
+    let funcItem = document.querySelectorAll(".funcItem");
+
+    // funcDiv.addEventListener("mouseover",function(){
+    //     funcBtn.style.transform = "scale(1.3,1.3)";
+    //     funcItemDiv.classList.toggle("funcItemDivOn",true);
+    // })
+    // funcDiv.addEventListener("mouseout",function(){
+    //     funcBtn.style.transform = "initial";
+    //     funcItemDiv.classList.toggle("funcItemDivOn",false);
+    // })
+    // funcBtn.addEventListener("touchstart",function(e){
+    //     e.preventDefault();
+    //     funcItemDiv.classList.toggle("funcItemDivOn");
+    // })
+    for(let m=0;m<func.length;m++){
+        func[m].addEventListener("click",function(){
+            for(let n=0;n<func.length;n++){
+                funcItem[n].classList.toggle("funcItemOn",m==n && !func[m].classList.contains("funcOn"));
+                func[n].classList.toggle("funcOn",m==n && !func[m].classList.contains("funcOn"));
+            }
+        })
+    }
+
 }
 
 
@@ -1002,51 +1042,7 @@ function createPad(){
         }
     }
 
-    let funcDiv = cE("div");
-    let funcBtn = cE("div","funcBtn pointNumberP","☰","id","funcBtn");
-    let funcItemDiv = cE("div","funcItemDiv");
-    let func = [];
-    func[0] = cE("button","funcItem","Track Volume");
-    func[1] = cE("button","funcItem","Keyboard Control");
-    func[2] = cE("button","funcItem","Drum Pad");
-
-    funcDiv.addEventListener("mouseover",function(){
-        funcBtn.style.transform = "scale(1.3,1.3)";
-        funcItemDiv.classList.toggle("funcItemDivOn",true);
-    })
-    funcDiv.addEventListener("mouseout",function(){
-        funcBtn.style.transform = "initial";
-        funcItemDiv.classList.toggle("funcItemDivOn",false);
-    })
-    funcBtn.addEventListener("touchstart",function(e){
-        e.preventDefault();
-        funcItemDiv.classList.toggle("funcItemDivOn");
-    })
-    func[0].addEventListener("click",function(){
-        funcItemDiv.classList.remove("funcItemDivOn");
-        document.getElementById("trackSettingListDiv").style = "display:grid;";
-        document.getElementById("kbCtrlDiv").style = "display:none;";
-        document.getElementById("drumPadDiv").style = "display:none;";
-    })
-    func[1].addEventListener("click",function(){
-        funcItemDiv.classList.remove("funcItemDivOn");
-        document.getElementById("trackSettingListDiv").style = "display:none;";
-        document.getElementById("kbCtrlDiv").style = "display:flex;";
-        document.getElementById("drumPadDiv").style = "display:none;";
-    })
-    func[2].addEventListener("click",function(){
-        funcItemDiv.classList.remove("funcItemDivOn");
-        document.getElementById("trackSettingListDiv").style = "display:none;";
-        document.getElementById("kbCtrlDiv").style = "display:none;";
-        document.getElementById("drumPadDiv").style = "display:grid;";
-    })
-    funcItemDiv.append(func[0],func[2]);
-    if(mediaQuery[0].matches || mediaQuery[1].matches){
-        funcItemDiv.append(func[1]);
-    }
-    funcDiv.append(funcBtn,funcItemDiv);
-    padDiv.appendChild(funcDiv);
-    // padDiv.appendChild(funcDiv);
+    padDiv.appendChild(cE("div"));
     // padDiv.appendChild(funcItemDiv);
     for(let j=0;j<length;j++){
         pointNumberList[j] = cE("div",j%4?"pointNumber":"pointNumberP",j%4?(j%4)+1:((j+page*length)/4)+1);
