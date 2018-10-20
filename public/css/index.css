@@ -186,7 +186,7 @@ input[type="range"]::-moz-focus-outer{
 }
 
 .navShield {
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     top: 0px;
@@ -209,7 +209,7 @@ input[type="range"]::-moz-focus-outer{
     border: 0px;
 }
 
-.beatListBtn {
+.beatListBtnShow {
     /* align-self: flex-end; */
     background-color: #4D99CC;
 }
