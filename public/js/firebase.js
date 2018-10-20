@@ -341,7 +341,11 @@ function showUserBeatList(userBeatList,uid) {
                     }
                     beatId = i;
                     document.getElementById("bpm").value = bpm;
+                    for(let k=0;k<trackQty;k++){
+                        document.getElementById("trackSetVolume"+k).value = volume[k];
+                    }
                     decideLength(mediaQuery);
+                    reset();
                 })
                 .catch(error => {
                     console.error("Load beat error:",error)

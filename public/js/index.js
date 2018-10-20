@@ -70,6 +70,7 @@ let pointNumberList = [];
 
 let play;
 let stop;
+let reset;
 
 function decideLength(media) {
     if(mediaQuery[0].matches) {
@@ -277,7 +278,7 @@ function finishedLoading(bufferList) {
         document.getElementById("playImg").src = "img/play.svg";
     }
 
-    let reset = function() {
+    reset = function() {
         clearInterval(timerId);
         timerId = setInterval(function(){
             playByPoint(bufferList,p);
