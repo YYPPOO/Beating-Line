@@ -380,6 +380,7 @@ function finishedLoading(bufferList) {
     } else {
         if(localStorage.beat) {state = JSON.parse(localStorage.getItem("beat"));}
         if(localStorage.bpm) {bpm = localStorage.getItem("bpm");}
+        if(localStorage.volume) {volume = JSON.parse(localStorage.getItem("volume"));}
         document.getElementById("bpm").value = bpm;
         decideLength(mediaQuery);
         createTrackSetting();
@@ -1362,6 +1363,8 @@ function createTrackSetting() {
 function saveBeatToLocalStorage() {
     let beatString = JSON.stringify(state);
     localStorage.setItem("beat",beatString);
+    localStorage.setItem("bpm",bpm);
+    localStorage.setItem("volume",JSON.stringify(volume));
 }
 
 // save beat feature ------------------------------------------------------------
@@ -1430,9 +1433,7 @@ function saveBeat() {
                 console.log(newBeatId);
                 removeUserBeatList();
                 getUserBeatList(authStatus().uid);
-                setTimeout(function(){
-                    // window.location = "index.html?id="+newBeatId;
-                },3000);
+                window.history.pushState(null,beatName,"index.html?id="+newBeatId);
             }
         }
     })
@@ -1466,14 +1467,12 @@ function saveAsNewBeat() {
             alert("The beat isn't saved, please try again later. :(");
             console.error("Update to database error:",error)
         } else {
-            alert("Beat saved! Jump page after 3 seconds.", true);
+            alert("Beat saved!", true);
             console.log("Update to database success:",response);
             let newBeatId = response.newBeatId;
             removeUserBeatList();
             getUserBeatList(authStatus().uid);
-            setTimeout(function(){
-                // window.location = "index.html?id="+newBeatId;
-            },3000);
+            window.history.pushState(null,beatName,"index.html?id="+newBeatId);
         }
     })
     .catch(error => {
