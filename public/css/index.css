@@ -342,6 +342,15 @@ input[type="range"]::-moz-focus-outer{
     border-radius: 5px;
 }
 
+.namingCopy {
+    position: absolute;
+    right: 30px;
+    top: 100px;
+    font-size: 12px;
+    color: #aaaaaa;
+    line-height: 12px;
+}
+
 .namingBtn {
     background-color: #0f1a2a;
     /* border: 1px solid #aaaaaa; */
