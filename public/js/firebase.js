@@ -380,6 +380,7 @@ function deleteBeat(beatId,uid) {
         alert("Beat delete.",true);
         removeUserBeatList();
         getUserBeatList(authStatus().uid);
+        window.history.replaceState(null,"","index.html");
     }).catch((error)=>{
         console.log(error);
         alert("Beat delete fail, please try again.")
