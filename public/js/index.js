@@ -139,6 +139,7 @@ function init() {
 
     bufferLoader.load();
 
+    // add side nav click event ---------------------------------------------
     document.querySelector(".memberIcon").addEventListener("click",function() {
         authStatus() ? goToProfile() : popUpLogIn();
     });
@@ -196,6 +197,8 @@ function finishedLoading(bufferList) {
 
     soundList = bufferList;
     
+    // add top nav button event -----------------------------------------------------------
+    // playing control
     play = function(e) {
         if(playing) {
             clearInterval(timerId);
@@ -373,7 +376,7 @@ function finishedLoading(bufferList) {
         createTrackSetting();
     }
 
-    // set button feature -------------------------------------------------------------
+    // set top nav button feature -------------------------------------------------------------
     let playBtn = document.getElementById("play");
     playBtn.addEventListener("click",play);
     // document.getElementById("clear").addEventListener("click",clear);
@@ -412,6 +415,7 @@ function finishedLoading(bufferList) {
         muteBtn.classList.toggle("volumeOn",totalVolume>0.01);
     });
 
+    // bottom feature menu feature ------------------------------------------
     document.getElementById("visualSwitch").addEventListener("click",function(){
         visualMode = (visualMode+1)%3;
         this.src = "img/visual"+visualMode+".svg";
@@ -425,7 +429,7 @@ function finishedLoading(bufferList) {
     }
 
 
-
+    // add keyboard event ----------------------------------------------------
     let keyHit = function(i){
         playSound(soundList[i],context.currentTime,volume[i]);
         trackList[i].classList.add("b"+i);
@@ -493,6 +497,7 @@ function finishedLoading(bufferList) {
             muteBtn.classList.toggle("volumeOn",totalVolume>0.01);
         }
     }
+
     window.onkeydown = function(e) {
         if(document.activeElement.tagName == "INPUT"){
             if(e.keyCode==13) {
@@ -841,16 +846,31 @@ function finishedLoading(bufferList) {
         // let x = sliceWidth/2;
         // canvasCtx.moveTo(x, dataArray[0]/128.0*canvas.height/2);
         
-        let amp=0
-        for(let i=0;i<bufferLength;i+=step) {
-            let v = dataArray[i] / 128.0;
-            let y = v * canvas.height/2;
-            visualMode==2 && canvasCtx.moveTo(x, canvas.height/2);
-            canvasCtx.lineTo(x, y);
-            x += sliceWidth*step;
-            amp+=v;
+        let amp = 0;
+
+        if (visualMode==1){
+            let dir = true;
+            canvasCtx.moveTo(x, canvas.height/2);
+            for(let i=1;i<bufferLength;i+=step) {
+                if((dataArray[i]>dataArray[i-1]) !== dir) {
+                    canvasCtx.lineTo(x,dataArray[i] / 128 * canvas.height / 2)
+                    dir = !dir;
+                }
+                x += sliceWidth*step;
+                amp+=dataArray[i] / 128;
+            }
+        } else if (visualMode==2){
+            for(let i=0;i<bufferLength;i+=step) {
+                let v = dataArray[i] / 128.0;
+                let y = v * canvas.height/2;
+                visualMode==2 && canvasCtx.moveTo(x, canvas.height/2);
+                canvasCtx.lineTo(x, y);
+                x += sliceWidth*step;
+                amp+=v;
+            }
+            visualMode==2 && canvasCtx.moveTo(canvas.width , canvas.height/2);
         }
-        visualMode==2 && canvasCtx.moveTo(canvas.width , canvas.height/2);
+
         canvasCtx.lineTo(canvas.width, dataArray[bufferLength-1]/128*canvas.height/2);
 
         canvasCtx.lineWidth = 3;

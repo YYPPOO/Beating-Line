@@ -246,10 +246,10 @@ function popUpLogIn() {
         mySignButton.addEventListener("click",signUp);
 
     let myPolicyDiv = cE("div","policyDiv");
-    let myPolicyCheck = cE("input","policyCheck",null,"type","checkbox");
+    // let myPolicyCheck = cE("input","policyCheck",null,"type","checkbox");
     let myPolicyText = cE("span","policyText");
-        myPolicyText.innerHTML = "I accept <a class='logInText' target='_blank' href='terms.html'>Terms</a> and <a class='logInText' target='_blank' href='privacy.html'>Privacy Policy</a>.";
-        myPolicyDiv.append(myPolicyCheck,myPolicyText);
+        myPolicyText.innerHTML = "By clicking,<br/> you agree our <a class='logInText' target='_blank' href='terms.html'>Terms</a> and <a class='logInText' target='_blank' href='privacy.html'>Privacy Policy</a>.";
+        myPolicyDiv.append(myPolicyText);
 
     //是那個ＯＲ分格線
 	let myHrDiv = cE("div","divideLine");
@@ -346,7 +346,7 @@ function showUserBeatList(userBeatList,uid) {
                         document.getElementById("trackSetVolume"+k).value = volume[k];
                     }
                     decideLength(mediaQuery);
-                    reset();
+                    playing && reset();
                 })
                 .catch(error => {
                     console.error("Load beat error:",error)
