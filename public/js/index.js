@@ -165,7 +165,7 @@ function init() {
 
     document.getElementById("save").addEventListener("click",function(){
         if(authStatus()) {
-            beatId ? saveBeat() :popUpSaveBeat(saveBeat);
+            beatId ? alert("Replace the original beat?",false,saveBeat) :popUpSaveBeat(saveBeat);
         } else {
             popUpLogIn();
         }
@@ -177,7 +177,11 @@ function init() {
         alert("The Feature Is Comming Soon.");
     });
     document.getElementById("share").addEventListener("click",function(){
-        alert("The Feature Is Comming Soon.");
+        if(authStatus()) {
+            beatId ? popUpShareBeat() : alert("Please save the beat first.",false,function(){popUpSaveBeat(saveBeat)});
+        } else {
+            popUpLogIn();
+        }
     });
 
 }
@@ -349,6 +353,8 @@ function finishedLoading(bufferList) {
                 padList[i][j].classList.remove("b"+i);
             }
         }
+        beatId = null;
+        window.history.replaceState(null,"","index.html");
     }
 
     // get beat from back end or local storage ---------------------------------------
@@ -1479,4 +1485,40 @@ function saveAsNewBeat() {
         alert("The beat isn't saved, please try again later. :(");
         console.error("Update to database error:",error)
     });
+}
+
+function popUpShareBeat() {
+    let mySheild = cE("div","shield");
+    let myNaming = cE("div","naming");
+    let shareLink = "https://beatingline.com/index.html?id="+beatId;
+    let closeNaming = function() {
+        mySheild.parentNode.removeChild(mySheild);
+        myNaming.parentNode.removeChild(myNaming);
+    }
+
+    let myNamingText = cE('div', "namingText","Copy link and share!");
+    let myNamingInput = cE("input","namingInput",null,"value",shareLink);
+        myNamingInput.select();
+        // myNamingInput.addEventListener("change",function(){
+        //     beatName = this.value;
+        //     console.log(beatName);
+        // })
+    let myNamingCopy = cE("div","namingCopy","Link copied!");
+        myNamingCopy.style.display = "none";
+	let myNamingBtnDiv = cE("div","namingBtnDiv");
+	let myNamingBtn = cE('button', "namingBtn", "Copy");
+	myNamingBtn.addEventListener('click', function () {
+        myNamingInput.select();
+        document.execCommand("copy");
+        myNamingCopy.style.display = "block";
+		// cb && cb();
+        // closeNaming();
+    });
+    let myNamingBtn2 = cE('button', "namingCancel", "Okay");
+    myNamingBtn2.addEventListener('click',closeNaming);
+
+    myNamingBtnDiv.append(myNamingBtn,myNamingBtn2);
+    
+    myNaming.append(myNamingText,myNamingInput,myNamingCopy,myNamingBtnDiv);
+	document.body.append(mySheild, myNaming);
 }
