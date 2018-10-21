@@ -185,12 +185,14 @@ let resetPassword = function() {
 }  
 
 function goToProfile() {
+    saveBeatToLocalStorage();
     window.location = "/profile.html";
 }
 
 //==========================製造登入小視窗=============================
 //實際跳出的產生函式
 function popUpLogIn() {
+    saveBeatToLocalStorage();
     if(authStatus()!==null) {
         return;
     }
@@ -304,7 +306,9 @@ function getUserBeatList(uid) {
     })
     .then(response => {
         console.log("Load user beat: ",response);
-        showUserBeatList(response,uid);
+        if(!response.error){
+            showUserBeatList(response,uid);
+        }
     })
     .catch(error => {
         console.error("Load user beat error: ",error);
@@ -347,6 +351,7 @@ function showUserBeatList(userBeatList,uid) {
                     }
                     decideLength(mediaQuery);
                     playing && reset();
+                    window.history.pushState(null,beatName,"index.html?id="+beatId);
                 })
                 .catch(error => {
                     console.error("Load beat error:",error)
@@ -383,7 +388,7 @@ function deleteBeat(beatId,uid) {
 
 function removeUserBeatList() {
     let beatListBtn = document.querySelector(".beatListBtn");
-    beatListBtn.parentNode.removeChild(beatListBtn);
+    beatListBtn && beatListBtn.parentNode.removeChild(beatListBtn);
     let beatListDiv = document.querySelector(".beatListDiv");
-    beatListDiv.parentNode.removeChild(beatListDiv);
+    beatListDiv && beatListDiv.parentNode.removeChild(beatListDiv);
 }
