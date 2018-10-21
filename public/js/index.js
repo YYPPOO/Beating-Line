@@ -191,6 +191,8 @@ function playByPoint(soundList,p){
         }
         padList[i][(p+totalLength-1)%totalLength-page*length] && padList[i][(p+totalLength-1)%totalLength-page*length].classList.remove("bOn");
     }
+    pointNumberList[p%totalLength-page*length] && pointNumberList[p%totalLength-page*length].classList.add("pointNumberOn");
+    pointNumberList[(p+totalLength-1)%totalLength-page*length] && pointNumberList[(p+totalLength-1)%totalLength-page*length].classList.remove("pointNumberOn");
 }
 
 function finishedLoading(bufferList) {
@@ -218,11 +220,14 @@ function finishedLoading(bufferList) {
                     if (autoPage) {
                         page=pagePlaying;
                         for(let i=0;i<trackQty;i++){
-                            padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
+                            if(trackSwitch[i]) {
+                                padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
+                            }
                             for(let j=0;j<length;j++){
                                 padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
                             }
                         }
+                        //change point number
                         for(let j=0;j<length;j+=4){
                             pointNumberList[j].textContent = ((j+page*length)/4)+1;
                         }
@@ -241,7 +246,7 @@ function finishedLoading(bufferList) {
                     document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
                 }
 
-                // kb mode
+                // kb mode icon animation
                 if(kbMode && p%4==0){
                     document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
                 }
@@ -274,6 +279,7 @@ function finishedLoading(bufferList) {
             for (let i=0;i<8;i++){
                 padList[i][(p+length-1)%length].classList.remove("bOn");
                 // padList[i][(p+totalLength-1)%totalLength].classList.remove("bOn");
+                pointNumberList[(p+length-1)%length-page*length] && pointNumberList[(p+length-1)%length-page*length].classList.remove("pointNumberOn");
             }
         }
 
@@ -288,44 +294,47 @@ function finishedLoading(bufferList) {
         clearInterval(timerId);
         timerId = setInterval(function(){
             playByPoint(bufferList,p);
-                if(p%length==0) {
-                    if (pageList[pagePlaying]){
-                        autoPage && pageList[page].classList.remove("pageNow");
-                        pageList[pagePlaying].classList.remove("pagePlaying");
-                    }
-                    pagePlaying=(p%totalLength)/length;
+            if(p%length==0) {
+                if (pageList[pagePlaying]){
+                    autoPage && pageList[page].classList.remove("pageNow");
+                    pageList[pagePlaying].classList.remove("pagePlaying");
+                }
+                pagePlaying=(p%totalLength)/length;
 
-                    // auto turn page part
-                    if (autoPage) {
-                        page=pagePlaying;
-                        for(let i=0;i<trackQty;i++){
+                // auto turn page part
+                if (autoPage) {
+                    page=pagePlaying;
+                    for(let i=0;i<trackQty;i++){
+                        if(trackSwitch[i]) {
                             padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
-                            for(let j=0;j<length;j++){
-                                padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
-                            }
                         }
-                        for(let j=0;j<length;j+=4){
-                            pointNumberList[j].textContent = ((j+page*length)/4)+1;
+                        for(let j=0;j<length;j++){
+                            padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
                         }
                     }
-
-                    // change page button
-                    if(pageList[pagePlaying]) {
-                        autoPage && pageList[pagePlaying].classList.add("pageNow");
-                        pageList[pagePlaying].classList.add("pagePlaying");
+                    //change point number
+                    for(let j=0;j<length;j+=4){
+                        pointNumberList[j].textContent = ((j+page*length)/4)+1;
                     }
                 }
 
-                // metronome sound
-                if(metronome && p%4==0){
-                    playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
-                    document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
+                // change page button
+                if(pageList[pagePlaying]) {
+                    autoPage && pageList[pagePlaying].classList.add("pageNow");
+                    pageList[pagePlaying].classList.add("pagePlaying");
                 }
+            }
 
-                // kb mode
-                if(kbMode && p%4==0){
-                    document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
-                }
+            // metronome sound
+            if(metronome && p%4==0){
+                playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
+                document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
+            }
+
+            // kb mode icon animation
+            if(kbMode && p%4==0){
+                document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
+            }
             p++;
         },15000/bpm);
     }
@@ -470,17 +479,26 @@ function finishedLoading(bufferList) {
             for(let k=0;k<trackQty;k++){
                 trackSwitch[k] = true;
                 document.getElementById("trackSwitch"+k).classList.toggle("b"+k,true);
+                if(page==pagePlaying) {
+                    padList[k][(p+length-1)%length].classList.toggle("bOn",true);
+                }
             }
         } else {
             for(let k=0;k<trackQty;k++){
                 trackSwitch[k] = (k==i);
                 document.getElementById("trackSwitch"+k).classList.toggle("b"+k,k==i);
+                if(page==pagePlaying) {
+                    padList[k][(p+length-1)%length].classList.toggle("bOn",k==i);
+                }
             }
         }
     }
     let toggleTrackSwitch = function(i){
         trackSwitch[i] = !trackSwitch[i];
         document.getElementById("trackSwitch"+i).classList.toggle("b"+i,trackSwitch[i]);
+        if(page==pagePlaying) {
+            padList[i][(p+length-1)%length].classList.toggle("bOn",trackSwitch[i]);
+        }
     }
     let stepUpDown = function(plus,shift){
         if(shift){
@@ -1094,12 +1112,13 @@ function createPageButton() {
         pageList[m].addEventListener("click",function(){
             if(playing) {autoPage = false;}
 
-            // when page is on playing, remove hit block
+            // when page is on playing, remove hit block and point number
             if(Math.floor((p-1)%totalLength/length)==page){
                 console.log(p,p%totalLength,page);
                 for(let i=0;i<trackQty;i++){
                     padList[i][(p+length-1)%length].classList.remove("bOn");
                 }
+                pointNumberList[(p+length-1)%length].classList.remove("pointNumberOn");
             }
 
             page=m;
@@ -1275,11 +1294,18 @@ function createTrackSetting() {
                 e.stopPropagation();
                 trackSwitch[i] = !trackSwitch[i];
                 this.classList.toggle("b"+i,trackSwitch[i]);
+                // if(page==pagePlaying && state[i][(p+totalLength-1)%totalLength]) {
+                if(page==pagePlaying) {
+                    padList[i][(p+length-1)%length].classList.toggle("bOn",trackSwitch[i]);
+                }
                 // e.stopImmediatePropagation();
             })
             trackSetSwitch.addEventListener("mousedown",function(e){
                 trackSwitch[i] = !trackSwitch[i];
                 this.classList.toggle("b"+i,trackSwitch[i]);
+                if(page==pagePlaying && state[i][(p+totalLength-1)%totalLength]) {
+                    padList[i][(p+length-1)%length].classList.toggle("bOn",trackSwitch[i]);
+                }
                 e.stopPropagation();
                 // e.stopImmediatePropagation();
             })

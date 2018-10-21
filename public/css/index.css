@@ -450,8 +450,9 @@ canvas {
 }
 
 .pointNumberOn {
-    background-color: #dddddd;
+    background-color: #4d99cc;
     color: #ffffff;
+    border-radius: 5px;
 }
 
 .b, .bp {
