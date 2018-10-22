@@ -250,7 +250,7 @@ function popUpLogIn() {
     let myPolicyDiv = cE("div","policyDiv");
     // let myPolicyCheck = cE("input","policyCheck",null,"type","checkbox");
     let myPolicyText = cE("span","policyText");
-        myPolicyText.innerHTML = "By clicking,<br/> you agree our <a class='logInText' target='_blank' href='terms.html'>Terms</a> and <a class='logInText' target='_blank' href='privacy.html'>Privacy Policy</a>.";
+        myPolicyText.innerHTML = "Agree our <a class='logInText' target='_blank' href='terms.html'>Terms</a> and <a class='logInText' target='_blank' href='privacy.html'>Privacy Policy</a> by clicking.";
         myPolicyDiv.append(myPolicyText);
 
     //是那個ＯＲ分格線
@@ -371,8 +371,8 @@ function showUserBeatList(userBeatList,uid) {
     document.getElementById("sideNav").appendChild(myBeatListDiv);
 }
 
-function deleteBeat(beatId,uid) {
-    fetch(dbHost+"/exe/deleteBeat?beatId="+beatId+"&userId="+uid,{
+function deleteBeat(deleteBeatId,uid) {
+    fetch(dbHost+"/exe/deleteBeat?beatId="+deleteBeatId+"&userId="+uid,{
         method:"delete"
     }).then(res => res.json())
     .then(response => {
@@ -380,7 +380,10 @@ function deleteBeat(beatId,uid) {
         alert("Beat delete.",true);
         removeUserBeatList();
         getUserBeatList(authStatus().uid);
-        window.history.replaceState(null,"","index.html");
+        if(beatId==deleteBeatId){
+            beatId = false;
+            window.history.replaceState(null,"","index.html");
+        }
     }).catch((error)=>{
         console.log(error);
         alert("Beat delete fail, please try again.")
