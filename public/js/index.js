@@ -5,7 +5,7 @@ let analyser;
 let analyserFilter;
 let drawVisualId;
 
-let bpm = 120;
+let bpm = 60;
 let totalVolume = 1;
 
 let trackQty = 8;
@@ -61,7 +61,7 @@ let rhythm1 = [
     [0,1,0,0,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
-state = rhythm1;
+state = rhythm0;
 
 let trackName = ["Kick","Snare","Close Hat","Open Hat","Tom","Clap","Conga","Atm"];
 let trackList = [];
@@ -231,6 +231,7 @@ function finishedLoading(bufferList) {
                                 padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
                             }
                         }
+                        pointNumberList[p%totalLength-page*length] && pointNumberList[p%totalLength-page*length].classList.add("pointNumberOn");
                         //change point number
                         for(let j=0;j<length;j+=4){
                             pointNumberList[j].textContent = ((j+page*length)/4)+1;
@@ -352,8 +353,10 @@ function finishedLoading(bufferList) {
             for(let j=0;j<length;j++){
                 padList[i][j].classList.remove("b"+i);
             }
+            volume[i] = 1;
+            document.getElementById("trackSetVolume"+i).value = 1;
         }
-        beatId = null;
+        beatId = false;
         window.history.replaceState(null,"","index.html");
     }
 
