@@ -213,6 +213,8 @@ function finishedLoading(bufferList) {
         } else {
             timerId = setInterval(function(){
                 playByPoint(bufferList,p);
+
+                // change page
                 if(p%length==0) {
                     if (pageList[pagePlaying]){
                         autoPage && pageList[page].classList.remove("pageNow");
@@ -439,6 +441,7 @@ function finishedLoading(bufferList) {
         visualMode = (visualMode+1)%3;
         this.src = "img/visual"+visualMode+".svg";
         this.classList.toggle("visualSwitchOn",visualMode);
+        // visualMode?draw():window.cancelAnimationFrame(drawVisualId);
         // vusualMode && draw();
     })
 
@@ -838,11 +841,13 @@ function finishedLoading(bufferList) {
     // draw an oscilloscope of the current audio source
     function draw() {
         drawVisualId = requestAnimationFrame(draw);
+
+        if(!visualMode){
+            // window.cancelAnimationFrame(drawVisualId);
+            return;
+        }
         canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // if(!visualMode){
-        //     return;
-        // }
         if(mediaQuery[0].matches) {
             canvas.width = 1115;
             step = 2;
@@ -862,11 +867,7 @@ function finishedLoading(bufferList) {
 
 
         canvasCtx.fillStyle = "rgba(15,26,42,0.1)";
-        // canvasCtx.fillStyle = "#0f1a2a";
-        // canvasCtx.fillStyle = "black";
 
-        //"#4d99cc";
-        
         canvasCtx.beginPath();
         
         let sliceWidth = canvas.width * 1.0 / bufferLength;
@@ -885,54 +886,34 @@ function finishedLoading(bufferList) {
                     dir = !dir;
                 }
                 x += sliceWidth*step;
-                amp+=dataArray[i] / 128;
+                amp += dataArray[i] / 128;
             }
         } else if (visualMode==2){
             for(let i=0;i<bufferLength;i+=step) {
                 let v = dataArray[i] / 128.0;
                 let y = v * canvas.height/2;
-                visualMode==2 && canvasCtx.moveTo(x, canvas.height/2);
+                canvasCtx.moveTo(x, canvas.height/2);
                 canvasCtx.lineTo(x, y);
                 x += sliceWidth*step;
-                amp+=v;
+                amp += v;
             }
-            visualMode==2 && canvasCtx.moveTo(canvas.width , canvas.height/2);
+            canvasCtx.moveTo(canvas.width , canvas.height/2);
         }
 
         canvasCtx.lineTo(canvas.width, dataArray[bufferLength-1]/128*canvas.height/2);
 
         canvasCtx.lineWidth = 3;
-        // canvasCtx.strokeStyle = "rgba(77,153,204,"+(1-Math.pow(((amp-bufferLength)/256-1),10))+")"
-        // canvasCtx.strokeStyle = "rgba(77,153,204,"+(amp!==bufferLength?1:0)+")"
-        canvasCtx.strokeStyle = "rgba(77,153,204,"+(visualMode && amp!==bufferLength/step?1:0)+")"
-
-        // canvasCtx.lineTo(canvas.width, canvas.height/2);
+        canvasCtx.strokeStyle = "rgba(77,153,204,"+(visualMode && amp!==bufferLength/step?1:0)+")";
         canvasCtx.stroke();
     };
-    draw();
+    // draw();
 
-    
-    // let funcDiv = cE("div");
-    // let funcBtn = cE("div","funcBtn pointNumberP","☰","id","funcBtn");
-    // let funcItemDiv = cE("div","funcItemDiv");
     let func = [];
     func[0] = document.getElementById("func0");
     func[1] = document.getElementById("func1");
     func[2] = document.getElementById("func2");
     let funcItem = document.querySelectorAll(".funcItem");
 
-    // funcDiv.addEventListener("mouseover",function(){
-    //     funcBtn.style.transform = "scale(1.3,1.3)";
-    //     funcItemDiv.classList.toggle("funcItemDivOn",true);
-    // })
-    // funcDiv.addEventListener("mouseout",function(){
-    //     funcBtn.style.transform = "initial";
-    //     funcItemDiv.classList.toggle("funcItemDivOn",false);
-    // })
-    // funcBtn.addEventListener("touchstart",function(e){
-    //     e.preventDefault();
-    //     funcItemDiv.classList.toggle("funcItemDivOn");
-    // })
     for(let m=0;m<func.length;m++){
         func[m].addEventListener("click",function(){
             for(let n=0;n<func.length;n++){
@@ -946,27 +927,19 @@ function finishedLoading(bufferList) {
 
 
 function playSound(buffer,time,volume) {
-    let source = context.createBufferSource(); // creates a sound source
+    let source = context.createBufferSource();
     let gain = context.createGain();
 
-    source.buffer = buffer;                    // tell the source which sound to play
-    source.connect(gain);       // connect the source to the context's destination (the speakers)
+    source.buffer = buffer;
+    source.connect(gain);
     gain.connect(analyserFilter);
     gain.gain.value = totalVolume*volume;
     gain.connect(context.destination);
-    // analyserFilter.connect(context.destination);
-    source.start(time);                           // play the source now
-    // source.stop(time+source.buffer.duration);
-    // console.log(gain);
-    // console.log(source);
-    // console.log(context.createBufferSource());
+    source.start(time);
     playingList.push(gain);
-    // console.log(playingList);
     source.onended = function(){
         playingList.splice(playingList.indexOf(gain),1);
     };
-
-    // note: on older systems, may have to use deprecated noteOn(time);
 }
 // let dogBarkingBuffer = null;
 // // Fix up prefixing
