@@ -1,4 +1,4 @@
-
+/* ----------------------------------------------- */
 nav {
     display: flex;
     justify-content: center;
@@ -31,7 +31,6 @@ nav .nav {
     margin: 5px;
     width: 30px;
     border-radius: 5px;
-    /* border: solid 1px #777777; */
     cursor: pointer;
 }
 
@@ -40,12 +39,12 @@ nav .nav {
     width: 60px;
 }
 
-.metronome, .kbMode, .volume, .visualSwitch, .clear {
-    background-color: #3f4a5a;
-}
-
 .nav>img:hover, .nav>button:hover {
     filter: brightness(1.2);
+}
+
+.metronome, .kbMode, .volume, .visualSwitch, .clear {
+    background-color: #3f4a5a;
 }
 
 .metronomeOn, .kbModeOn, .volumeOn, .visualSwitchOn {
@@ -61,11 +60,10 @@ nav .nav {
 }
 
 #play {
-    /* background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-image: url(../img/play.svg); */
     background-color: #4D99CC;
+}
+#play>img {
+    margin-left: 3px;
 }
 
 .nav>button>img {
@@ -73,22 +71,12 @@ nav .nav {
     width: 26px;
     height: 26px;
 }
-#play>img {
-    margin-left: 3px;
-}
-/* 
-#stop {
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-image: url(../img/stop.svg);
-} */
 
+/* ---------------------------------------------------- */
 input[type="range"] {
     position: relative;
     -webkit-appearance: none;
     -moz-appearance: none;
-    /* overflow: visible; */
     overflow: hidden;
     height: 10px;
     width: 100px;
@@ -109,33 +97,6 @@ input[type="range"]::-webkit-slider-thumb {
     box-shadow: -50px 0 0 45px #4D99CC;
     border: 0px;
 }
-
-/* input[type="range"]::-webkit-slider-runnable-track:hover>#thumb{
-    transform: scale(1.5,1.5);
-    background-color: #ffffff;
-} */
-
-input[type="range"]::-webkit-slider-thumb:hover,
-input[type="range"]::-webkit-slider-thumb:active,
-input[type="range"]::-webkit-slider-thumb:focus,
-input[type="range"]::-moz-range-thumb:hover,
-input[type="range"]::-moz-range-thumb:active,
-input[type="range"]::-moz-range-thumb:focus{
-    background-color: #ffffff !important;
-}
-
-/* input[type="range"]::-webkit-slider-thumb::before {
-    position: absolute;
-    top: 0px;
-    width: 2000%;
-    height: 1000%;
-    left: -197px;
-    background-color: #aaaaaa;
-    content:"-";
-    pointer-events: none;
-    transition:.2s;
-    z-index: 1;
-} */
 
 input[type="range"]::-moz-range-thumb {
     width: 10px;
@@ -159,7 +120,7 @@ input[type="range"]::-moz-range-progress{
 }
 
 input[type="range"]::-moz-focus-outer{
-    border:none;    /* 去除 focus 時候的外框虛線 */
+    border:none;
 }
 
 /* side nav --------------------------------------*/
