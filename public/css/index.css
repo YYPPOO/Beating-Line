@@ -1013,6 +1013,11 @@ canvas {
         opacity: 1;
     }
 }
+@media (max-width:650px) {
+    .b0.bOn,.b1.bOn,.b2.bOn,.b3.bOn,.b4.bOn,.b5.bOn,.b6.bOn,.b7.bOn {
+        animation: none;
+    }
+}
 
 #container>img{
     border: solid 1px white;
