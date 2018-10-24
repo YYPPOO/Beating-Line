@@ -17,7 +17,8 @@ let length = 16;
 let page = 0;
 let pagePlaying = 0;
 
-let p=0;
+let p = 0;
+let lastP = totalLength-1;
 let playing = false;
 let autoPage = true;
 let metronome = false;
@@ -35,9 +36,9 @@ let volume = [1,1,1,1,1,1,1,1];
 let trackSwitch = [true,true,true,true,true,true,true,true];
 
 let state = [];
-for(let i=0;i<trackQty;i++) {
+for(let i=0;i<trackQty;++i) {
     state[i] = [];
-    for(let j=0;j<totalLength;j++) {
+    for(let j=0;j<totalLength;++j) {
         state[i].push(0);
     }
 }
@@ -104,7 +105,7 @@ let mediaQuery = [
     window.matchMedia("(min-width: 650px)"),
     window.matchMedia("(max-width: 375px)")
 ];
-for(let i=0;i<mediaQuery.length;i++){
+for(let i=0;i<mediaQuery.length;++i){
     mediaQuery[i].addListener(decideLength);
 }
 
@@ -186,17 +187,17 @@ function init() {
 
 }
 
-function playByPoint(soundList,p){
+function playByPoint(soundList,onPage,lastOnPage){
     let startTime = context.currentTime;
-    for (let i=0;i<8;i++){
+    for (let i=0;i<8;++i){
         if(trackSwitch[i]) {
-            state[i][p%totalLength] && playSound(soundList[i],startTime+0.05,volume[i]);
-            padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
+            state[i][p] && playSound(soundList[i],startTime+0.05,volume[i]);
+            onPage && padList[i][p-page*length].classList.add("bOn");
         }
-        padList[i][(p+totalLength-1)%totalLength-page*length] && padList[i][(p+totalLength-1)%totalLength-page*length].classList.remove("bOn");
+        padList[i][lastP-page*length] && padList[i][lastP-page*length].classList.remove("bOn");
     }
-    pointNumberList[p%totalLength-page*length] && pointNumberList[p%totalLength-page*length].classList.add("pointNumberOn");
-    pointNumberList[(p+totalLength-1)%totalLength-page*length] && pointNumberList[(p+totalLength-1)%totalLength-page*length].classList.remove("pointNumberOn");
+    onPage && pointNumberList[p-page*length].classList.add("pointNumberOn");
+    pointNumberList[lastP-page*length] && pointNumberList[lastP-page*length].classList.remove("pointNumberOn");
 }
 
 function finishedLoading(bufferList) {
@@ -204,6 +205,58 @@ function finishedLoading(bufferList) {
     soundList = bufferList;
     
     // add top nav button event -----------------------------------------------------------
+    let handlePlay = function(){
+        let onPage = p>=page*length && p<(page+1)*length;
+        let lastOnPage = lastP>=page*length && lastP<(page+1)*length;
+        playByPoint(bufferList,onPage,lastOnPage);
+
+        // change page
+        if(p%length===0) {
+            if (pageList[pagePlaying]){
+                autoPage && pageList[page].classList.remove("pageNow");
+                pageList[pagePlaying].classList.remove("pagePlaying");
+            }
+            pagePlaying = p/length;
+
+            // auto turn page part
+            if (autoPage) {
+                page = pagePlaying;
+                for(let i=0;i<trackQty;++i){
+                    if(trackSwitch[i]) {
+                        padList[i][p-page*length].classList.add("bOn");
+                    }
+                    for(let j=0;j<length;++j){
+                        padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
+                    }
+                }
+                pointNumberList[p-page*length].classList.add("pointNumberOn");
+                //change point number
+                for(let j=0;j<length;j+=4){
+                    pointNumberList[j].textContent = ((j+page*length)/4)+1;
+                }
+            }
+
+            // change page button
+            if(pageList[pagePlaying]) {
+                autoPage && pageList[pagePlaying].classList.add("pageNow");
+                pageList[pagePlaying].classList.add("pagePlaying");
+            }
+        }
+
+        // metronome sound
+        if(metronome && p%4===0){
+            playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
+            document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
+        }
+
+        // kb mode icon animation
+        if(kbMode && p%4===0){
+            document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
+        }
+        lastP = p;
+        p = (p+1)%totalLength;
+        // p = (p+1)===totalLength ? 0 : (p+1);
+    }
     // playing control
     play = function(e) {
         if(playing) {
@@ -211,54 +264,7 @@ function finishedLoading(bufferList) {
             playing = false;
             document.getElementById("playImg").src = "img/play.svg";
         } else {
-            timerId = setInterval(function(){
-                playByPoint(bufferList,p);
-
-                // change page
-                if(p%length==0) {
-                    if (pageList[pagePlaying]){
-                        autoPage && pageList[page].classList.remove("pageNow");
-                        pageList[pagePlaying].classList.remove("pagePlaying");
-                    }
-                    pagePlaying=(p%totalLength)/length;
-
-                    // auto turn page part
-                    if (autoPage) {
-                        page=pagePlaying;
-                        for(let i=0;i<trackQty;i++){
-                            if(trackSwitch[i]) {
-                                padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
-                            }
-                            for(let j=0;j<length;j++){
-                                padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
-                            }
-                        }
-                        pointNumberList[p%totalLength-page*length] && pointNumberList[p%totalLength-page*length].classList.add("pointNumberOn");
-                        //change point number
-                        for(let j=0;j<length;j+=4){
-                            pointNumberList[j].textContent = ((j+page*length)/4)+1;
-                        }
-                    }
-
-                    // change page button
-                    if(pageList[pagePlaying]) {
-                        autoPage && pageList[pagePlaying].classList.add("pageNow");
-                        pageList[pagePlaying].classList.add("pagePlaying");
-                    }
-                }
-
-                // metronome sound
-                if(metronome && p%4==0){
-                    playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
-                    document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
-                }
-
-                // kb mode icon animation
-                if(kbMode && p%4==0){
-                    document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
-                }
-                p++;
-            },15000/bpm);
+            timerId = setInterval(handlePlay,15000/bpm);
             playing = true;
             // draw();
             document.getElementById("stop").removeEventListener("click",stop);
@@ -282,15 +288,15 @@ function finishedLoading(bufferList) {
         pageList[pagePlaying] && pageList[pagePlaying].classList.remove("pagePlaying");
         
         // turn off the "On" blocks
-        if(Math.floor((p-1)%totalLength/length)==page){
-            for (let i=0;i<8;i++){
-                padList[i][(p+length-1)%length].classList.remove("bOn");
-                // padList[i][(p+totalLength-1)%totalLength].classList.remove("bOn");
-                pointNumberList[(p+length-1)%length-page*length] && pointNumberList[(p+length-1)%length-page*length].classList.remove("pointNumberOn");
+        if(lastP>=page*length && lastP<(page+1)*length){
+            for (let i=0;i<trackQty;++i){
+                padList[i][lastP%length].classList.remove("bOn");
             }
+            pointNumberList[lastP-page*length].classList.remove("pointNumberOn");
         }
 
         p=0;
+        lastP = totalLength-1;
 
         // set buttons
         document.getElementById("stop").removeEventListener("click",stop);
@@ -299,60 +305,16 @@ function finishedLoading(bufferList) {
 
     reset = function() {
         clearInterval(timerId);
-        timerId = setInterval(function(){
-            playByPoint(bufferList,p);
-            if(p%length==0) {
-                if (pageList[pagePlaying]){
-                    autoPage && pageList[page].classList.remove("pageNow");
-                    pageList[pagePlaying].classList.remove("pagePlaying");
-                }
-                pagePlaying=(p%totalLength)/length;
-
-                // auto turn page part
-                if (autoPage) {
-                    page=pagePlaying;
-                    for(let i=0;i<trackQty;i++){
-                        if(trackSwitch[i]) {
-                            padList[i][p%totalLength-page*length] && padList[i][p%totalLength-page*length].classList.add("bOn");
-                        }
-                        for(let j=0;j<length;j++){
-                            padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
-                        }
-                    }
-                    //change point number
-                    for(let j=0;j<length;j+=4){
-                        pointNumberList[j].textContent = ((j+page*length)/4)+1;
-                    }
-                }
-
-                // change page button
-                if(pageList[pagePlaying]) {
-                    autoPage && pageList[pagePlaying].classList.add("pageNow");
-                    pageList[pagePlaying].classList.add("pagePlaying");
-                }
-            }
-
-            // metronome sound
-            if(metronome && p%4==0){
-                playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
-                document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
-            }
-
-            // kb mode icon animation
-            if(kbMode && p%4==0){
-                document.getElementById("kbMode").src = "img/kbMode"+(p%16)/4+".svg";
-            }
-            p++;
-        },15000/bpm);
+        timerId = setInterval(handlePlay,15000/bpm);
     }
 
     let clear = function() {
         // playing && stop();
-        for(let i=0;i<trackQty;i++){
-            for(let j=0;j<totalLength;j++){
+        for(let i=0;i<trackQty;++i){
+            for(let j=0;j<totalLength;++j){
                 state[i][j] = 0;
             }
-            for(let j=0;j<length;j++){
+            for(let j=0;j<length;++j){
                 padList[i][j].classList.remove("b"+i);
             }
             volume[i] = 1;
@@ -442,10 +404,10 @@ function finishedLoading(bufferList) {
         this.src = "img/visual"+visualMode+".svg";
         this.classList.toggle("visualSwitchOn",visualMode);
         // visualMode?draw():window.cancelAnimationFrame(drawVisualId);
-        // vusualMode && draw();
+        visualMode && draw();
     })
 
-    for(let i=0;i<trackQty;i++) {
+    for(let i=0;i<trackQty;++i) {
         let drumPad = document.getElementById("drumPad"+i);
         addHitEventHandler(drumPad,i,false);
     }
@@ -456,7 +418,7 @@ function finishedLoading(bufferList) {
         playSound(soundList[i],context.currentTime,volume[i]);
         trackList[i].classList.add("b"+i);
         document.getElementById("drumPad"+i).classList.add("b"+i);
-        for(let j=0;j<length;j++){
+        for(let j=0;j<length;++j){
             padList[i][j].classList.add("bSelected");
         }
         if(playing && kbMode) {
@@ -469,12 +431,12 @@ function finishedLoading(bufferList) {
     let keyUp = function(i){
         trackList[i].classList.remove("b"+i);
         document.getElementById("drumPad"+i).classList.remove("b"+i);
-        for(let j=0;j<length;j++){
+        for(let j=0;j<length;++j){
             padList[i][j].classList.remove("bSelected");
         }
     }
     let deleteTrack = function(i){
-        for(let j=0;j<totalLength;j++){
+        for(let j=0;j<totalLength;++j){
             state[i][j] = false;
             if(j<length) {
                 padList[i][j].classList.remove("b"+i);
@@ -483,25 +445,25 @@ function finishedLoading(bufferList) {
     }
     let toggleOtherTrack = function(i){
         let sum=0
-        for(let k=0;k<trackQty;k++){
+        for(let k=0;k<trackQty;++k){
             if(trackSwitch[k]) {
                 sum++;
             }
         }
-        if(sum==1 && trackSwitch[i]){
-            for(let k=0;k<trackQty;k++){
+        if(sum===1 && trackSwitch[i]){
+            for(let k=0;k<trackQty;++k){
                 trackSwitch[k] = true;
                 document.getElementById("trackSwitch"+k).classList.toggle("b"+k,true);
-                if(page==pagePlaying) {
+                if(page===pagePlaying) {
                     padList[k][(p+length-1)%length].classList.toggle("bOn",true);
                 }
             }
         } else {
-            for(let k=0;k<trackQty;k++){
-                trackSwitch[k] = (k==i);
-                document.getElementById("trackSwitch"+k).classList.toggle("b"+k,k==i);
-                if(page==pagePlaying) {
-                    padList[k][(p+length-1)%length].classList.toggle("bOn",k==i);
+            for(let k=0;k<trackQty;++k){
+                trackSwitch[k] = (k===i);
+                document.getElementById("trackSwitch"+k).classList.toggle("b"+k,k===i);
+                if(page===pagePlaying) {
+                    padList[k][(p+length-1)%length].classList.toggle("bOn",k===i);
                 }
             }
         }
@@ -509,7 +471,7 @@ function finishedLoading(bufferList) {
     let toggleTrackSwitch = function(i){
         trackSwitch[i] = !trackSwitch[i];
         document.getElementById("trackSwitch"+i).classList.toggle("b"+i,trackSwitch[i]);
-        if(page==pagePlaying) {
+        if(page===pagePlaying) {
             padList[i][(p+length-1)%length].classList.toggle("bOn",trackSwitch[i]);
         }
     }
@@ -530,8 +492,8 @@ function finishedLoading(bufferList) {
     }
 
     window.onkeydown = function(e) {
-        if(document.activeElement.tagName == "INPUT"){
-            if(e.keyCode==13) {
+        if(document.activeElement.tagName === "INPUT"){
+            if(e.keyCode===13) {
                 document.activeElement.blur();
             }
             return;
@@ -731,7 +693,7 @@ function finishedLoading(bufferList) {
         }
     }
     window.onkeyup = function(e) {
-        if(document.activeElement.tagName == "INPUT"){return;}
+        if(document.activeElement.tagName === "INPUT"){return;}
         console.log(e.which);
         e.preventDefault();
         switch(e.which) {
@@ -841,12 +803,13 @@ function finishedLoading(bufferList) {
     // draw an oscilloscope of the current audio source
     function draw() {
         drawVisualId = requestAnimationFrame(draw);
-
+        
+        canvasCtx.fillStyle = "rgba(15,26,42,1)";
+        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
         if(!visualMode){
-            // window.cancelAnimationFrame(drawVisualId);
+            window.cancelAnimationFrame(drawVisualId);
             return;
         }
-        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
         if(mediaQuery[0].matches) {
             canvas.width = 1115;
@@ -865,9 +828,6 @@ function finishedLoading(bufferList) {
 
         analyser.getByteTimeDomainData(dataArray);
 
-
-        canvasCtx.fillStyle = "rgba(15,26,42,0.1)";
-
         canvasCtx.beginPath();
         
         let sliceWidth = canvas.width * 1.0 / bufferLength;
@@ -877,7 +837,7 @@ function finishedLoading(bufferList) {
         
         let amp = 0;
 
-        if (visualMode==1){
+        if (visualMode===1){
             let dir = true;
             canvasCtx.moveTo(x, canvas.height/2);
             for(let i=1;i<bufferLength;i+=step) {
@@ -888,7 +848,7 @@ function finishedLoading(bufferList) {
                 x += sliceWidth*step;
                 amp += dataArray[i] / 128;
             }
-        } else if (visualMode==2){
+        } else if (visualMode===2){
             for(let i=0;i<bufferLength;i+=step) {
                 let v = dataArray[i] / 128.0;
                 let y = v * canvas.height/2;
@@ -914,11 +874,11 @@ function finishedLoading(bufferList) {
     func[2] = document.getElementById("func2");
     let funcItem = document.querySelectorAll(".funcItem");
 
-    for(let m=0;m<func.length;m++){
+    for(let m=0;m<func.length;++m){
         func[m].addEventListener("click",function(){
-            for(let n=0;n<func.length;n++){
-                funcItem[n].classList.toggle("funcItemOn",m==n && !func[m].classList.contains("funcOn"));
-                func[n].classList.toggle("funcOn",m==n && !func[m].classList.contains("funcOn"));
+            for(let n=0;n<func.length;++n){
+                funcItem[n].classList.toggle("funcItemOn",m===n && !func[m].classList.contains("funcOn"));
+                func[n].classList.toggle("funcOn",m===n && !func[m].classList.contains("funcOn"));
             }
         })
     }
@@ -1012,7 +972,7 @@ function createPad(){
     page=Math.floor((p%totalLength)/length);
     let padDiv = document.getElementById("padDiv");
         padDiv.style = "grid-template-columns: 40px repeat("+length+",30px);"
-    for(let i=0;i<trackQty;i++){
+    for(let i=0;i<trackQty;++i){
         trackList[i] = cE("div","track");
         trackNumber = cE("div","trackNumber",i+1);
         trackIcon = cE("img","trackIcon","","src","img/track"+i+".svg")
@@ -1021,10 +981,10 @@ function createPad(){
             playSound(soundList[i],context.currentTime,volume[i]);
             this.classList.add("b"+i);
             // document.getElementById("trackSetDiv"+s).classList.add("b"+s);
-            for(let j=0;j<length;j++){
+            for(let j=0;j<length;++j){
                 padList[i][j].classList.add("bSelected");
             }
-            // lastSelect==i || handleSelect(i);
+            // lastSelect===i || handleSelect(i);
             // lastSelect = i;
         })
         trackList[i].addEventListener("touchstart",function(e){
@@ -1032,34 +992,34 @@ function createPad(){
             playSound(soundList[i],context.currentTime,volume[i]);
             this.classList.add("b"+i);
             // document.getElementById("trackSetDiv"+s).classList.add("b"+s);
-            for(let j=0;j<length;j++){
+            for(let j=0;j<length;++j){
                 padList[i][j].classList.add("bSelected");
             }
-            // lastSelect==i || handleSelect(i);
+            // lastSelect===i || handleSelect(i);
             // lastSelect = i;
         })
         trackList[i].addEventListener("mouseup",function(){
             this.classList.remove("b"+i);
-            for(let j=0;j<length;j++){
+            for(let j=0;j<length;++j){
                 padList[i][j].classList.remove("bSelected");
             }
         })
         trackList[i].addEventListener("touchend",function(e){
             e.preventDefault();
             this.classList.remove("b"+i);
-            for(let j=0;j<length;j++){
+            for(let j=0;j<length;++j){
                 padList[i][j].classList.remove("bSelected");
             }
             
         })
         padDiv.appendChild(trackList[i]);
-        for(let j=0;j<length;j++){
+        for(let j=0;j<length;++j){
             padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
             padList[i][j].addEventListener("click",function(){
                 state[i][j+page*length] = !state[i][j+page*length];
                 state[i][j+page*length] && !playing && playSound(soundList[i],context.currentTime,volume[i]);
                 padList[i][j].classList.toggle("b"+i);
-                lastSelect==i || handleSelect(i);
+                lastSelect===i || handleSelect(i);
                 lastSelect = i;
             })
             state[i][j+page*length] && padList[i][j].classList.add("b"+i);
@@ -1069,7 +1029,7 @@ function createPad(){
 
     padDiv.appendChild(cE("div"));
     // padDiv.appendChild(funcItemDiv);
-    for(let j=0;j<length;j++){
+    for(let j=0;j<length;++j){
         pointNumberList[j] = cE("div",j%4?"pointNumber":"pointNumberP",j%4?(j%4)+1:((j+page*length)/4)+1);
         padDiv.appendChild(pointNumberList[j]);
     }
@@ -1077,7 +1037,7 @@ function createPad(){
     // function cancelSelect(){
     //     console.log("body clicked");
     //     trackList[lastSelect] && trackList[lastSelect].classList.remove("b"+lastSelect);
-    //     for(let j=0;j<length;j++){
+    //     for(let j=0;j<length;++j){
     //         padList[lastSelect] && padList[lastSelect][j].classList.remove("bSelected");
     //     }
     //     lastSelect = null;
@@ -1089,27 +1049,27 @@ function createPad(){
 
 function createPageButton() {
     let totalPage = totalLength/length;
-    for(let m=0;m<totalPage;m++) {
+    for(let m=0;m<totalPage;++m) {
         pageList[m] = cE("div","pageButton");
-        m==page && pageList[m].classList.add("pageNow");
+        m===page && pageList[m].classList.add("pageNow");
         pageList[m].addEventListener("click",function(){
             if(playing) {autoPage = false;}
 
             // when page is on playing, remove hit block and point number
-            if(Math.floor((p-1)%totalLength/length)==page){
+            if(Math.floor((p-1)%totalLength/length)===page){
                 console.log(p,p%totalLength,page);
-                for(let i=0;i<trackQty;i++){
+                for(let i=0;i<trackQty;++i){
                     padList[i][(p+length-1)%length].classList.remove("bOn");
                 }
                 pointNumberList[(p+length-1)%length].classList.remove("pointNumberOn");
             }
 
             page=m;
-            for(let i=0;i<trackQty;i++){
-                for(let j=0;j<length;j++){
+            for(let i=0;i<trackQty;++i){
+                for(let j=0;j<length;++j){
                     padList[i][j].classList.toggle("b"+i,state[i][j+page*length]);
                 }
-                if(Math.floor((p-1)%totalLength/length)==page){
+                if(Math.floor((p-1)%totalLength/length)===page){
                     padList[i][(p-1)%length].classList.add("bOn");
                 }
             }
@@ -1118,8 +1078,8 @@ function createPageButton() {
             for(let j=0;j<length;j+=4){
                 pointNumberList[j].textContent = ((j+page*length)/4)+1;
             }
-            for(let n=0;n<totalPage;n++){
-                pageList[n].classList.toggle("pageNow",n==m);
+            for(let n=0;n<totalPage;++n){
+                pageList[n].classList.toggle("pageNow",n===m);
             }
         })
         document.getElementById("pageDiv").appendChild(pageList[m]);
@@ -1133,7 +1093,7 @@ function handleSelect(s){
     }
     trackList[s].classList.add("b"+s);
     // document.getElementById("trackSetDiv"+s).classList.add("b"+s);
-    for(let j=0;j<length;j++){
+    for(let j=0;j<length;++j){
         padList[lastSelect] && padList[lastSelect][j].classList.remove("bSelected");
         // if(!state[s][j]) 
         padList[s][j].classList.add("bSelected");
@@ -1156,7 +1116,7 @@ function addHitEventHandler(element,i,parent) {
         playSound(soundList[i],context.currentTime,volume[i]);
         parent?element.parentNode.classList.add("b"+i):element.classList.add("b"+i);
         trackList[i].classList.add("b"+i);
-        for(let j=0;j<length;j++){
+        for(let j=0;j<length;++j){
             padList[i][j].classList.add("bSelected");
         }
         if(playing && kbMode) {
@@ -1171,7 +1131,7 @@ function addHitEventHandler(element,i,parent) {
         playSound(soundList[i],context.currentTime,volume[i]);
         parent?element.parentNode.classList.add("b"+i):element.classList.add("b"+i);
         trackList[i].classList.add("b"+i);
-        for(let j=0;j<length;j++){
+        for(let j=0;j<length;++j){
             padList[i][j].classList.add("bSelected");
         }
         if(playing && kbMode) {
@@ -1184,7 +1144,7 @@ function addHitEventHandler(element,i,parent) {
     element.addEventListener("mouseup",function(){
         parent?element.parentNode.classList.remove("b"+i):element.classList.remove("b"+i);
         trackList[i].classList.remove("b"+i);
-        for(let j=0;j<length;j++){
+        for(let j=0;j<length;++j){
             padList[i][j].classList.remove("bSelected");
         }
     })
@@ -1192,20 +1152,20 @@ function addHitEventHandler(element,i,parent) {
         e.preventDefault();
         parent?element.parentNode.classList.remove("b"+i):element.classList.remove("b"+i);
         trackList[i].classList.remove("b"+i);
-        for(let j=0;j<length;j++){
+        for(let j=0;j<length;++j){
             padList[i][j].classList.remove("bSelected");
         }
     })
 }
 
 function createTrackSetting() {
-    for(let i=0;i<8;i++){
+    for(let i=0;i<8;++i){
         let trackSetDiv = cE("div","trackSetDiv",null,"id","trackSetDiv"+i);
             // trackSetDiv.addEventListener("mousedown",function(){
             //     playSound(soundList[i],context.currentTime,volume[i]);
             //     this.classList.add("b"+i);
             //     trackList[i].classList.add("b"+i);
-            //     for(let j=0;j<length;j++){
+            //     for(let j=0;j<length;++j){
             //         padList[i][j].classList.add("bSelected");
             //     }
             // })
@@ -1214,14 +1174,14 @@ function createTrackSetting() {
             //     playSound(soundList[i],context.currentTime,volume[i]);
             //     this.classList.add("b"+i);
             //     trackList[i].classList.add("b"+i);
-            //     for(let j=0;j<length;j++){
+            //     for(let j=0;j<length;++j){
             //         padList[i][j].classList.add("bSelected");
             //     }
             // })
             // trackSetDiv.addEventListener("mouseup",function(){
             //     this.classList.remove("b"+i);
             //     trackList[i].classList.remove("b"+i);
-            //     for(let j=0;j<length;j++){
+            //     for(let j=0;j<length;++j){
             //         padList[i][j].classList.remove("bSelected");
             //     }
             // })
@@ -1229,7 +1189,7 @@ function createTrackSetting() {
             //     e.preventDefault();
             //     this.classList.remove("b"+i);
             //     trackList[i].classList.remove("b"+i);
-            //     for(let j=0;j<length;j++){
+            //     for(let j=0;j<length;++j){
             //         padList[i][j].classList.remove("bSelected");
             //     }
             // })
@@ -1277,8 +1237,8 @@ function createTrackSetting() {
                 e.stopPropagation();
                 trackSwitch[i] = !trackSwitch[i];
                 this.classList.toggle("b"+i,trackSwitch[i]);
-                // if(page==pagePlaying && state[i][(p+totalLength-1)%totalLength]) {
-                if(page==pagePlaying) {
+                // if(page===pagePlaying && state[i][(p+totalLength-1)%totalLength]) {
+                if(page===pagePlaying) {
                     padList[i][(p+length-1)%length].classList.toggle("bOn",trackSwitch[i]);
                 }
                 // e.stopImmediatePropagation();
@@ -1286,7 +1246,7 @@ function createTrackSetting() {
             trackSetSwitch.addEventListener("mousedown",function(e){
                 trackSwitch[i] = !trackSwitch[i];
                 this.classList.toggle("b"+i,trackSwitch[i]);
-                if(page==pagePlaying && state[i][(p+totalLength-1)%totalLength]) {
+                if(page===pagePlaying && state[i][(p+totalLength-1)%totalLength]) {
                     padList[i][(p+length-1)%length].classList.toggle("bOn",trackSwitch[i]);
                 }
                 e.stopPropagation();
