@@ -194,10 +194,10 @@ function playByPoint(soundList,onPage,lastOnPage){
             state[i][p] && playSound(soundList[i],startTime+0.05,volume[i]);
             onPage && padList[i][p-page*length].classList.add("bOn");
         }
-        padList[i][lastP-page*length] && padList[i][lastP-page*length].classList.remove("bOn");
+        lastOnPage && padList[i][lastP-page*length].classList.remove("bOn");
     }
     onPage && pointNumberList[p-page*length].classList.add("pointNumberOn");
-    pointNumberList[lastP-page*length] && pointNumberList[lastP-page*length].classList.remove("pointNumberOn");
+    lastOnPage && pointNumberList[lastP-page*length].classList.remove("pointNumberOn");
 }
 
 function finishedLoading(bufferList) {
@@ -863,7 +863,7 @@ function finishedLoading(bufferList) {
         canvasCtx.lineTo(canvas.width, dataArray[bufferLength-1]/128*canvas.height/2);
 
         canvasCtx.lineWidth = 3;
-        canvasCtx.strokeStyle = "rgba(77,153,204,"+(visualMode && amp!==bufferLength/step?1:0)+")";
+        canvasCtx.strokeStyle = "rgba(77,153,204,"+(amp!==bufferLength/step?1:0)+")";
         canvasCtx.stroke();
     };
     // draw();
@@ -901,22 +901,6 @@ function playSound(buffer,time,volume) {
         playingList.splice(playingList.indexOf(gain),1);
     };
 }
-// let dogBarkingBuffer = null;
-// // Fix up prefixing
-
-// function loadSound(url) {
-//   let request = new XMLHttpRequest();
-//   request.open("GET", url, true);
-//   request.responseType = "arraybuffer";
-
-//   // Decode asynchronously
-//   request.onload = function() {
-//     context.decodeAudioData(request.response, function(buffer) {
-//       dogBarkingBuffer = buffer;
-//     }, onError);
-//   }
-//   request.send();
-// }
 
 // BufferLoader setting ----------------------------------------------------
 function BufferLoader(context, urlList, callback) {
@@ -1161,74 +1145,17 @@ function addHitEventHandler(element,i,parent) {
 function createTrackSetting() {
     for(let i=0;i<8;++i){
         let trackSetDiv = cE("div","trackSetDiv",null,"id","trackSetDiv"+i);
-            // trackSetDiv.addEventListener("mousedown",function(){
-            //     playSound(soundList[i],context.currentTime,volume[i]);
-            //     this.classList.add("b"+i);
-            //     trackList[i].classList.add("b"+i);
-            //     for(let j=0;j<length;++j){
-            //         padList[i][j].classList.add("bSelected");
-            //     }
-            // })
-            // trackSetDiv.addEventListener("touchmove",function(e){
-                // e.preventDefault();
-            //     playSound(soundList[i],context.currentTime,volume[i]);
-            //     this.classList.add("b"+i);
-            //     trackList[i].classList.add("b"+i);
-            //     for(let j=0;j<length;++j){
-            //         padList[i][j].classList.add("bSelected");
-            //     }
-            // })
-            // trackSetDiv.addEventListener("mouseup",function(){
-            //     this.classList.remove("b"+i);
-            //     trackList[i].classList.remove("b"+i);
-            //     for(let j=0;j<length;++j){
-            //         padList[i][j].classList.remove("bSelected");
-            //     }
-            // })
-            // trackSetDiv.addEventListener("touchend",function(e){
-            //     e.preventDefault();
-            //     this.classList.remove("b"+i);
-            //     trackList[i].classList.remove("b"+i);
-            //     for(let j=0;j<length;++j){
-            //         padList[i][j].classList.remove("bSelected");
-            //     }
-            // })
+
         let trackSetVolume = cE("input","trackSetVolume",null,"id","trackSetVolume"+i);
             trackSetVolume.type = "range";
             trackSetVolume.max = 1;
             trackSetVolume.min = 0;
             trackSetVolume.step = "any";
             trackSetVolume.value = volume[i];
-            // trackSetVolume.addEventListener("touchstart",function(e){
-                // e.stopPropagation();
-                // e.preventDefault();
-                // e.stopImmediatePropagation();
-            // })
-            // trackSetVolume.addEventListener("mousedown",function(e){
-            //         e.stopPropagation();
-            //         console.log(this.value);
-            //     })
-            trackSetVolume.addEventListener("input",function(e){
-                // alert(this.value);
-                volume[i] = this.value;
-                // e.stopPropagation();
-                // console.log(this.value);
-                // e.preventDefault();
-            })
-            // trackSetVolume.addEventListener("touchend",function(e){
-            //     this.blur();
-            //     console.log(this.value);
-            // })
 
-        // let trackSetPlay = cE("div","trackSetPlay");
-        //     trackSetPlay.addEventListener("click",function(){
-        //         if(this.classList.contains("trackSetStop")) {
-        //             stopSingleTrack(i);
-        //         } else {
-        //             playSingleTrack(i);
-        //         }
-        //         this.classList.toggle("trackSetStop");
-        //     });
+            trackSetVolume.addEventListener("input",function(e){
+                volume[i] = this.value;
+            })
 
         let trackSetSwitch = cE("div","trackSetSwitch",null,"id","trackSwitch"+i);
             trackSetSwitch.classList.toggle("b"+i,trackSwitch[i]);
@@ -1252,17 +1179,7 @@ function createTrackSetting() {
                 e.stopPropagation();
                 // e.stopImmediatePropagation();
             })
-        // let trackSetSwitch = cE("label","trackSetSwitch");
-        //     let trackSetCheckBox = cE("input",null,null,"type","checkbox");
-        //         trackSetCheckBox.id = "trackSwitch"+i;
-        //         trackSetCheckBox.checked = trackSwitch[i];
-        //         trackSetCheckBox.addEventListener("change",function(){
-        //             trackSwitch[i] = this.checked;
-        //         })
-        //     let trackSetSlider = cE("span","trackSetSlider");
-        //     trackSetSwitch.append(trackSetCheckBox,trackSetSlider);
 
-        // let trackSetVolumeKey = cE("div","trackSetVolumeKey","Volume");
         let trackSetNum = cE("div","trackSetNum",i+1);
         addHitEventHandler(trackSetNum,i,true);
         let trackSetIcon = cE("img","trackSetIcon",null,"src","img/track"+i+".svg");
@@ -1271,35 +1188,6 @@ function createTrackSetting() {
         document.getElementById("trackSettingListDiv").appendChild(trackSetDiv);
     }
 }
-
-// function playSingleTrack(i) {
-//     if(playing) {
-//         clearInterval(timerId);
-//         timerId = setInterval(function(){
-//             let startTime = context.currentTime;
-//             state[i][p%length] && playSound(soundList[i],startTime+0.05,volume[i]);
-//             padList[i][p%length].classList.add("bOn");
-//             padList[i][(p+length-1)%length].classList.remove("bOn");
-//             p++;
-//         },15000/bpm);
-//     } else {
-//         timerId = setInterval(function(){
-//             let startTime = context.currentTime;
-//             state[i][p%length] && playSound(soundList[i],startTime+0.05,volume[i]);
-//             padList[i][p%length].classList.add("bOn");
-//             padList[i][(p+length-1)%length].classList.remove("bOn");
-//             p++;
-//         },15000/bpm)
-//         // playing = true;
-//     }
-// }
-
-// function stopSingleTrack(i) {
-//     if(playing) {
-
-//     }
-// }
-
 
 // save to local storage
 function saveBeatToLocalStorage() {
