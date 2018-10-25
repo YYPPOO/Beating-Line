@@ -1,18 +1,25 @@
 // states --------------------------------------------------------------------------
-let context;
-let bufferLoader;
-let analyser;
-let analyserFilter;
-let drawVisualId;
+let audio = {};
+// let context;
+// let bufferLoader;
+// let analyser;
+// let analyserFilter;
+// let drawVisualId;
 
-let bpm = 60;
-let totalVolume = 1;
+let beat = {
+    bpm:120,
+    totalVolume:1
+};
+// let bpm = 60;
+// let totalVolume = 1;
 
 let trackQty = 8;
-let bit = 16;
-let t = 60/bpm/4;
+// let bit = 16;
+// let t = 60/bpm/4;
+
 
 let totalLength = 32;
+
 let length = 16;
 let page = 0;
 let pagePlaying = 0;
@@ -62,9 +69,19 @@ let rhythm1 = [
     [0,1,0,0,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
-state = rhythm0;
+let rhythm2 = [
+    [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0],
+    [0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,1],
+    [0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],
+    [1,1,0,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,1,0,0,1,0,0,0,1,0,1,0],
+    [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1],
+    [1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+]
+state = rhythm2;
 
-let trackName = ["Kick","Snare","Close Hat","Open Hat","Tom","Clap","Conga","Atm"];
+// let trackName = ["Kick","Snare","Close Hat","Open Hat","Tom","Clap","Conga","Atm"];
 let trackList = [];
 let padList = [[],[],[],[],[],[],[],[]];
 let pointNumberList = [];
@@ -118,11 +135,11 @@ window.onload = init;
 function init() {
     // Fix up prefixing
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    context = new AudioContext();
+    audio.context = new AudioContext();
 
 
-    bufferLoader = new BufferLoader(
-        context,
+    audio.bufferLoader = new BufferLoader(
+        audio.context,
         [
         "sound/0kick0.wav",
         "sound/1snare0.wav",
@@ -138,7 +155,7 @@ function init() {
         finishedLoading
         );
 
-    bufferLoader.load();
+    audio.bufferLoader.load();
 
     // add side nav click event ---------------------------------------------
     document.querySelector(".memberIcon").addEventListener("click",function() {
@@ -188,8 +205,9 @@ function init() {
 }
 
 function playByPoint(soundList,onPage,lastOnPage){
-    let startTime = context.currentTime;
-    for (let i=0;i<8;++i){
+    let startTime = audio.context.currentTime;
+    let i;
+    for (i=0;i<8;++i){
         if(trackSwitch[i]) {
             state[i][p] && playSound(soundList[i],startTime+0.05,volume[i]);
             onPage && padList[i][p-page*length].classList.add("bOn");
@@ -203,6 +221,8 @@ function playByPoint(soundList,onPage,lastOnPage){
 function finishedLoading(bufferList) {
 
     soundList = bufferList;
+    let i;
+    let j;
     
     // add top nav button event -----------------------------------------------------------
     let handlePlay = function(){
@@ -221,17 +241,17 @@ function finishedLoading(bufferList) {
             // auto turn page part
             if (autoPage) {
                 page = pagePlaying;
-                for(let i=0;i<trackQty;++i){
+                for(i=0;i<trackQty;++i){
                     if(trackSwitch[i]) {
                         padList[i][p-page*length].classList.add("bOn");
                     }
-                    for(let j=0;j<length;++j){
+                    for(j=0;j<length;++j){
                         padList[i][j].classList.toggle("b"+i,state[i][j+page*length])
                     }
                 }
                 pointNumberList[p-page*length].classList.add("pointNumberOn");
                 //change point number
-                for(let j=0;j<length;j+=4){
+                for(j=0;j<length;j+=4){
                     pointNumberList[j].textContent = ((j+page*length)/4)+1;
                 }
             }
@@ -245,7 +265,7 @@ function finishedLoading(bufferList) {
 
         // metronome sound
         if(metronome && p%4===0){
-            playSound((p/4)%4?soundList[9]:soundList[8],context.currentTime+0.05,totalVolume);
+            playSound((p/4)%4?soundList[9]:soundList[8],audio.context.currentTime+0.05,beat.totalVolume);
             document.getElementById("metronome").src = p%8 ? "img/metronome.svg" : "img/metronome1.svg";
         }
 
@@ -264,7 +284,7 @@ function finishedLoading(bufferList) {
             playing = false;
             document.getElementById("playImg").src = "img/play.svg";
         } else {
-            timerId = setInterval(handlePlay,15000/bpm);
+            timerId = setInterval(handlePlay,15000/beat.bpm);
             playing = true;
             // draw();
             document.getElementById("stop").removeEventListener("click",stop);
@@ -280,7 +300,7 @@ function finishedLoading(bufferList) {
 
         // turn off audios
         playingList.forEach(function(item){
-            item.gain.setTargetAtTime(0, context.currentTime,0.5);
+            item.gain.setTargetAtTime(0, audio.context.currentTime,0.5);
         })
 
         playing = false;
@@ -289,7 +309,7 @@ function finishedLoading(bufferList) {
         
         // turn off the "On" blocks
         if(lastP>=page*length && lastP<(page+1)*length){
-            for (let i=0;i<trackQty;++i){
+            for (i=0;i<trackQty;++i){
                 padList[i][lastP%length].classList.remove("bOn");
             }
             pointNumberList[lastP-page*length].classList.remove("pointNumberOn");
@@ -305,16 +325,16 @@ function finishedLoading(bufferList) {
 
     reset = function() {
         clearInterval(timerId);
-        timerId = setInterval(handlePlay,15000/bpm);
+        timerId = setInterval(handlePlay,15000/beat.bpm);
     }
 
     let clear = function() {
         // playing && stop();
-        for(let i=0;i<trackQty;++i){
-            for(let j=0;j<totalLength;++j){
+        for(i=0;i<trackQty;++i){
+            for(j=0;j<totalLength;++j){
                 state[i][j] = 0;
             }
-            for(let j=0;j<length;++j){
+            for(j=0;j<length;++j){
                 padList[i][j].classList.remove("b"+i);
             }
             volume[i] = 1;
@@ -339,11 +359,11 @@ function finishedLoading(bufferList) {
             } else {
                 console.log("Load beat success:",response);
                 state = response.beat;
-                bpm = response.bpm;
+                beat.bpm = response.bpm;
                 beatName = response.beatName;
                 volume = response.volume;
             }
-            document.getElementById("bpm").value = bpm;
+            document.getElementById("bpm").value = beat.bpm;
             decideLength(mediaQuery);
             createTrackSetting();
         })
@@ -352,9 +372,9 @@ function finishedLoading(bufferList) {
         });
     } else {
         if(localStorage.beat) {state = JSON.parse(localStorage.getItem("beat"));}
-        if(localStorage.bpm) {bpm = localStorage.getItem("bpm");}
+        if(localStorage.bpm) {beat.bpm = localStorage.getItem("bpm");}
         if(localStorage.volume) {volume = JSON.parse(localStorage.getItem("volume"));}
-        document.getElementById("bpm").value = bpm;
+        document.getElementById("bpm").value = beat.bpm;
         decideLength(mediaQuery);
         createTrackSetting();
     }
@@ -376,26 +396,26 @@ function finishedLoading(bufferList) {
     let bpmBtn = document.getElementById("bpm");
     bpmBtn.addEventListener("change",function(){
         console.log(this.value);
-        bpm = this.value;
+        beat.bpm = this.value;
         playing && reset();
-        localStorage.setItem("bpm",bpm);
+        localStorage.setItem("bpm",beat.bpm);
     });
 
     let muteBtn = document.getElementById("mute");
     let totalVolumeBtn = document.getElementById("totalVolume")
     muteBtn.addEventListener("click",function(){
-        totalVolumeBtn.value = Number(!totalVolume);
-        totalVolume = Number(!totalVolume);
-        this.classList.toggle("volumeOn",!!totalVolume);
-        this.src = "img/volume"+Math.round(totalVolume)*3+".svg";
+        totalVolumeBtn.value = Number(!beat.totalVolume);
+        beat.totalVolume = Number(!beat.totalVolume);
+        this.classList.toggle("volumeOn",!!beat.totalVolume);
+        this.src = "img/volume"+Math.round(beat.totalVolume)*3+".svg";
     })
     totalVolumeBtn.addEventListener("input",function(){
-        totalVolume = this.value;
+        beat.totalVolume = this.value;
         playingList.forEach(function(item){
-            item.gain.value = totalVolume;
+            item.gain.value = beat.totalVolume;
         })
         muteBtn.src = "img/volume"+Math.floor(this.value*4)+".svg";
-        muteBtn.classList.toggle("volumeOn",totalVolume>0.01);
+        muteBtn.classList.toggle("volumeOn",beat.totalVolume>0.01);
     });
 
     // bottom feature menu feature ------------------------------------------
@@ -403,11 +423,11 @@ function finishedLoading(bufferList) {
         visualMode = (visualMode+1)%3;
         this.src = "img/visual"+visualMode+".svg";
         this.classList.toggle("visualSwitchOn",visualMode);
-        // visualMode?draw():window.cancelAnimationFrame(drawVisualId);
+        // visualMode?draw():window.cancelAnimationFrame(audio.drawVisualId);
         visualMode && draw();
     })
 
-    for(let i=0;i<trackQty;++i) {
+    for(i=0;i<trackQty;++i) {
         let drumPad = document.getElementById("drumPad"+i);
         addHitEventHandler(drumPad,i,false);
     }
@@ -415,28 +435,28 @@ function finishedLoading(bufferList) {
 
     // add keyboard event ----------------------------------------------------
     let keyHit = function(i){
-        playSound(soundList[i],context.currentTime,volume[i]);
+        playSound(soundList[i],audio.context.currentTime,volume[i]);
         trackList[i].classList.add("b"+i);
         document.getElementById("drumPad"+i).classList.add("b"+i);
-        for(let j=0;j<length;++j){
+        for(j=0;j<length;++j){
             padList[i][j].classList.add("bSelected");
         }
         if(playing && kbMode) {
-            state[i][(p+totalLength-1)%totalLength] = true;
-            if(((p+totalLength-1)%totalLength-page*length) >= 0 || ((p+totalLength-1)%totalLength-page*length) < length){
-                padList[i][(p+totalLength-1)%totalLength-page*length].classList.toggle("b"+i,true);
+            state[i][lastP] = true;
+            if((lastP-page*length) >= 0 && (lastP-page*length) < length){
+                padList[i][lastP-page*length].classList.toggle("b"+i,true);
             }
         }
     }
     let keyUp = function(i){
         trackList[i].classList.remove("b"+i);
         document.getElementById("drumPad"+i).classList.remove("b"+i);
-        for(let j=0;j<length;++j){
+        for(j=0;j<length;++j){
             padList[i][j].classList.remove("bSelected");
         }
     }
     let deleteTrack = function(i){
-        for(let j=0;j<totalLength;++j){
+        for(j=0;j<totalLength;++j){
             state[i][j] = false;
             if(j<length) {
                 padList[i][j].classList.remove("b"+i);
@@ -444,14 +464,15 @@ function finishedLoading(bufferList) {
         }
     }
     let toggleOtherTrack = function(i){
-        let sum=0
-        for(let k=0;k<trackQty;++k){
+        let sum=0;
+        let k;
+        for(k=0;k<trackQty;++k){
             if(trackSwitch[k]) {
                 sum++;
             }
         }
         if(sum===1 && trackSwitch[i]){
-            for(let k=0;k<trackQty;++k){
+            for(k=0;k<trackQty;++k){
                 trackSwitch[k] = true;
                 document.getElementById("trackSwitch"+k).classList.toggle("b"+k,true);
                 if(page===pagePlaying) {
@@ -459,7 +480,7 @@ function finishedLoading(bufferList) {
                 }
             }
         } else {
-            for(let k=0;k<trackQty;++k){
+            for(k=0;k<trackQty;++k){
                 trackSwitch[k] = (k===i);
                 document.getElementById("trackSwitch"+k).classList.toggle("b"+k,k===i);
                 if(page===pagePlaying) {
@@ -478,16 +499,16 @@ function finishedLoading(bufferList) {
     let stepUpDown = function(plus,shift){
         if(shift){
             plus? bpmBtn.stepUp() : bpmBtn.stepDown();
-            bpm = bpmBtn.value;
+            beat.bpm = bpmBtn.value;
             playing && reset();
         } else {
             plus? totalVolumeBtn.stepUp() : totalVolumeBtn.stepDown();
-            totalVolume = totalVolumeBtn.value;
+            beat.totalVolume = totalVolumeBtn.value;
             playingList.forEach(function(item){
-                item.gain.value = totalVolume;
+                item.gain.value = beat.totalVolume;
             })
-            muteBtn.src = "img/volume"+Math.floor(totalVolume*4)+".svg";
-            muteBtn.classList.toggle("volumeOn",totalVolume>0.01);
+            muteBtn.src = "img/volume"+Math.floor(beat.totalVolume*4)+".svg";
+            muteBtn.classList.toggle("volumeOn",beat.totalVolume>0.01);
         }
     }
 
@@ -783,17 +804,17 @@ function finishedLoading(bufferList) {
 
 
     // beating line setting
-    analyser = context.createAnalyser();
-    analyser.fftSize = 256;
-    analyser.maxDecibels = -90;
-    analyser.minDecibels = -100;
-    analyser.smoothingTimeConstant = 1;
-    analyserFilter = context.createBiquadFilter();
-    analyserFilter.type = "lowpass";
-    analyserFilter.frequency.value = 2000;
-    // analyserFilter.Q.value = 0.1;
-    analyserFilter.connect(analyser);
-    let bufferLength = analyser.fftSize;
+    audio.analyser = audio.context.createAnalyser();
+    audio.analyser.fftSize = 256;
+    audio.analyser.maxDecibels = -90;
+    audio.analyser.minDecibels = -100;
+    audio.analyser.smoothingTimeConstant = 1;
+    audio.analyserFilter = audio.context.createBiquadFilter();
+    audio.analyserFilter.type = "lowpass";
+    audio.analyserFilter.frequency.value = 2000;
+    // audio.analyserFilter.Q.value = 0.1;
+    audio.analyserFilter.connect(audio.analyser);
+    let bufferLength = audio.analyser.fftSize;
     let dataArray = new Uint8Array(bufferLength);
     // analyser.getByteTimeDomainData(dataArray);
     
@@ -802,12 +823,12 @@ function finishedLoading(bufferList) {
     let step;
     // draw an oscilloscope of the current audio source
     function draw() {
-        drawVisualId = requestAnimationFrame(draw);
+        audio.drawVisualId = requestAnimationFrame(draw);
         
         canvasCtx.fillStyle = "rgba(15,26,42,1)";
         canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
         if(!visualMode){
-            window.cancelAnimationFrame(drawVisualId);
+            window.cancelAnimationFrame(audio.drawVisualId);
             return;
         }
 
@@ -819,14 +840,14 @@ function finishedLoading(bufferList) {
             step = 4;
         } else if(mediaQuery[2].matches) {
             canvas.width = 254;
-            step = 8;
+            step = 16;
         } else {
             canvas.width = 275;
             step = 8;
         }
         canvas.height = mediaQuery[2].matches?254:275;
 
-        analyser.getByteTimeDomainData(dataArray);
+        audio.analyser.getByteTimeDomainData(dataArray);
 
         canvasCtx.beginPath();
         
@@ -836,11 +857,12 @@ function finishedLoading(bufferList) {
         // canvasCtx.moveTo(x, dataArray[0]/128.0*canvas.height/2);
         
         let amp = 0;
+        let i;
 
         if (visualMode===1){
             let dir = true;
             canvasCtx.moveTo(x, canvas.height/2);
-            for(let i=1;i<bufferLength;i+=step) {
+            for(i=1;i<bufferLength;i+=step) {
                 if((dataArray[i]>dataArray[i-1]) !== dir) {
                     canvasCtx.lineTo(x,dataArray[i] / 128 * canvas.height / 2)
                     dir = !dir;
@@ -849,7 +871,7 @@ function finishedLoading(bufferList) {
                 amp += dataArray[i] / 128;
             }
         } else if (visualMode===2){
-            for(let i=0;i<bufferLength;i+=step) {
+            for(i=0;i<bufferLength;i+=step) {
                 let v = dataArray[i] / 128.0;
                 let y = v * canvas.height/2;
                 canvasCtx.moveTo(x, canvas.height/2);
@@ -874,27 +896,32 @@ function finishedLoading(bufferList) {
     func[2] = document.getElementById("func2");
     let funcItem = document.querySelectorAll(".funcItem");
 
-    for(let m=0;m<func.length;++m){
+    let m;
+    let n;
+    for(m=0;m<func.length;++m){
         func[m].addEventListener("click",function(){
-            for(let n=0;n<func.length;++n){
+            for(n=0;n<func.length;++n){
                 funcItem[n].classList.toggle("funcItemOn",m===n && !func[m].classList.contains("funcOn"));
                 func[n].classList.toggle("funcOn",m===n && !func[m].classList.contains("funcOn"));
             }
         })
     }
 
+    if(document.querySelector(".loading")) {
+        document.querySelector(".loading").style.display = "none";
+    }
 }
 
 
 function playSound(buffer,time,volume) {
-    let source = context.createBufferSource();
-    let gain = context.createGain();
+    let source = audio.context.createBufferSource();
+    let gain = audio.context.createGain();
 
     source.buffer = buffer;
     source.connect(gain);
-    gain.connect(analyserFilter);
-    gain.gain.value = totalVolume*volume;
-    gain.connect(context.destination);
+    gain.connect(audio.analyserFilter);
+    gain.gain.value = beat.totalVolume*volume;
+    gain.connect(audio.context.destination);
     source.start(time);
     playingList.push(gain);
     source.onended = function(){
@@ -962,7 +989,7 @@ function createPad(){
         trackIcon = cE("img","trackIcon","","src","img/track"+i+".svg")
         trackList[i].append(trackNumber,trackIcon);
         trackList[i].addEventListener("mousedown",function(){
-            playSound(soundList[i],context.currentTime,volume[i]);
+            playSound(soundList[i],audio.context.currentTime,volume[i]);
             this.classList.add("b"+i);
             // document.getElementById("trackSetDiv"+s).classList.add("b"+s);
             for(let j=0;j<length;++j){
@@ -973,7 +1000,7 @@ function createPad(){
         })
         trackList[i].addEventListener("touchstart",function(e){
             e.preventDefault();
-            playSound(soundList[i],context.currentTime,volume[i]);
+            playSound(soundList[i],audio.context.currentTime,volume[i]);
             this.classList.add("b"+i);
             // document.getElementById("trackSetDiv"+s).classList.add("b"+s);
             for(let j=0;j<length;++j){
@@ -1001,7 +1028,7 @@ function createPad(){
             padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
             padList[i][j].addEventListener("click",function(){
                 state[i][j+page*length] = !state[i][j+page*length];
-                state[i][j+page*length] && !playing && playSound(soundList[i],context.currentTime,volume[i]);
+                state[i][j+page*length] && !playing && playSound(soundList[i],audio.context.currentTime,volume[i]);
                 padList[i][j].classList.toggle("b"+i);
                 lastSelect===i || handleSelect(i);
                 lastSelect = i;
@@ -1097,7 +1124,7 @@ function removePad() {
 
 function addHitEventHandler(element,i,parent) {
     element.addEventListener("mousedown",function(){
-        playSound(soundList[i],context.currentTime,volume[i]);
+        playSound(soundList[i],audio.context.currentTime,volume[i]);
         parent?element.parentNode.classList.add("b"+i):element.classList.add("b"+i);
         trackList[i].classList.add("b"+i);
         for(let j=0;j<length;++j){
@@ -1112,7 +1139,7 @@ function addHitEventHandler(element,i,parent) {
     })
     element.addEventListener("touchstart",function(e){
         e.preventDefault();
-        playSound(soundList[i],context.currentTime,volume[i]);
+        playSound(soundList[i],audio.context.currentTime,volume[i]);
         parent?element.parentNode.classList.add("b"+i):element.classList.add("b"+i);
         trackList[i].classList.add("b"+i);
         for(let j=0;j<length;++j){
@@ -1193,7 +1220,7 @@ function createTrackSetting() {
 function saveBeatToLocalStorage() {
     let beatString = JSON.stringify(state);
     localStorage.setItem("beat",beatString);
-    localStorage.setItem("bpm",bpm);
+    localStorage.setItem("bpm",beat.bpm);
     localStorage.setItem("volume",JSON.stringify(volume));
 }
 
@@ -1237,7 +1264,7 @@ function saveBeat() {
         user:authStatus().uid,
         beat:state,
         beatName:beatName,
-        bpm:bpm,
+        bpm:beat.bpm,
         length:length,
         volume:volume
     }
@@ -1279,7 +1306,7 @@ function saveAsNewBeat() {
         user:authStatus().uid,
         beat:state,
         beatName:beatName,
-        bpm:bpm,
+        bpm:beat.bpm,
         length:length,
         volume:volume
     }
