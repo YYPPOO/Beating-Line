@@ -48,7 +48,7 @@ let state = {
     step:4,
     page:0,
     pagePlaying:0
-}
+};
 
 let dom = {
     pageList:[],
@@ -57,13 +57,9 @@ let dom = {
     pointNumberList:[],
     drumPad:[],
     trackSetSwitch:[]
-}
+};
 
-let app = {
-    play:null,
-    stop:null,
-    reset:null
-}
+let app = {};
 
 let rhythm = [];
 rhythm[0] = [

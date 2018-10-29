@@ -10,10 +10,6 @@ firebase.auth().onAuthStateChanged(function(user) {
         console.log("成功以"+user.providerData[0].providerId+"登入");
         showUserData(user);
         showProfilePic(user);
-        // showUserPic(user);
-        // document.querySelector(".memberIcon").addEventListener("click",function(){
-        //     window.location = "/profile.html";
-        // });
         document.getElementById("logout").addEventListener("click",function(){alert("Log out of your account?!",false,logout)});
 
     } else {
@@ -26,13 +22,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 let showUserData = function(user) {
-    // app.removeElement(".nRight");
-	console.log(user);
-
 	let myTitle = cE("h2","profileTitle","Profile");
-	// let myHr = cE("div","hr");
-
-	// let profileDiv = cE("div", "profileDiv");
     let emailKey = cE("span", "profileKey", "Email");
     let emailValue = cE("input", "profileValue", user.userEmail, "id", "userEmail");
         emailValue.type = "text";
@@ -43,8 +33,6 @@ let showUserData = function(user) {
         nameValue.type = "text";
         nameValue.value = user.displayName;
         nameValue.disabled = true;
-    
-        // profileDiv.append();
 
     let uploadPicButton = cE("button",null,"Upload Pic","id","uploadPicButton");
         uploadPicButton.style.display = "none";
@@ -79,24 +67,12 @@ let showProfilePic = function(user) {
 
 let uploadProfilePic = function () {
 	let image = document.getElementById("uploadPic").files[0];
-    console.log(image);
     if (image) {
         let user = authStatus();
-        // let storage = ourFirebase.storage();
         let imageRef = firebase.storage().ref(user.uid + "/").child("main.jpg");
-        console.log(imageRef);
         imageRef.put(image).then((snapshot) => {
             console.log("Main Image Uploaded");
             console.log(snapshot);
-            // storage.ref(authStatus().uid+'/main.jpg').getDownloadURL().then((url)=>{
-            //     console.log(url);
-            // 	user.updateProfile({photoURL:snapshop}).then((res) => {
-            // 		alert("圖片上傳成功！",true);
-            // 		console.log(res);
-            // 	}).catch((error)=>{console.log(error)});
-            // }).catch( (req) => {
-            // 	console.log("Cannot get photo url."+req);
-            // })
             alert("Upload success!", true);
             cancelRenewProfile();
             showProfilePic(user);
@@ -123,7 +99,6 @@ let renewProfile = function() {
 			userId: authStatus().uid,
 			userName: name,
 			userEmail: authStatus().email
-            // providerId:user.providerData[0].providerId
         };
 
         firebase.auth().currentUser.updateProfile({displayName: name})
@@ -144,10 +119,8 @@ let renewProfile = function() {
                 .then(response => {
                     alert("Update profile!", true);
                     console.log("Update to database success:",response);
-				    console.log(authStatus());
                 });
             }).catch(function(error) {
-            // An error happened.
             alert("Update fail, please try again.");
             console.log("Update display name fail:",error);
         });
@@ -170,11 +143,9 @@ let cancelRenewProfile = function() {
     document.getElementById("uploadPic").style.display = "none";
 }
 
-
 let logout = function () {
 	firebase.auth().signOut().then(function () {
-		alert("Log out success, go back to index in 3 seconds.", true);
-		console.log("email sign out")
+		alert("Log out success. Page is reloading.", true);
 		setTimeout(function () {
 			window.location = "/index.html";
 		}, 3000);
