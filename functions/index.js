@@ -131,7 +131,7 @@ app.post("/exe/saveBeat", (req, res) => {
 		beat:beatData.beat,
 		beatName:beatData.beatName,
 		bpm:beatData.bpm,
-		length:beatData.length,
+		totalLength:beatData.totalLength,
 		volume:beatData.volume
 	}
 
@@ -238,7 +238,7 @@ app.post("/exe/saveAsNewBeat", (req, res) => {
 		beat:beatData.beat,
 		beatName:beatData.beatName,
 		bpm:beatData.bpm,
-		length:beatData.length,
+		totalLength:beatData.totalLength,
 		volume:beatData.volume
 	}
 
