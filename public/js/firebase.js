@@ -1,5 +1,4 @@
 let dbHost = "https://beating-line.firebaseapp.com";
-// let clickProfile = popUpLogIn;
 
 let authStatus = function(){
     return firebase.auth().currentUser;
@@ -138,11 +137,9 @@ let signUp = function() {
                     setTimeout(function(){document.location.reload()},3000);
                 })
             }).catch(function(error) {
-            // An error happened.
                 console.log("send mail fail:"+error);
             });
         }).catch(function(error) {
-            // An error happened.
             console.log("update profile fail:"+error);
         });
     })
