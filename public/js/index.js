@@ -802,9 +802,6 @@ let setAudioAnalyser = function() {
         
         let sliceWidth = dom.canvas.width / bufferLength;
         let x = 0;
-        // let x = sliceWidth/2;
-        // canvasCtx.moveTo(x, dataArray[0]/128.0*dom.canvas.height/2);
-        
         let amp = 0;
         let i;
 

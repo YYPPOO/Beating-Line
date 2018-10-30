@@ -184,7 +184,6 @@ input[type="range"]::-moz-focus-outer{
 }
 
 .beatListBtnShow {
-    /* align-self: flex-end; */
     background-color: #4D99CC;
 }
 
@@ -218,7 +217,6 @@ input[type="range"]::-moz-focus-outer{
 /* Track */
 .beatListDiv::-webkit-scrollbar-track {
     background-color: #0f1a2a;
-    /* box-shadow: inset 0 0 2px grey;  */
     border-radius: 3px;
 }
 
@@ -255,17 +253,6 @@ input[type="range"]::-moz-focus-outer{
 }
 
 /* pop up naming ---------------------------------*/
-/* .shield {
-    position:fixed;
-    left:0px;
-    top:0px;
-    width:100%;
-    height:100%;
-    background:#0f1a2a;
-    z-index: 50;
-    opacity: 0.6;
-} */
-
 .naming {
     display: flex;
     flex-direction: column;
@@ -314,12 +301,10 @@ input[type="range"]::-moz-focus-outer{
 
 .namingBtn {
     background-color: #0f1a2a;
-    /* border: 1px solid #aaaaaa; */
 }
 
 .namingCancel {
     background-color: #3f4a5a;
-    /* border: 1px solid #aaaaaa; */
 }
 
 
@@ -344,16 +329,6 @@ canvas {
     opacity: 1;
 }
 
-/* @media (max-width:1200px) and (min-width:650px) {
-    canvas {
-        transform: initial;
-    }
-}
-@media (max-width:650px) {
-    canvas {
-        transform: initial;
-    }
-}*/
 @media (max-width:375px) {
     canvas {
         transform: translateX(16px);
@@ -379,19 +354,12 @@ canvas {
     background-color: #333333;
     cursor: pointer;
 }
-/* .track:hover {
-    filter: brightness(1.2);
-} */
 
 .trackIcon {
     width: 30px;
     height: 30px;
     margin: 0;
 }
-
-/* .trackNumber {
-    font-family: "arial", "sans-serif";
-} */
 
 @media (max-width:375px) {
     .padDiv {
@@ -410,16 +378,13 @@ canvas {
 .pointNumber {
     text-align: center;
     font-size: 12px;
-    /* font-family: "arial", "sans-serif"; */
     align-self: flex-start;
     color: #777777;
 }
-
 .pointNumberP {
     text-align: center;
     font-size: 12px;
     font-weight: bold;
-    /* font-family: "arial", "sans-serif"; */
     align-self: flex-start;
     color: #ffffff;
 }
@@ -445,11 +410,6 @@ canvas {
 
 .bp {
     background-color: #555555;
-    /* border-radius: 5px;
-    width: 30px;
-    height: 30px;
-    transition: all 0.1s;
-    opacity: 0.8; */
 }
 
 .bOn {
@@ -461,7 +421,6 @@ canvas {
 }
 
 .bSelected {
-    /* filter: brightness(2); */
     background-color: #777777;
 }
 
@@ -488,54 +447,22 @@ canvas {
     border: solid 1px white;
 }
 
-
-/* #funcBtn {
-    cursor: pointer;
-    font-size: 16px;
-    padding: 10px 0 0;
-    margin: 3px 0;
-}
-.funcDiv {
-    cursor: pointer;
-    position: relative;
-} */
 .funcBtnDiv {
-    /* background-color: #333333;
-    border-radius: 5px;
-    text-align: left;
-    position: absolute;
-    height: 258px;
-    top: 143px;
-    bottom: 0;
-    flex-direction: column;
-    transform: scale(0,1);
-    transform-origin: left;
-    transition: all 0.2s;
-    z-index: 3;
-    padding: 10px; */
     display: flex;
     font-weight: initial;
 }
 
-/* .funcItemDivOn{
-    transform: scale(1,1);
-} */
-
 .func {
     background-color: #3f4a5a;
-    /* background-color: #4D99CC; */
     border: 0px;
     font-size: 16px;
     width: 150px;
-    /* margin-bottom: 15px; */
 }
 
 /* track setting */
 .trackSettingListDiv {
-    /* opacity: 0; */
     display: none;
     grid-template-columns: repeat(8,auto);
-    /* grid-template-rows: repeat(2,auto); */
     grid-gap: 0 15px;
     justify-content: center;
     justify-items: center;
@@ -561,24 +488,15 @@ canvas {
     touch-action: none;
 }
 
-/* .trackSetVolumeKey {
-    grid-area: volumeKey;
-} */
-
 .trackSetVolume {
     grid-area: volume;
     transform: rotate(270deg);
     transform-origin: center;
 }
 
-/* .trackSetVolume::-webkit-slider-thumb:hover{
-    background-color: #ffffff;
-} */
-
 #trackSetVolume0::-webkit-slider-thumb{
     background: #41d841;
     width: 15px;
-    /* border: 0px; */
     box-shadow: -50px 0 0 45px #41d841;
 }
 #trackSetVolume0::-moz-range-thumb,
@@ -589,7 +507,6 @@ canvas {
 #trackSetVolume1::-webkit-slider-thumb {
     background: #d65d5d;
     width: 15px;
-    /* border: 0px; */
     box-shadow: -50px 0 0 45px #d65d5d;
 }
 #trackSetVolume1::-moz-range-thumb,
@@ -599,7 +516,6 @@ canvas {
 #trackSetVolume2::-webkit-slider-thumb {
     background: #e2e228;
     width: 15px;
-    /* border: 0px; */
     box-shadow: -50px 0 0 45px #e2e228;
 }
 #trackSetVolume2::-moz-range-thumb,
@@ -609,7 +525,6 @@ canvas {
 #trackSetVolume3::-webkit-slider-thumb {
     background: #ec7310;
     width: 15px;
-    /* border: 0px; */
     box-shadow: -50px 0 0 45px #ec7310;
 }
 #trackSetVolume3::-moz-range-thumb,
@@ -619,7 +534,6 @@ canvas {
 #trackSetVolume4::-webkit-slider-thumb {
     background: #87cefa;
     width: 15px;
-    /* border: 0px; */
     box-shadow: -50px 0 0 45px #87cefa;
 }
 #trackSetVolume4::-moz-range-thumb,
@@ -629,7 +543,6 @@ canvas {
 #trackSetVolume5::-webkit-slider-thumb {
     background: #58ffff;
     width: 15px;
-    /* border: 0px; */
     box-shadow: -50px 0 0 45px #58ffff;
 }
 #trackSetVolume5::-moz-range-thumb,
@@ -639,7 +552,6 @@ canvas {
 #trackSetVolume6::-webkit-slider-thumb {
     background: #f3b272;
     width: 15px;
-    /* border: 0px; */
     box-shadow: -50px 0 0 45px #f3b272;
 }
 #trackSetVolume6::-moz-range-thumb,
@@ -649,26 +561,12 @@ canvas {
 #trackSetVolume7::-webkit-slider-thumb {
     background: #ac25ac;
     width: 15px;
-    /* border: 0px; */
     box-shadow: -50px 0 0 45px #ac25ac;
 }
 #trackSetVolume7::-moz-range-thumb,
 #trackSetVolume7::-moz-range-progress {
     background: #ac25ac;
 }
-
-/* .trackSetPlay {
-    grid-area: play;
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    background-size: contain;
-    background-image: url(../img/play.svg);
-}
-
-.trackSetStop {
-    background-image: url(../img/stop.svg);
-} */
 
 .trackSetSwitch {
     grid-area: switch;
@@ -678,55 +576,6 @@ canvas {
     border-radius: 5px;
     transition: all 0.3s;
 }
-
-/* .trackSetSwitch {
-    grid-area: switch;
-    display: block;
-    position: relative;
-    width: 44px;
-    height: 24px;
-} origin*/
-
-/* 
-.trackSetSwitch input {
-    visibility: hidden;
-}
-
-.trackSetSlider {
-    position: absolute;
-    cursor: pointer;
-    border-radius: 5px;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #3f4a5a;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.trackSetSlider::before {
-    position: absolute;
-    content: "";
-    border-radius: 5px;
-    height: 20px;
-    width: 20px;
-    left: 2px;
-    top: 2px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.trackSetSwitch input:checked + .trackSetSlider {
-    background-color: #4D99CC;
-}
-
-.trackSetSwitch input:checked + .trackSetSlider:before {
-    -webkit-transform: translateX(20px);
-    -ms-transform: translateX(20px);
-    transform: translateX(20px);
-} */
 
 .trackSetNum {
     grid-area: number;
@@ -740,9 +589,6 @@ canvas {
 }
 
 .kbCtrlDiv {
-    /* display: flex;
-    flex-direction: column;
-    align-items: center; */
     display: none;
     grid-template-columns: 800px 300px;
     justify-items: center;
@@ -844,7 +690,6 @@ canvas {
         grid-template-columns: auto auto;
         grid-template-rows: repeat(4,auto);
         grid-gap: 5px 5px;
-        /* justify-content: flex-start; */
     }
     .trackSetDiv {
         grid-template-columns: 30px 30px 80px;
@@ -859,7 +704,6 @@ canvas {
         transform: initial;
         width: 80px;
     }
-    /* .trackSetVolume */
     .trackSetNum {
         display: none;
     }
@@ -951,42 +795,34 @@ canvas {
 
 .b0 {
     background-color: #41d841;
-    /* color: #0f1a2a; */
 }
 
 .b1 {
     background-color: #d65d5d;
-    /* color: #0f1a2a; */
 }
 
 .b2 {
     background-color: #e2e228;
-    /* color: #0f1a2a; */
 }
 
 .b3 {
     background-color: #ec7310;
-    /* color: #0f1a2a; */
 }
 
 .b4 {
     background-color: #87cefa;
-    /* color: #0f1a2a; */
 }
 
 .b5 {
     background-color: #58ffff;
-    /* color: #0f1a2a; */
 }
 
 .b6 {
     background-color: #f3b272;
-    /* color: #0f1a2a; */
 }
 
 .b7 {
     background-color: #ac25ac;
-    /* color: #0f1a2a; */
 }
 
 .b0.bOn,.b1.bOn,.b2.bOn,.b3.bOn,.b4.bOn,.b5.bOn,.b6.bOn,.b7.bOn {
@@ -1023,17 +859,3 @@ canvas {
         animation: none;
     }
 }
-
-#container>img{
-    border: solid 1px white;
-}
-
-
-/* @media (min-width:1200px) and (min-height:800px),
-(max-width:1200px) and (min-width:650px) and (min-height:800px),
-(max-width:650px) and (min-height:800px){
-    footer {
-        position: absolute;
-        bottom: 0;
-    }
-} */
