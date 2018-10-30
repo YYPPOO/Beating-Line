@@ -210,7 +210,6 @@ function popUpLogIn() {
     let mySignLink = cE("a","logInText","Already have an account? Sign in here.");
         mySignLink.addEventListener("click",function(){
             let logging = this.textContent == "Already have an account? Sign in here.";
-            console.log(logging);
             //true = sign up to sign in, false = sign in to sign up
                 mySignLink.textContent = logging?"Don't have an account? Sign up here.":"Already have an account? Sign in here.";
                 myForget.textContent = logging?"Forget password?":"";
@@ -246,7 +245,7 @@ function popUpLogIn() {
 
     myAlertBtnDiv.append(myFB,myG);
 
-    myLogInDiv.append(myLogoImg,myNameInput,myEmailInput,myPasswordInput/*,mySignInText*/,mySignLink,myForget,mySignButton,myPolicyDiv,myHrDiv,myAlertBtnDiv);
+    myLogInDiv.append(myLogoImg,myNameInput,myEmailInput,myPasswordInput,mySignLink,myForget,mySignButton,myPolicyDiv,myHrDiv,myAlertBtnDiv);
     myLogIn.appendChild(myLogInDiv);
 
     document.body.append(mySheild,myLogIn);
@@ -305,7 +304,7 @@ function showUserBeatList(userBeatList,uid) {
                         document.getElementById("trackSetVolume"+k).value = beat.volume[k];
                     }
                     decideLength(mediaQuery);
-                    state.playing && reset();
+                    state.playing && app.reset();
                     window.history.pushState(null,beat.beatName,"index.html?id="+beat.beatId);
                 })
                 .catch(error => {
