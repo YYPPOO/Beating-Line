@@ -337,7 +337,7 @@ canvas {
 
 .padDiv {
     display: grid;
-    grid-template-columns: 40px repeat(8,30px);
+    grid-template-columns: 40px repeat(32,30px);
     grid-template-rows: repeat(8,30px) 10px;
     grid-gap: 5px 5px;
     align-items: center;
@@ -360,16 +360,27 @@ canvas {
     height: 30px;
     margin: 0;
 }
-
+@media (max-width:1200px) and (min-width:650px) {
+    .padDiv {
+        grid-template-columns: 40px repeat(16,30px);
+    }
+    
+}
+@media (max-width:650px) {
+    .padDiv {
+        grid-template-columns: 40px repeat(8,30px);
+    }
+    
+}
 @media (max-width:375px) {
     .padDiv {
-        grid-template-columns: repeat(8,30px);
+        /* grid-template-columns: repeat(8,30px); */
         grid-gap: 2px 2px;
         margin: 0 auto 15px;
     }
-    .trackNumber {
+    /* .trackNumber {
         display: none;
-    }
+    } */
     .trackIcon {
         margin: 0;
     }
@@ -692,7 +703,7 @@ canvas {
         grid-gap: 5px 5px;
     }
     .trackSetDiv {
-        grid-template-columns: 30px 30px 80px;
+        grid-template-columns: 30px 30px 85px;
         grid-template-rows: 30px;
         grid-gap: 0px 4px;
         grid-template-areas:
@@ -702,7 +713,7 @@ canvas {
     }
     .trackSetVolume[type="range"] {
         transform: initial;
-        width: 80px;
+        width: 85px;
     }
     .trackSetNum {
         display: none;
@@ -716,8 +727,8 @@ canvas {
     }
 
     .drumPad {
-        grid-template-columns: 55px 8px 30px;
-        grid-template-rows: 40px 30px;
+        grid-template-columns: 10px 8px 30px;
+        grid-template-rows: 20px 30px;
         grid-template-areas: 
             ". . ."
             ". number icon";
@@ -772,7 +783,7 @@ canvas {
         grid-gap: 2px 2px;
     }
     .trackSetDiv {
-        grid-template-columns: 10px 30px 80px;
+        grid-template-columns: 10px 30px 85px;
         grid-gap: 0px 5px;
         grid-template-areas: "number switch volume";
         justify-items: center;
@@ -784,7 +795,7 @@ canvas {
         display: block;
     }
     .drumPadDiv {
-        grid-template-columns: repeat(2,140px);
+        grid-template-columns: repeat(2,145px);
         grid-template-rows: repeat(4,70px);
         grid-gap: 5px 5px;
     }

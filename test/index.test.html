@@ -1,20 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127962121-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-127962121-1');
-    </script>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-8380072077837273",
-            enable_page_level_ads: true
-        });
-    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,16 +8,12 @@
     <meta name="description" content="Play finger drumming, save and share beats with Beating Line.">
     <meta name="author" content="YPO">
     <meta property="og:image" content="https://beatingline.com/img/facebookIconR.png">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://beatingline.com/css/main.css">
+    <link rel="stylesheet" href="https://beatingline.com/css/index.css">
     <link rel='shortcut icon' type='image/x-icon' href='img/favicon.png'>
     <title>Beating Line --My Online Finger Drum</title>
-    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-functions.js"></script>
-    <script src="js/firebaseInit.js" text/javascript></script>
+
+    <link href="https://unpkg.com/mocha@5.2.0/mocha.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -57,7 +39,7 @@
     <div class="sideNav" id="sideNav">
         <img id="closeNav" src="img/close.svg" alt="close"/>
         <div class="sideNavUserDiv">
-            <img class="memberIcon sideNavUserPic" id="memberIcon" src="img/member.svg" alt="Member"/>
+            <img class="memberIcon sideNavUserPic" src="img/member.svg" alt="Member"/>
             <div class="sideNavUserName" id="memberName">Sign In/Up</div>
         </div>
         <button class="sideNavButton" id="save">Save Beat</button>
@@ -67,7 +49,7 @@
     </div>
 
     <section>
-        <svg id="loading" class="loading" width="160px" height="60px" viewBox="0 0 160 100">
+        <svg class="loading" width="160px" height="60px" viewBox="0 0 160 100">
             <rect y="50" width="10" height="10" rx="5" ry="5" fill="#41d841">
                 <animate attributeName="height" values="10;60;10;10;10;10" begin="0s" dur="2s" repeatCount="indefinite" />
                 <animate attributeName="y" values="50;0;50;50;50;50" begin="0s" dur="2s" repeatCount="indefinite"/>
@@ -177,12 +159,23 @@
             </div>
         </div>
     </section>
+    <div id="mocha"></div>
     <footer>
         by YYPPOO | contact@beatingline.com
     </footer>
     <div id="background"></div>
-    <script src="js/lib.js" text/javascript></script>
-    <script src="js/index.js" text/javascript></script>
-    <script src="js/firebase.js" text/javascript></script>
+    <script src="../public/js/lib.js" text/javascript></script>
+    <script src="index.test.js" text/javascript></script>
+    <!-- <script src="js/firebase.js" text/javascript></script> -->
+    
+    <script src="https://unpkg.com/chai/chai.js"></script>
+    <script src="https://unpkg.com/mocha@5.2.0/mocha.js"></script>
+  
+    <script>mocha.setup('bdd')</script>
+    <script src="test.js"></script>
+    <script>
+    //   mocha.checkLeaks();
+    //   mocha.run();
+    </script>
 </body>
 </html>
