@@ -7,7 +7,6 @@ let audio = {
     analyser:null,
     analyserFilter:null,
     drawVisualId:null,
-    delay:0.05,
     urlList:[
         "sound/0kick0.wav",
         "sound/1snare0.wav",
@@ -60,49 +59,40 @@ let dom = {
     trackSetSwitch:[]
 };
 
-// initial beats ------------------------------------------------------------------
-let rhythm = [];
-rhythm[0] = {
-    state:[
-        [1,0,0,1,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,0,0,0],
-        [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,1],
-        [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
-        [0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1],
-        [0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,1],
-        [0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
-    ],
-    bpm: 60
-};
-rhythm[1] = {
-    state:[
-        [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,1],
-        [0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0],
-        [0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,1,0,1,0,1,1,1,0,1,0,1,0,1,1,0,0,1],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,1,0,1,1,0,0,0,0,0,0,0,1,0,0,0],
-        [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,1],
-        [0,1,0,0,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    ],
-    bpm: 100
-};
-rhythm[2] = {
-    state:[
-        [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0],
-        [0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,1],
-        [0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],
-        [1,1,0,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,1,0,0,1,0,0,0,1,0,1,0],
-        [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1],
-        [1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
-    ],
-    bpm: 120
-};
+let app = {};
 
-// media query ------------------------------------------------------
+let rhythm = [];
+rhythm[0] = [
+    [1,0,0,1,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,0,0,0],
+    [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,1],
+    [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+    [0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1],
+    [0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,1],
+    [0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+];
+rhythm[1] = [
+    [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,1],
+    [0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0],
+    [0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,1,0,1,0,1,1,1,0,1,0,1,0,1,1,0,0,1],
+    [0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1],
+    [0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,1,0,1,1,0,0,0,0,0,0,0,1,0,0,0],
+    [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,1],
+    [0,1,0,0,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+];
+rhythm[2] = [
+    [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0],
+    [0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,1],
+    [0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],
+    [1,1,0,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,1,0,0,1,0,0,0,1,0,1,0],
+    [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1],
+    [1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+];
+
 let decideLength = function(media) {
     dom.canvas.height = 275;
     if(mediaQuery[0].matches) {
@@ -121,6 +111,7 @@ let decideLength = function(media) {
         state.step = 8;
         dom.canvas.width = 275;
         if(mediaQuery[2].matches) {
+            document.getElementById("padDiv").style = "grid-template-columns: 30px repeat("+state.length+",30px);"
             dom.canvas.width = 254;
             dom.canvas.height = 254;
         }
@@ -137,7 +128,6 @@ let mediaQuery = [
     window.matchMedia("(max-width: 375px)")
 ];
 
-// flow control -----------------------------------------------------------
 window.onload = init;
 
 function init() {
@@ -147,15 +137,13 @@ function init() {
     for(i=0;i<beat.trackQty;++i) {
         beat.state[i] = [];
         dom.padList[i] = [];
-        dom.drumPad[i] = app.get("drumPad"+i);
+        dom.drumPad[i] = document.getElementById("drumPad"+i);
         for(j=0;j<beat.totalLength;++j) {
             beat.state[i].push(0);
         }
     }
-    let random = Math.floor(3*Math.random());
-    beat.state = rhythm[random].state;
-    beat.bpm = rhythm[random].bpm;
-    dom.canvas = app.get("visual");
+    beat.state = rhythm[2];
+    dom.canvas = document.getElementById("visual");
 
     //setting media query
     for(i=0;i<mediaQuery.length;++i){
@@ -199,9 +187,8 @@ function finishedLoading(bufferList) {
                 beat.beatName = response.beatName;
                 beat.volume = response.volume;
             }
-            app.get("bpm").value = beat.bpm;
+            document.getElementById("bpm").value = beat.bpm;
             decideLength(mediaQuery);
-            app.get("loading").style.display = "none";
             createTrackSetting();
         })
         .catch(error => {
@@ -211,9 +198,8 @@ function finishedLoading(bufferList) {
         if(localStorage.beat) {beat.state = JSON.parse(localStorage.getItem("beat"));}
         if(localStorage.bpm) {beat.bpm = localStorage.getItem("bpm");}
         if(localStorage.volume) {beat.volume = JSON.parse(localStorage.getItem("volume"));}
-        app.get("bpm").value = beat.bpm;
+        document.getElementById("bpm").value = beat.bpm;
         decideLength(mediaQuery);
-        app.get("loading").style.display = "none";
         createTrackSetting();
     }
 
@@ -221,22 +207,26 @@ function finishedLoading(bufferList) {
     addKeyEvent();
     setAudioAnalyser();
     setBottomFunc();
+
+    if(document.querySelector(".loading")) {
+        document.querySelector(".loading").style.display = "none";
+    }
+    mocha.checkLeaks();
+    mocha.run();
 }
 
 app.playByPoint = function(soundList,onPage,lastOnPage) {
     let startTime = audio.context.currentTime;
-    let p = state.p % state.length;
-    let lastP = state.lastP % state.length;
     let i;
-    for (i=0;i<beat.trackQty;++i){
+    for (i=0;i<8;++i){
         if(state.trackSwitch[i]) {
-            beat.state[i][state.p] && playSound(soundList[i],startTime + audio.delay,beat.volume[i]);
-            onPage && dom.padList[i][p].classList.add("bOn");
+            beat.state[i][state.p] && playSound(soundList[i],startTime+0.05,beat.volume[i]);
+            onPage && dom.padList[i][state.p-state.page*state.length].classList.add("bOn");
         }
-        lastOnPage && dom.padList[i][lastP].classList.remove("bOn");
+        lastOnPage && dom.padList[i][state.lastP-state.page*state.length].classList.remove("bOn");
     }
-    onPage && dom.pointNumberList[p].classList.add("pointNumberOn");
-    lastOnPage && dom.pointNumberList[lastP].classList.remove("pointNumberOn");
+    onPage && dom.pointNumberList[state.p-state.page*state.length].classList.add("pointNumberOn");
+    lastOnPage && dom.pointNumberList[state.lastP-state.page*state.length].classList.remove("pointNumberOn");
 }
 
 // add top nav button event -----------------------------------------------------------
@@ -256,7 +246,7 @@ app.handlePlay = function(){
     app.playByPoint(audio.soundList,onPage,lastOnPage);
 
     // change page
-    if(state.p%state.length === 0) {
+    if(state.p%state.length===0) {
         if (dom.pageList[state.pagePlaying]){
             state.autoPage && dom.pageList[state.page].classList.remove("pageNow");
             dom.pageList[state.pagePlaying].classList.remove("pagePlaying");
@@ -270,13 +260,13 @@ app.handlePlay = function(){
             let j;
             for(i=0;i<beat.trackQty;++i){
                 if(state.trackSwitch[i]) {
-                    dom.padList[i][0].classList.add("bOn");
+                    dom.padList[i][state.p-state.page*state.length].classList.add("bOn");
                 }
                 for(j=0;j<state.length;++j){
                     dom.padList[i][j].classList.toggle("b"+i,beat.state[i][j+state.page*state.length])
                 }
             }
-            dom.pointNumberList[0].classList.add("pointNumberOn");
+            dom.pointNumberList[state.p-state.page*state.length].classList.add("pointNumberOn");
             //change point number
             for(j=0;j<state.length;j+=4){
                 dom.pointNumberList[j].textContent = ((j+state.page*state.length)/4)+1;
@@ -292,13 +282,13 @@ app.handlePlay = function(){
 
     // metronome sound and view
     if(state.metronome && state.p%4===0){
-        playSound((state.p/4)%4?audio.soundList[9]:audio.soundList[8],audio.context.currentTime+audio.delay,beat.totalVolume);
-        app.get("metronome").src = state.p%8 ? "img/metronome.svg" : "img/metronome1.svg";
+        playSound((state.p/4)%4?audio.soundList[9]:audio.soundList[8],audio.context.currentTime+0.05,beat.totalVolume);
+        document.getElementById("metronome").src = state.p%8 ? "img/metronome.svg" : "img/metronome1.svg";
     }
 
     // kb mode icon view
     if(state.kbMode && state.p%4===0){
-        app.get("kbMode").src = "img/kbMode"+(state.p%16)/4+".svg";
+        document.getElementById("kbMode").src = "img/kbMode"+(state.p%16)/4+".svg";
     }
 }
 
@@ -308,12 +298,13 @@ app.play = function() {
         // pause
         clearInterval(state.timerId);
         state.playing = false;
-        app.get("playImg").src = "img/play.svg";
+        document.getElementById("playImg").src = "img/play.svg";
     } else {
         state.timerId = setInterval(app.handlePlay,15000/beat.bpm);
-        app.get("stop").removeEventListener("click",app.stop);
-        app.event("stop","click",app.stop);
-        app.get("playImg").src = "img/pause.svg";
+        document.getElementById("stop").removeEventListener("click",app.stop);
+        document.getElementById("stop").addEventListener("click",app.stop);
+        document.getElementById("playImg").src = "img/pause.svg";
+        saveBeatToLocalStorage();
     }
 }
 
@@ -327,11 +318,10 @@ app.stop = function() {
 
     // turn off the "On" blocks
     if(state.page === state.pagePlaying){
-        let p = state.p%state.length;
         for (i=0;i<beat.trackQty;++i){
-            dom.padList[i][p].classList.remove("bOn");
+            dom.padList[i][state.p%state.length].classList.remove("bOn");
         }
-        dom.pointNumberList[p].classList.remove("pointNumberOn");
+        dom.pointNumberList[state.p-state.page*state.length].classList.remove("pointNumberOn");
     }
     
     // initial state
@@ -342,8 +332,8 @@ app.stop = function() {
     state.lastP = beat.totalLength-1;
 
     // set buttons
-    app.get("stop").removeEventListener("click",app.stop);
-    app.get("playImg").src = "img/play.svg";
+    document.getElementById("stop").removeEventListener("click",app.stop);
+    document.getElementById("playImg").src = "img/play.svg";
 }
 
 app.reset = function() {
@@ -360,17 +350,17 @@ app.clear = function() {
             dom.padList[i][j].classList.remove("b"+i);
         }
         beat.volume[i] = 1;
-        app.get("trackSetVolume"+i).value = 1;
+        document.getElementById("trackSetVolume"+i).value = 1;
     }
     beat.beatId = false;
     window.history.replaceState(null,"","index.html");
 }
 
 let setTopNavButton = function() {
-    app.event("play","click",app.play);
+    document.getElementById("play").addEventListener("click",app.play);
     
-    let muteBtn = app.get("mute");
-    let totalVolumeBtn = app.get("totalVolume");
+    let muteBtn = document.getElementById("mute");
+    let totalVolumeBtn = document.getElementById("totalVolume");
     muteBtn.addEventListener("click",function(){
         totalVolumeBtn.value = Number(!beat.totalVolume);
         beat.totalVolume = Number(!beat.totalVolume);
@@ -386,29 +376,26 @@ let setTopNavButton = function() {
         muteBtn.classList.toggle("volumeOn",beat.totalVolume>0.01);
     });
     
-    app.event("visualSwitch","click",function(){
+    document.getElementById("visualSwitch").addEventListener("click",function(){
         state.visualMode = (state.visualMode+1)%3;
         this.src = "img/visual"+state.visualMode+".svg";
         this.classList.toggle("visualSwitchOn",state.visualMode);
         state.visualMode && app.draw();
     })
-    app.event("kbMode","click",function(){
+    document.getElementById("kbMode").addEventListener("click",function(){
         state.kbMode = !state.kbMode;
         this.classList.toggle("kbModeOn",state.kbMode);
     })
-    app.event("metronome","click",function(){
+    document.getElementById("metronome").addEventListener("click",function(){
         state.metronome = !state.metronome;
         this.classList.toggle("metronomeOn",state.metronome);
     })
-    app.event("bpm","click",function(){
-        this.select();
-    });
-    app.event("bpm","change",function(){
+    document.getElementById("bpm").addEventListener("change",function(){
         beat.bpm = this.value;
         state.playing && app.reset();
         localStorage.setItem("bpm",beat.bpm);
     });
-    app.event("clear","click",function(){
+    document.getElementById("clear").addEventListener("click",function(){
         alert("Clear the Beat?!",false,app.clear);
     });
 }
@@ -481,13 +468,13 @@ app.toggleTrack = function(i){
 }
 app.stepUpDown = function(plus,shift){
     if(shift){
-        let bpmBtn = app.get("bpm");
+        let bpmBtn = document.getElementById("bpm");
         plus? bpmBtn.stepUp() : bpmBtn.stepDown();
         beat.bpm = bpmBtn.value;
         state.playing && app.reset();
     } else {
-        let muteBtn = app.get("mute");
-        let totalVolumeBtn = app.get("totalVolume");
+        let muteBtn = document.getElementById("mute");
+        let totalVolumeBtn = document.getElementById("totalVolume");
         plus? totalVolumeBtn.stepUp() : totalVolumeBtn.stepDown();
         beat.totalVolume = totalVolumeBtn.value;
         audio.playingList.forEach(function(item){
@@ -517,15 +504,20 @@ let addKeyEvent = function() {
                 e.ctrlKey && app.clear();
                 e.shiftKey && app.clear();
                 break;
+            // case 220: //"\"
             case 48: //0
-                app.get("metronome").click();
+                // state.metronome = !state.metronome;
+                // document.getElementById("metronome").classList.toggle("metronomeOn",state.metronome);
+                document.getElementById("metronome").click();
                 break;
             // case 13: //enter
             case 57: //9
-                app.get("kbMode").click();
+                // state.kbMode = !state.kbMode;
+                // document.getElementById("kbMode").classList.toggle("kbModeOn",state.kbMode);
+                document.getElementById("kbMode").click();
                 break;
             case 192: //`
-                app.get("visualSwitch").click();
+                document.getElementById("visualSwitch").click();
                 break;
             case 173: //-
                 app.stepUpDown(false,e.shiftKey);
@@ -783,7 +775,6 @@ let addKeyEvent = function() {
     }
 }
 
-// drawing visual mode -----------------------------------------------------------------
 let setAudioAnalyser = function() {
     audio.analyser = audio.context.createAnalyser();
     audio.analyser.fftSize = 256;
@@ -793,6 +784,7 @@ let setAudioAnalyser = function() {
     audio.analyserFilter = audio.context.createBiquadFilter();
     audio.analyserFilter.type = "lowpass";
     audio.analyserFilter.frequency.value = 2000;
+    // audio.analyserFilter.Q.value = 0.1;
     audio.analyserFilter.connect(audio.analyser);
 
     let bufferLength = audio.analyser.fftSize;
@@ -849,9 +841,11 @@ let setAudioAnalyser = function() {
     };
 }
 
-// -------------------------------------------------------------------------------------
 let setBottomFunc = function() {
-    let func = document.querySelectorAll(".func");
+    let func = [];
+    func[0] = document.getElementById("func0");
+    func[1] = document.getElementById("func1");
+    func[2] = document.getElementById("func2");
     let funcItem = document.querySelectorAll(".funcItem");
 
     for(let m=0;m<func.length;++m){
@@ -937,7 +931,8 @@ BufferLoader.prototype.load = function() {
 // create pad --------------------------------------------------------------
 function createPad(){
     state.page=Math.floor(state.p/state.length);
-    let padDiv = app.get("padDiv");
+    let padDiv = document.getElementById("padDiv");
+        padDiv.style = "grid-template-columns: 40px repeat("+state.length+",30px);"
     for(let i=0;i<beat.trackQty;++i){
         dom.trackList[i] = cE("div","track");
         trackNumber = cE("div","trackNumber",i+1);
@@ -974,16 +969,15 @@ function createPad(){
 
         padDiv.appendChild(dom.trackList[i]);
         for(let j=0;j<state.length;++j){
-            let p = j+state.page*state.length;
             dom.padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
             dom.padList[i][j].addEventListener("click",function(){
-                beat.state[i][p] = !beat.state[i][p];
-                beat.state[i][p] && !state.playing && playSound(audio.soundList[i],audio.context.currentTime,beat.volume[i]);
+                beat.state[i][j+state.page*state.length] = !beat.state[i][j+state.page*state.length];
+                beat.state[i][j+state.page*state.length] && !state.playing && playSound(audio.soundList[i],audio.context.currentTime,beat.volume[i]);
                 dom.padList[i][j].classList.toggle("b"+i);
                 state.lastSelect===i || handleSelect(i);
                 state.lastSelect = i;
             })
-            beat.state[i][p] && dom.padList[i][j].classList.add("b"+i);
+            beat.state[i][j+state.page*state.length] && dom.padList[i][j].classList.add("b"+i);
             padDiv.appendChild(dom.padList[i][j]);
         }
     }
@@ -1006,6 +1000,7 @@ function createPageButton() {
 
             // when page is on playing, remove hit block and point number
             if(state.pagePlaying===state.page){
+                console.log(state.p,state.p,state.page);
                 for(let i=0;i<beat.trackQty;++i){
                     dom.padList[i][state.p%state.length].classList.remove("bOn");
                 }
@@ -1013,14 +1008,11 @@ function createPageButton() {
             }
             
             state.page=m;
-
-            // renew pad
             for(let i=0;i<beat.trackQty;++i){
                 for(let j=0;j<state.length;++j){
                     dom.padList[i][j].classList.toggle("b"+i,beat.state[i][j+state.page*state.length]);
                 }
             }
-
             if(state.pagePlaying===state.page){
                 dom.pointNumberList[state.p%state.length].classList.add("pointNumberOn");
                 for(let i=0;i<beat.trackQty;++i){
@@ -1032,13 +1024,11 @@ function createPageButton() {
             for(let j=0;j<state.length;j+=4){
                 dom.pointNumberList[j].textContent = ((j+state.page*state.length)/4)+1;
             }
-
-            // change page button
             for(let n=0;n<totalPage;++n){
                 dom.pageList[n].classList.toggle("pageNow",n===m);
             }
         })
-        app.get("pageDiv").appendChild(dom.pageList[m]);
+        document.getElementById("pageDiv").appendChild(dom.pageList[m]);
     }
 }
 
@@ -1054,11 +1044,11 @@ function handleSelect(s){
 }
 
 function removePad() {
-    let padDiv = app.get("padDiv");
+    let padDiv = document.getElementById("padDiv");
     while (padDiv.hasChildNodes()) {
         padDiv.removeChild(padDiv.firstChild);
     }
-    let pageDiv = app.get("pageDiv");
+    let pageDiv = document.getElementById("pageDiv");
     while (pageDiv.hasChildNodes()) {
         pageDiv.removeChild(pageDiv.firstChild);
     }
@@ -1112,7 +1102,7 @@ function addHitEventHandler(element,i,parent) {
 }
 
 function createTrackSetting() {
-    for(let i=0;i<beat.trackQty;++i){
+    for(let i=0;i<8;++i){
         let trackSetDiv = cE("div","trackSetDiv",null,"id","trackSetDiv"+i);
 
         let trackSetVolume = cE("input","trackSetVolume",null,"id","trackSetVolume"+i);
@@ -1151,7 +1141,7 @@ function createTrackSetting() {
         let trackSetIcon = cE("img","trackSetIcon",null,"src","img/track"+i+".svg");
         addHitEventHandler(trackSetIcon,i,true);
         trackSetDiv.append(trackSetVolume,dom.trackSetSwitch[i],trackSetNum,trackSetIcon);
-        app.get("trackSettingListDiv").appendChild(trackSetDiv);
+        document.getElementById("trackSettingListDiv").appendChild(trackSetDiv);
     }
 }
 
@@ -1166,43 +1156,45 @@ function saveBeatToLocalStorage() {
 // decide side nav button function ---------------------------------------------
 let addSideNavFunc = function(){
     // call or close side nav
-    app.event("menu","click",function(){
-        app.get("sideNav").classList.add("sideNavShow");
+    document.getElementById("menu").addEventListener("click",function(){
+        document.getElementById("sideNav").classList.add("sideNavShow");
         let navShield = cE("div","navShield");
         document.body.appendChild(navShield);
         navShield.addEventListener("click",function(){
-            app.get("sideNav").classList.remove("sideNavShow");
+            document.getElementById("sideNav").classList.remove("sideNavShow");
             navShield.parentNode.removeChild(navShield);
         })
     });
-    app.event("closeNav","click",function(){
-        app.get("sideNav").classList.remove("sideNavShow");
+    document.getElementById("closeNav").addEventListener("click",function(){
+        document.getElementById("sideNav").classList.remove("sideNavShow");
         let navShield = document.querySelector(".navShield");
         navShield.parentNode.removeChild(navShield);
     });
     
     // call log in
-    app.event("memberIcon", "click", authStatus() ? goToProfile : popUpLogIn);
-    app.event("memberName", "click", authStatus() ? goToProfile : popUpLogIn);
+    document.querySelector(".memberIcon").addEventListener("click",function() {
+        authStatus() ? goToProfile() : popUpLogIn();
+    });
+    document.getElementById("memberName").addEventListener("click",function() {
+        authStatus() ? goToProfile() : popUpLogIn();
+    });
     
-    app.event("save", "click", function(){
+    document.getElementById("save").addEventListener("click",function(){
         if(authStatus()) {
-            beat.beatId ? alert("Replace the original beat?", false, saveBeat) : popUpSaveBeat(saveBeat,true);
+            beat.beatId ? alert("Replace the original beat?",false,saveBeat) :popUpSaveBeat(saveBeat,true);
         } else {
             popUpLogIn();
         }
     });
-    app.event("saveAs","click",function(){
+    document.getElementById("saveAs").addEventListener("click",function(){
         authStatus() ? popUpSaveBeat(saveBeat,true) : popUpLogIn();
     });
-    app.event("download","click",function(){
+    document.getElementById("download").addEventListener("click",function(){
         alert("The Feature Is Comming Soon.");
     });
-    app.event("share","click",function(){
+    document.getElementById("share").addEventListener("click",function(){
         if(authStatus()) {
-            beat.beatId ? popUpShareBeat() : alert("Please save the beat first.", false, function(){
-                popUpSaveBeat(saveBeat);
-            });
+            beat.beatId ? popUpShareBeat() : alert("Please save the beat first.",false,function(){popUpSaveBeat(saveBeat)});
         } else {
             popUpLogIn();
         }
@@ -1294,7 +1286,10 @@ let popUpShareBeat = function() {
     let myNamingText = cE('div', "namingText","Copy link and share!");
     let myNamingInput = cE("input","namingInput",null,"value",shareLink);
         myNamingInput.select();
-
+        // myNamingInput.addEventListener("change",function(){
+        //     beatName = this.value;
+        //     console.log(beatName);
+        // })
     let myNamingCopy = cE("div","namingCopy","Link copied!");
         myNamingCopy.style.display = "none";
 	let myNamingBtnDiv = cE("div","namingBtnDiv");

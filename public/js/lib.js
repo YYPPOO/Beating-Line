@@ -6,6 +6,14 @@ const cE = (type,v0,v1,k2,v2) => {
     return myElement;
 };
 
+let app = {};
+app.get = (id) => {
+    return document.getElementById(id);
+};
+app.event = (id,event,callback) => {
+    document.getElementById(id).addEventListener(event,callback);
+};
+
 let showUserPic = function(data){
     let storage = firebase.storage();
     storage.ref(authStatus().uid+'/main.jpg').getDownloadURL().then((url)=>{
