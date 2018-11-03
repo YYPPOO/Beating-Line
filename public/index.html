@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127962121-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-127962121-1');
+    </script>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-8380072077837273",
+            enable_page_level_ads: true
+        });
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Play finger drumming, save and share beats with Beating Line.">
+    <meta name="author" content="YPO">
+    <meta property="og:image" content="https://beatingline.com/img/facebookIconR.png">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel='shortcut icon' type='image/x-icon' href='img/favicon.png'>
+    <title>Beating Line --My Online Finger Drum</title>
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-functions.js"></script>
+    <script src="js/firebaseInit.js" text/javascript></script>
+</head>
+<body>
+    <header>
+        <a href="index.html"><img class="logo" id="icon" src="img/icon.svg" alt="logo"/></a>
+        <a href="index.html"><img class="logo" src="img/logo.svg" alt="logo"/></a>
+        <img class="menu" id="menu" src="img/menu.svg" alt="Menu"/>
+    </header>
+    <nav>
+        <div class="nav">
+            <button class="play" id="play"><img id="playImg" src="img/play.svg"/></button>
+            <button class="stop" id="stop"><img src="img/stop.svg"/></button>
+            <img class="volume volumeOn" id="mute" src="img/volume3.svg" />
+            <input type="range" value="1" min="0" max="0.99" step="0.09" id="totalVolume">
+        </div>
+        <div class="nav">
+            <img class="visualSwitch" id="visualSwitch" src="img/visual0.svg" />
+            <img class="kbMode" id="kbMode" src="img/kbMode0.svg" />
+            <img class="metronome" id="metronome" src="img/metronome.svg" />
+            <input type="number" min="30" max="240" step="5" id="bpm" list="bpmList"/>
+            <img src="img/clear.svg" class="clear" id="clear"/>
+        </div>
+    </nav>
+    <div class="sideNav" id="sideNav">
+        <img id="closeNav" src="img/close.svg" alt="close"/>
+        <div class="sideNavUserDiv">
+            <img class="memberIcon sideNavUserPic" id="memberIcon" src="img/member.svg" alt="Member"/>
+            <div class="sideNavUserName" id="memberName">Sign In/Up</div>
+        </div>
+        <button class="sideNavButton" id="save">Save Beat</button>
+        <button class="sideNavButton" id="saveAs">Save As</button>
+        <button class="sideNavButton" id="download">Download</button>
+        <button class="sideNavButton" id="share">Share</button>
+    </div>
+
+    <section>
+        <svg id="loading" class="loading" width="160px" height="60px" viewBox="0 0 160 100">
+            <rect y="50" width="10" height="10" rx="5" ry="5" fill="#41d841">
+                <animate attributeName="height" values="10;60;10;10;10;10" begin="0s" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="y" values="50;0;50;50;50;50" begin="0s" dur="2s" repeatCount="indefinite"/>
+            </rect>
+    
+            <rect x="20" y="50" width="10" height="10" rx="5" ry="5" fill="#d65d5d">
+                <animate attributeName="height" values="10;60;10;10;10;10" begin="0.2s" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="y" values="50;0;50;50;50;50" begin="0.2s" dur="2s" repeatCount="indefinite" />
+            </rect>
+    
+            <rect x="40" y="50" width="10" height="10" rx="5" ry="5" fill="#e2e228">
+                <animate attributeName="height" values="10;60;10;10;10;10" begin="0.4s" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="y" values="50;0;50;50;50;50" begin="0.4s" dur="2s" repeatCount="indefinite" />
+            </rect>
+    
+            <rect x="60" y="50" width="10" height="10" rx="5" ry="5" fill="#ec7310">
+                <animate attributeName="height" values="10;60;10;10;10;10" begin="0.6s" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="y" values="50;0;50;50;50;50" begin="0.6s" dur="2s" repeatCount="indefinite" />
+            </rect>
+    
+            <rect x="80" y="50" width="10" height="10" rx="5" ry="5" fill="#87cefa">
+                <animate attributeName="height" values="10;60;10;10;10;10" begin="0.8s" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="y" values="50;0;50;50;50;50" begin="0.8s" dur="2s" repeatCount="indefinite" />
+            </rect>
+    
+            <rect x="100" y="50" width="10" height="10" rx="5" ry="5" fill="#58ffff">
+                <animate attributeName="height" values="10;60;10;10;10;10" begin="1s" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="y" values="50;0;50;50;50;50" begin="1s" dur="2s" repeatCount="indefinite" />
+            </rect>
+    
+            <rect x="120" y="50" width="10" height="10" rx="5" ry="5" fill="#f3b272">
+                <animate attributeName="height" values="10;60;10;10;10;10" begin="1.2s" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="y" values="50;0;50;50;50;50" begin="1.2s" dur="2s" repeatCount="indefinite" />
+            </rect>
+    
+            <rect x="140" y="50" width="10" height="10" rx="5" ry="5" fill="#ac25ac">
+                <animate attributeName="height" values="10;60;10;10;10;10" begin="1.4s" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="y" values="50;0;50;50;50;50" begin="1.4s" dur="2s" repeatCount="indefinite" />
+            </rect>
+        </svg>
+        <canvas id="visual" class="visual"></canvas>
+        <div class="padDiv" id="padDiv"></div>
+        <div class="pageDiv" id="pageDiv"></div>
+        <div class="funcBtnDiv" id="funcBtnDiv">
+            <button class="func" id="func0">Track Volume</button>
+            <button class="func" id="func1">Drum Pad</button>
+            <button class="func" id="func2">Keyboard Control</button>
+        </div>
+        <div class="funcItem trackSettingListDiv" id="trackSettingListDiv"></div>
+        <div class="funcItem drumPadDiv" id="drumPadDiv">
+            <div class="drumPad" id="drumPad4">
+                <span>5</span>
+                <img src="img/track4.svg" alt="Tom-Tom">
+                <div>Tom-Tom</div>
+            </div>
+            <div class="drumPad" id="drumPad5">
+                <span>6</span>
+                <img src="img/track5.svg" alt="Clap">
+                <div>Clap</div>
+            </div>
+            <div class="drumPad" id="drumPad6">
+                <span>7</span>
+                <img src="img/track6.svg" alt="Conga">
+                <div>Conga</div>
+            </div>
+            <div class="drumPad" id="drumPad7">
+                <span>8</span>
+                <img src="img/track7.svg" alt="Atmosphere">
+                <div>Atmosphere</div>
+            </div>
+            <div class="drumPad" id="drumPad0">
+                <span>1</span>
+                <img src="img/track0.svg" alt="Kick">
+                <div>Kick</div>
+            </div>
+            <div class="drumPad" id="drumPad1">
+                <span>2</span>
+                <img src="img/track1.svg" alt="Snare">
+                <div>Snare</div>
+            </div>
+            <div class="drumPad" id="drumPad2">
+                <span>3</span>
+                <img src="img/track2.svg" alt="Close Hi-Hat">
+                <div>Close Hi-Hat</div>
+            </div>
+            <div class="drumPad" id="drumPad3">
+                <span>4</span>
+                <img src="img/track3.svg" alt="Open Hi-Hat">
+                <div>Open Hi-Hat</div>
+            </div>
+        </div>
+        <div class="funcItem kbCtrlDiv" id="kbCtrlDiv">
+            <div class="kbImgDiv" id="kbImgDiv"></div>
+            <div class="kbText">
+                <div class="kbKey">
+                    <div class="kbKeyKey">
+                        Key
+                    </div>
+                    Space<br/>Esc<br/>1~8<br/>Shift + 1~8<br/>Ctrl + 1~8<br/>`<br/>9<br/>0<br/>-<br/>=<br/>Shift + -<br/>Shift + =<br/>Ctrl + Del<br/>
+                </div>
+                <div class="kbAction">
+                    <div class="kbKeyKey">
+                        Action
+                    </div>
+                    Play / Pause<br/>Stop<br/>Turn On/Off Track<br/>Turn On/Off Other Tracks<br/>Delete Track<br/>Toggle Beating Line<br/>Toggle Keyboard Record<br/>Toggle Metronome<br/>Volume Down<br/>Volume Up<br/>Speed Down<br/>Speed Up<br/>Clear Beat<br/>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        by YYPPOO | contact@beatingline.com
+    </footer>
+    <div id="background"></div>
+    <script src="js/lib.js" text/javascript></script>
+    <script src="js/index.js" text/javascript></script>
+    <script src="js/firebase.js" text/javascript></script>
+</body>
+</html>
