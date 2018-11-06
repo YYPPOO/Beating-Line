@@ -4,13 +4,7 @@
 <?xml-stylesheet type="text/css" href="../css/svg.css"?>
 <svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
 <style>
-#googleIcon {
-    fill: #0f1a2a;
-}
 
-#googleIcon:hover {
-    fill: #dd4b39;
-}
 </style>
     <rect id="googleIcon" x="10" y="10" rx="64" ry="64" width="492" height="492" stroke="#ffffff" stroke-width="10" />
     <polygon id="svg_1" fill="#ffffff" points="407,242.5 407,188.5 380,188.5 380,242.5 326,242.5 326,269.5 380,269.5 380,323.5 407,323.5 407,269.5 461,269.5 461,242.5 "/>

@@ -35,7 +35,7 @@ let beat = {
 };
 
 let state = {
-    p:0,
+    p:-1,
     lastP:beat.totalLength-1,
     playing:false,
     autoPage:true,
@@ -242,14 +242,13 @@ app.playByPoint = function(soundList,onPage,lastOnPage) {
 // add top nav button event -----------------------------------------------------------
 app.handlePlay = function(){
     // control state
-    if(state.playing) {
+    // if(state.playing) {
         state.lastP = state.p;
         state.p = (state.p+1)>=beat.totalLength ? 0 : (state.p+1);
         // state.p = (state.p+1)%beat.totalLength;
         // ^^^^^^^ another method to add state.p
-    } else {
-        state.playing = true;
-    }
+    // } else {
+    // }
 
     let onPage = state.p >= state.page*state.length && state.p < (state.page+1)*state.length;
     let lastOnPage = state.lastP >= state.page*state.length && state.lastP < (state.page+1)*state.length;
@@ -310,6 +309,7 @@ app.play = function() {
         state.playing = false;
         app.get("playImg").src = "img/play.svg";
     } else {
+        state.playing = true;
         state.timerId = setInterval(app.handlePlay,15000/beat.bpm);
         app.get("stop").removeEventListener("click",app.stop);
         app.event("stop","click",app.stop);
@@ -338,7 +338,7 @@ app.stop = function() {
     dom.pageList[state.pagePlaying] && dom.pageList[state.pagePlaying].classList.remove("pagePlaying");
     state.playing = false;
     state.autoPage = true;
-    state.p=0;
+    state.p = -1;
     state.lastP = beat.totalLength-1;
 
     // set buttons
@@ -424,7 +424,7 @@ app.keyHit = function(i){
     }
     if(state.playing && state.kbMode) {
         beat.state[i][state.p] = true;
-        if(state.page === state.pagePlaying){
+        if(state.page === state.pagePlaying && state.p >= 0){
             dom.padList[i][state.p%state.length].classList.toggle("b"+i,true);
         }
     }
@@ -458,7 +458,7 @@ app.toggleOtherTrack = function(i){
         for(k=0;k<beat.trackQty;++k){
             state.trackSwitch[k] = true;
             dom.trackSetSwitch[k].classList.toggle("b"+k,true);
-            if(state.page===state.pagePlaying) {
+            if(state.page===state.pagePlaying && state.p >= 0) {
                 dom.padList[k][state.p%state.length].classList.toggle("bOn",true);
             }
         }
@@ -466,7 +466,7 @@ app.toggleOtherTrack = function(i){
         for(k=0;k<beat.trackQty;++k){
             state.trackSwitch[k] = (k===i);
             dom.trackSetSwitch[k].classList.toggle("b"+k,k===i);
-            if(state.page===state.pagePlaying) {
+            if(state.page===state.pagePlaying && state.p >= 0) {
                 dom.padList[k][state.p%state.length].classList.toggle("bOn",k===i);
             }
         }
@@ -475,7 +475,7 @@ app.toggleOtherTrack = function(i){
 app.toggleTrack = function(i){
     state.trackSwitch[i] = !state.trackSwitch[i];
     dom.trackSetSwitch[i].classList.toggle("b"+i,state.trackSwitch[i]);
-    if(state.page===state.pagePlaying) {
+    if(state.page===state.pagePlaying && state.p >= 0) {
         dom.padList[i][state.p%state.length].classList.toggle("bOn",state.trackSwitch[i]);
     }
 }
@@ -936,7 +936,7 @@ BufferLoader.prototype.load = function() {
 
 // create pad --------------------------------------------------------------
 function createPad(){
-    state.page=Math.floor(state.p/state.length);
+    state.page = 0 | (state.p/state.length);
     let padDiv = app.get("padDiv");
     for(let i=0;i<beat.trackQty;++i){
         dom.trackList[i] = cE("div","track");
@@ -1005,7 +1005,7 @@ function createPageButton() {
             if(state.playing) {state.autoPage = false;}
 
             // when page is on playing, remove hit block and point number
-            if(state.pagePlaying===state.page){
+            if(state.pagePlaying===state.page && state.p >= 0){
                 for(let i=0;i<beat.trackQty;++i){
                     dom.padList[i][state.p%state.length].classList.remove("bOn");
                 }
@@ -1021,7 +1021,7 @@ function createPageButton() {
                 }
             }
 
-            if(state.pagePlaying===state.page){
+            if(state.pagePlaying===state.page && state.p >= 0){
                 dom.pointNumberList[state.p%state.length].classList.add("pointNumberOn");
                 for(let i=0;i<beat.trackQty;++i){
                     dom.padList[i][state.p%state.length].classList.add("bOn");
@@ -1065,7 +1065,7 @@ function removePad() {
 }
 
 function addHitEventHandler(element,i,parent) {
-    element.addEventListener("mousedown",function(){
+    let pointDown = function(){
         playSound(audio.soundList[i],audio.context.currentTime,beat.volume[i]);
         parent?element.parentNode.classList.add("b"+i):element.classList.add("b"+i);
         dom.trackList[i].classList.add("b"+i);
@@ -1074,40 +1074,27 @@ function addHitEventHandler(element,i,parent) {
         }
         if(state.playing && state.kbMode) {
             beat.state[i][state.p] = true;
-            if(state.pagePlaying === state.page){
+            if(state.pagePlaying === state.page && state.p >= 0){
                 dom.padList[i][state.p%state.length].classList.toggle("b"+i,true);
             }
         }
-    })
+    };
+    let pointUp = function(){
+        parent?element.parentNode.classList.remove("b"+i):element.classList.remove("b"+i);
+        dom.trackList[i].classList.remove("b"+i);
+        for(let j=0;j<state.length;++j){
+            dom.padList[i][j].classList.remove("bSelected");
+        }
+    }
+    element.addEventListener("mousedown", pointDown)
     element.addEventListener("touchstart",function(e){
         e.preventDefault();
-        playSound(audio.soundList[i],audio.context.currentTime,beat.volume[i]);
-        parent?element.parentNode.classList.add("b"+i):element.classList.add("b"+i);
-        dom.trackList[i].classList.add("b"+i);
-        for(let j=0;j<state.length;++j){
-            dom.padList[i][j].classList.add("bSelected");
-        }
-        if(state.playing && state.kbMode) {
-            beat.state[i][state.p] = true;
-            if(state.pagePlaying === state.page){
-                dom.padList[i][state.p%state.length].classList.toggle("b"+i,true);
-            }
-        }
+        pointDown();
     })
-    element.addEventListener("mouseup",function(){
-        parent?element.parentNode.classList.remove("b"+i):element.classList.remove("b"+i);
-        dom.trackList[i].classList.remove("b"+i);
-        for(let j=0;j<state.length;++j){
-            dom.padList[i][j].classList.remove("bSelected");
-        }
-    })
+    element.addEventListener("mouseup",pointUp);
     element.addEventListener("touchend",function(e){
         e.preventDefault();
-        parent?element.parentNode.classList.remove("b"+i):element.classList.remove("b"+i);
-        dom.trackList[i].classList.remove("b"+i);
-        for(let j=0;j<state.length;++j){
-            dom.padList[i][j].classList.remove("bSelected");
-        }
+        pointUp();
     })
 }
 
@@ -1133,14 +1120,14 @@ function createTrackSetting() {
             e.stopPropagation();
             state.trackSwitch[i] = !state.trackSwitch[i];
             this.classList.toggle("b"+i,state.trackSwitch[i]);
-            if(state.page===state.pagePlaying) {
+            if(state.page===state.pagePlaying && state.p >= 0) {
                 dom.padList[i][state.p%state.length].classList.toggle("bOn",state.trackSwitch[i]);
             }
         })
         dom.trackSetSwitch[i].addEventListener("mousedown",function(e){
             state.trackSwitch[i] = !state.trackSwitch[i];
             this.classList.toggle("b"+i,state.trackSwitch[i]);
-            if(state.page===state.pagePlaying) {
+            if(state.page===state.pagePlaying && state.p >= 0) {
                 dom.padList[i][state.p%state.length].classList.toggle("bOn",state.trackSwitch[i]);
             }
             e.stopPropagation();
@@ -1283,29 +1270,28 @@ let saveBeat = function(saveAs) {
 }
 
 let popUpShareBeat = function() {
-    let mySheild = cE("div","shield");
-    let myNaming = cE("div","naming");
-    let shareLink = "https://beatingline.com/index.html?id="+beat.beatId;
     let closeNaming = function() {
         mySheild.parentNode.removeChild(mySheild);
         myNaming.parentNode.removeChild(myNaming);
-    }
-
-    let myNamingText = cE('div', "namingText","Copy link and share!");
-    let myNamingInput = cE("input","namingInput",null,"value",shareLink);
+    };
+    let copyLink = function () {
         myNamingInput.select();
+        document.execCommand("copy");
+        myNamingCopy.style.display = "block";
+    };
+    let mySheild = cE("div","shield");
+        mySheild.addEventListener('click',closeNaming);
+    let myNaming = cE("div","naming");
+    
+    let myNamingText = cE('div', "namingText","Copy link and share!");
+    let myNamingInput = cE("input","namingInput",null,"value","https://beatingline.com/index.html?id="+beat.beatId);
+        myNamingInput.addEventListener("click", copyLink);
 
     let myNamingCopy = cE("div","namingCopy","Link copied!");
         myNamingCopy.style.display = "none";
 	let myNamingBtnDiv = cE("div","namingBtnDiv");
 	let myNamingBtn = cE('button', "namingBtn", "Copy");
-	myNamingBtn.addEventListener('click', function () {
-        myNamingInput.select();
-        document.execCommand("copy");
-        myNamingCopy.style.display = "block";
-		// cb && cb();
-        // closeNaming();
-    });
+        myNamingBtn.addEventListener('click', copyLink);
     let myNamingBtn2 = cE('button', "namingCancel", "Okay");
     myNamingBtn2.addEventListener('click',closeNaming);
 
