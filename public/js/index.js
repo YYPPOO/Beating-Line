@@ -157,10 +157,6 @@ function init() {
     beat.bpm = rhythm[random].bpm;
     dom.canvas = app.get("visual");
 
-    //setting media query
-    for(i=0;i<mediaQuery.length;++i){
-        mediaQuery[i].addListener(decideLength);
-    }
 
     // load audio context
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -202,6 +198,10 @@ function finishedLoading(bufferList) {
             app.get("bpm").value = beat.bpm;
             decideLength(mediaQuery);
             app.get("loading").style.display = "none";
+            //setting media query
+            for(i=0;i<mediaQuery.length;++i){
+                mediaQuery[i].addListener(decideLength);
+            }
             createTrackSetting();
         })
         .catch(error => {
@@ -214,6 +214,10 @@ function finishedLoading(bufferList) {
         app.get("bpm").value = beat.bpm;
         decideLength(mediaQuery);
         app.get("loading").style.display = "none";
+        //setting media query
+        for(i=0;i<mediaQuery.length;++i){
+            mediaQuery[i].addListener(decideLength);
+        }
         createTrackSetting();
     }
 
