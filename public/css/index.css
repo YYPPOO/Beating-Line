@@ -360,13 +360,13 @@ canvas {
     height: 30px;
     margin: 0;
 }
-@media (max-width:1200px) and (min-width:650px) {
+@media (max-width:1199px) and (min-width:650px) {
     .padDiv {
         grid-template-columns: 40px repeat(16,30px);
     }
     
 }
-@media (max-width:650px) {
+@media (max-width:649px) {
     .padDiv {
         grid-template-columns: 40px repeat(8,30px);
     }
@@ -674,7 +674,7 @@ canvas {
     display: grid;
 }
 
-@media (max-width:1200px) and (min-width:650px) {
+@media (max-width:1199px) and (min-width:650px) {
     .trackSettingListDiv {
         grid-gap: 0 5px;
     }
