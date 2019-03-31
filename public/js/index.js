@@ -993,13 +993,14 @@ function createPad(){
         for(let j=0;j<state.length;++j){
             let p = j+state.page*state.length;
             dom.padList[i][j] = cE("div",j%4?"b":"bp","","id",i+"-"+j);
-            dom.padList[i][j].addEventListener("click",function(){
-                beat.state[i][p] = !beat.state[i][p];
-                beat.state[i][p] && !state.playing && playSound(audio.soundList[i],audio.context.currentTime,beat.volume[i]);
-                dom.padList[i][j].classList.toggle("b"+i);
-                state.lastSelect===i || handleSelect(i);
-                state.lastSelect = i;
-            })
+            dom.padList[i][j].addEventListener("click",() => {handleClickPad(i,j)})
+            // dom.padList[i][j].addEventListener("click",function(){
+            //     beat.state[i][p] = !beat.state[i][p];
+            //     beat.state[i][p] && !state.playing && playSound(audio.soundList[i],audio.context.currentTime,beat.volume[i]);
+            //     dom.padList[i][j].classList.toggle("b"+i);
+            //     state.lastSelect===i || handleSelect(i);
+            //     state.lastSelect = i;
+            // })
             beat.state[i][p] && dom.padList[i][j].classList.add("b"+i);
             padDiv.appendChild(dom.padList[i][j]);
         }
@@ -1011,6 +1012,15 @@ function createPad(){
         padDiv.appendChild(dom.pointNumberList[j]);
     }
 
+}
+
+function handleClickPad(i,j) {
+    const p = j+state.page*state.length;
+    beat.state[i][p] = !beat.state[i][p];
+    beat.state[i][p] && !state.playing && playSound(audio.soundList[i],audio.context.currentTime,beat.volume[i]);
+    dom.padList[i][j].classList.toggle("b"+i);
+    state.lastSelect===i || handleSelect(i);
+    state.lastSelect = i;
 }
 
 function createPageButton() {
