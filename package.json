@@ -4,7 +4,8 @@
   "description": "online-drum-machine",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "webpack"
   },
   "repository": {
     "type": "git",
@@ -16,8 +17,6 @@
     "url": "https://github.com/YYPPOO/Beating-Line-0/issues"
   },
   "homepage": "https://github.com/YYPPOO/Beating-Line-0#readme",
-  "dependencies": {
-    "firebase": "^5.5.2"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }
