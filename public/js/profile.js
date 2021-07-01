@@ -1,9 +1,6 @@
-const dbHost = "https://beating-line.firebaseapp.com";
-let authStatus = function () {
-  return firebase.auth().currentUser;
-}
+const authStatus = () => firebase.auth().currentUser;
 
-firebase.auth().onAuthStateChanged(function (user) {
+firebase.auth().onAuthStateChanged(user => {
   if (user) {
     console.log(user);
     console.log('登入id', authStatus().uid);
@@ -15,35 +12,35 @@ firebase.auth().onAuthStateChanged(function (user) {
   } else {
     console.log("未登入");
     alert("You're logged out, go back to index in 3 seconds.", true);
-    setTimeout(function () {
+    setTimeout(() => {
       window.location = "/index.html";
     }, 3000);
   }
 });
 
-let showUserData = function (user) {
-  let myTitle = cE("h2", "profileTitle", "Profile");
-  let emailKey = cE("span", "profileKey", "Email");
-  let emailValue = cE("input", "profileValue", user.userEmail, "id", "userEmail");
+const showUserData = user => {
+  const myTitle = cE("h2", "profileTitle", "Profile");
+  const emailKey = cE("span", "profileKey", "Email");
+  const emailValue = cE("input", "profileValue", user.userEmail, "id", "userEmail");
   emailValue.type = "text";
   emailValue.value = user.email;
   emailValue.disabled = true;
-  let nameKey = cE("span", "profileKey", "Name");
-  let nameValue = cE("input", "profileValue", user.userName, "id", "userName");
+  const nameKey = cE("span", "profileKey", "Name");
+  const nameValue = cE("input", "profileValue", user.userName, "id", "userName");
   nameValue.type = "text";
   nameValue.value = user.displayName;
   nameValue.disabled = true;
 
-  let uploadPicButton = cE("button", null, "Upload Pic", "id", "uploadPicButton");
+  const uploadPicButton = cE("button", null, "Upload Pic", "id", "uploadPicButton");
   uploadPicButton.style.display = "none";
   uploadPicButton.addEventListener("click", uploadProfilePic);
-  let uploadPic = cE("input", null, null, "type", "file");
+  const uploadPic = cE("input", null, null, "type", "file");
   uploadPic.id = "uploadPic";
   uploadPic.style.display = "none";
 
-  let renewProfileButton = cE("button", null, "Edit", "id", "renewProfileButton");
+  const renewProfileButton = cE("button", null, "Edit", "id", "renewProfileButton");
   renewProfileButton.addEventListener("click", renewProfile);
-  let renewProfileCancel = cE("button", null, "Cancel", "id", "renewProfileCancel");
+  const renewProfileCancel = cE("button", null, "Cancel", "id", "renewProfileCancel");
   renewProfileCancel.style.display = "none";
   renewProfileCancel.addEventListener("click", cancelRenewProfile);
 
@@ -52,24 +49,26 @@ let showUserData = function (user) {
   )
 }
 
-let showProfilePic = function (user) {
-  let storage = firebase.storage();
-  storage.ref(user.uid + '/main.jpg').getDownloadURL().then((url) => {
-    document.getElementById("profilePic").style.backgroundImage = "url(" + url + ")";
-  }).catch((req) => {
-    console.log(req);
-    let width = user.providerData[0].providerId == "facebook.com" ? "/picture/?width=200" : "";
-    if (user.photoURL) {
-      document.getElementById("profilePic").style.backgroundImage = "url(" + user.photoURL + width + ")";
-    }
-  })
+const showProfilePic = user => {
+  const storage = firebase.storage();
+  storage.ref(user.uid + '/main.jpg').getDownloadURL()
+    .then(url => {
+      document.getElementById("profilePic").style.backgroundImage = "url(" + url + ")";
+    })
+    .catch(error => {
+      console.log(error);
+      const width = user.providerData[0].providerId == "facebook.com" ? "/picture/?width=200" : "";
+      if (user.photoURL) {
+        document.getElementById("profilePic").style.backgroundImage = "url(" + user.photoURL + width + ")";
+      }
+    })
 }
 
-let uploadProfilePic = function () {
-  let image = document.getElementById("uploadPic").files[0];
+const uploadProfilePic = () => {
+  const image = document.getElementById("uploadPic").files[0];
   if (image) {
-    let user = authStatus();
-    let imageRef = firebase.storage().ref(user.uid + "/").child("main.jpg");
+    const user = authStatus();
+    const imageRef = firebase.storage().ref(user.uid + "/").child("main.jpg");
     imageRef.put(image).then((snapshot) => {
       console.log("Main Image Uploaded");
       console.log(snapshot);
@@ -86,7 +85,7 @@ let uploadProfilePic = function () {
   }
 }
 
-let renewProfile = function () {
+const renewProfile = () => {
   if (document.getElementById("renewProfileButton").textContent == "Done") {
     document.getElementById("userName").disabled = true;
     document.getElementById("renewProfileButton").textContent = "Edit";
@@ -94,37 +93,34 @@ let renewProfile = function () {
     document.getElementById("uploadPicButton").style.display = "none";
     document.getElementById("uploadPic").style.display = "none";
 
-    let name = document.getElementById("userName").value;
-    let newUserData = {
+    const name = document.getElementById("userName").value;
+    const newUserData = {
       userId: authStatus().uid,
       userName: name,
       userEmail: authStatus().email
     };
 
     firebase.auth().currentUser.updateProfile({ displayName: name })
-      .then(function () {
+      .then(() => {
         console.log("Update display name to:", name);
-        fetch(dbHost + "/exe/manageAccount", {
+        return fetch(dbHost + "/exe/manageAccount", {
           method: "POST",
           body: JSON.stringify(newUserData),
           mode: 'cors',
           headers: {
             "Content-Type": "application/json"
           }
-        }).then(res => res.json())
-          .catch(error => {
-            alert("Update fail, please try again.");
-            console.error("Update to database error:", error)
-          })
-          .then(response => {
-            alert("Update profile!", true);
-            console.log("Update to database success:", response);
-          });
-      }).catch(function (error) {
+        });
+      })
+      .then(res => res.json())
+      .then(response => {
+        alert("Update profile!", true);
+        console.log("Update to database success:", response);
+      })
+      .catch(function (error) {
         alert("Update fail, please try again.");
         console.log("Update display name fail:", error);
       });
-
   } else {
     document.getElementById("userName").disabled = false;
     document.getElementById("renewProfileButton").textContent = "Done";
@@ -134,7 +130,7 @@ let renewProfile = function () {
   }
 }
 
-let cancelRenewProfile = function () {
+const cancelRenewProfile = () => {
   document.getElementById("userName").disabled = true;
   document.getElementById("userName").value = authStatus().displayName;
   document.getElementById("renewProfileButton").textContent = "Edit";
@@ -143,14 +139,16 @@ let cancelRenewProfile = function () {
   document.getElementById("uploadPic").style.display = "none";
 }
 
-let logout = function () {
-  firebase.auth().signOut().then(function () {
-    alert("Log out success. Page is reloading.", true);
-    setTimeout(function () {
-      window.location = "/index.html";
-    }, 3000);
-  }).catch(function (error) {
-    alert("Log out fail, please try again.");
-    console.log(error);
-  })
+const logout = () => {
+  firebase.auth().signOut()
+    .then(() => {
+      alert("Log out success. Page is reloading.", true);
+      setTimeout(() => {
+        window.location = "/index.html";
+      }, 3000);
+    })
+    .catch(error => {
+      alert("Log out fail, please try again.");
+      console.log(error);
+    })
 }
