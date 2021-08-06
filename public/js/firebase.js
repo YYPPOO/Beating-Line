@@ -207,7 +207,7 @@ const popUpLogIn = () => {
   myPasswordInput.id = "logInPassword";
 
   const mySignLink = cE("a", "logInText", "Already have an account? Sign in here.");
-  mySignLink.addEventListener("click", () => {
+  mySignLink.addEventListener("click", function() { // TODO: remove 'this' next line to use arrow function
     const logging = this.textContent === "Already have an account? Sign in here.";
     //true = sign up to sign in, false = sign in to sign up
     mySignLink.textContent = logging ? "Don't have an account? Sign up here." : "Already have an account? Sign in here.";
