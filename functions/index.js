@@ -17,19 +17,19 @@ const db = admin.database();
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://beatingline.com');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, DELETE, OPTIONS');
+  next();
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
 // app.use(express.static('public'));
-
-app.use('/exe/', (req, res, next) => {
-  res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept');
-  res.set('Access-Control-Allow-Methods', 'POST, GET, DELETE, OPTIONS');
-  res.set('Access-Control-Allow-Credentials', 'true');
-  next();
-});
 
 // get Account ---------------------------------------------------
 app.get('/exe/getAccount', (req, res) => {
