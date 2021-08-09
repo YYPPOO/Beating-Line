@@ -1,13 +1,10 @@
 <?xml version="1.0"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
-    "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" 
-    width="512" height="512">
-<!-- <path d="M448,0 H64 C28.704,0,0,28.704, 0,64 v384 c0,35.296,28.704,64,64,64
-	h192 V336 h-64 v-80 h64 v-64 c0 -53.024,42.976-96,96-96 h64 v80 h-32 c-17.664,0-32-1.664-32,16 v64 h80 l-32,80 h-48 v176 h96 c35.296,0,64-28.704,64-64 V64 C512,28.704,483.296,0,448,0z" fill="#0f1a2a"/> -->
-<rect x="10" y="10" rx="64" ry="64" width="492" height="492" fill="#0f1a2a" stroke="#ffffff" stroke-width="10" />
-<!-- <rect x="0" y="0" rx="64" ry="64" width="512" height="512" fill="#0f1a2a" /> -->
-<path d="M256 506 V336 h-64 v-80 h64 v-64 c0 -53.024,42.976-96,96-96 h64 v80 h-32 c-17.664,0-32-1.664-32,16 v64 h80 l-32,80 h-48 v170 Z" fill="#ffffff" />
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="512" height="512">
+  <rect x="10" y="10" rx="64" ry="64" width="492" height="492" fill="#0f1a2a" stroke="#ffffff" stroke-width="10" />
+  <path
+    d="M256 506 V336 h-64 v-80 h64 v-64 c0 -53.024,42.976-96,96-96 h64 v80 h-32 c-17.664,0-32-1.664-32,16 v64 h80 l-32,80 h-48 v170 Z"
+    fill="#ffffff" />
 
 </svg>

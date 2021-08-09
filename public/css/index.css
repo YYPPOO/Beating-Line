@@ -1,872 +1,893 @@
 /* ----------------------------------------------- */
 nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
 }
 
 nav .nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 10px;
 }
 
-@media (max-width:650px) {
-    nav {
-        flex-direction: column-reverse;
-    }
-    nav .nav {
-        margin: 5px 10px;
-    }
+@media (max-width: 650px) {
+  nav {
+    flex-direction: column-reverse;
+  }
+  nav .nav {
+    margin: 5px 10px;
+  }
 }
 
 .nav input {
-    margin: 5px;
-    border-radius: 5px;
+  margin: 5px;
+  border-radius: 5px;
 }
 
-.nav>img {
-    margin: 5px;
-    width: 30px;
-    border-radius: 5px;
-    cursor: pointer;
+.nav > img {
+  margin: 5px;
+  width: 30px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.nav>button {
-    border: 0px;
-    width: 60px;
+.nav > button {
+  border: 0px;
+  width: 60px;
 }
 
-.nav>img:hover, .nav>button:hover {
-    filter: brightness(1.2);
+.nav > img:hover,
+.nav > button:hover {
+  filter: brightness(1.2);
 }
 
-.metronome, .kbMode, .volume, .visualSwitch, .clear {
-    background-color: #3f4a5a;
+.metronome,
+.kbMode,
+.volume,
+.visualSwitch,
+.clear {
+  background-color: #3f4a5a;
 }
 
-.metronomeOn, .kbModeOn, .volumeOn, .visualSwitchOn {
-    background-color: #4D99CC;
+.metronomeOn,
+.kbModeOn,
+.volumeOn,
+.visualSwitchOn {
+  background-color: #4d99cc;
 }
 
 .nav input[type="number"] {
-    width: 50px;
-    height: 20px;
-    border: 0px;
-    padding: 5px;
-    font-weight: bold;
+  width: 50px;
+  height: 20px;
+  border: 0px;
+  padding: 5px;
+  font-weight: bold;
 }
 
 #play {
-    background-color: #4D99CC;
+  background-color: #4d99cc;
 }
-#play>img {
-    margin-left: 3px;
+#play > img {
+  margin-left: 3px;
 }
 
-.nav>button>img {
-    margin-top: 2px;
-    width: 26px;
-    height: 26px;
+.nav > button > img {
+  margin-top: 2px;
+  width: 26px;
+  height: 26px;
 }
 
 /* ---------------------------------------------------- */
 input[type="range"] {
-    position: relative;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    overflow: hidden;
-    height: 10px;
-    width: 100px;
-    outline: transparent;
-    border-radius: 5px;
-    border: transparent;
-    background: #3f4a5a;
-    touch-action: none;
+  position: relative;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  overflow: hidden;
+  height: 10px;
+  width: 100px;
+  outline: transparent;
+  border-radius: 5px;
+  border: transparent;
+  background: #3f4a5a;
+  touch-action: none;
 }
 
 input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 10px;
-    height: 10px;
-    background: #4D99CC;
-    border-radius: 5px;
-    transition: .2s;
-    box-shadow: -50px 0 0 45px #4D99CC;
-    border: 0px;
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #4d99cc;
+  border-radius: 5px;
+  transition: 0.2s;
+  box-shadow: -50px 0 0 45px #4d99cc;
+  border: 0px;
 }
 
 input[type="range"]::-moz-range-thumb {
-    width: 10px;
-    height: 10px;
-    background: #4d99cc;
-    border-radius: 0px;
-    border-bottom-right-radius: 5px;
-    border-top-right-radius: 5px;
-    transition: .2s;
-    border: none;
+  width: 10px;
+  height: 10px;
+  background: #4d99cc;
+  border-radius: 0px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  transition: 0.2s;
+  border: none;
 }
 
-input[type="range"]::-moz-range-track{
-    height: 10px;
-    background-color: #3f4a5a;
+input[type="range"]::-moz-range-track {
+  height: 10px;
+  background-color: #3f4a5a;
 }
 
-input[type="range"]::-moz-range-progress{
-    height:10px;
-    background:#4d99cc;
+input[type="range"]::-moz-range-progress {
+  height: 10px;
+  background: #4d99cc;
 }
 
-input[type="range"]::-moz-focus-outer{
-    border:none;
+input[type="range"]::-moz-focus-outer {
+  border: none;
 }
 
 /* side nav --------------------------------------*/
 .sideNav {
-    width: 200px;
-    height: 100%;
-    overflow: auto;
-    position: fixed;
-    top: 0px;
-    right: -200px;
-    transition: right 0.5s;
-    background-color: #333333;
-    z-index: 10;
-    display: grid;
-    grid-template-columns: 150px;
-    grid-template-rows: 100px repeat(5,50px) 1fr 20px;
-    justify-content: center;
-    justify-items: center;
-    align-items: center;
+  width: 200px;
+  height: 100%;
+  overflow: auto;
+  position: fixed;
+  top: 0px;
+  right: -200px;
+  transition: right 0.5s;
+  background-color: #333333;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 150px;
+  grid-template-rows: 100px repeat(5, 50px) 1fr 20px;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
 }
 
 .sideNavShow {
-    right: 0px;
+  right: 0px;
 }
 
 .navShield {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0px;
-    left: 0px;
-    opacity: 0;
-    z-index: 8;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  opacity: 0;
+  z-index: 8;
 }
 
-.sideNav>#closeNav {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
+.sideNav > #closeNav {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 }
 
 .sideNavUserDiv {
-    justify-self: flex-start;
+  justify-self: flex-start;
 }
 .sideNavUserPic {
-    width: 40px;
-    border-radius: 5px;
-    cursor: pointer;
+  width: 40px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 .sideNavUserName {
-    color: #aaaaaa;
-    cursor: pointer;
+  color: #aaaaaa;
+  cursor: pointer;
 }
 
-.sideNav>button {
-    width: 100%;
-    border: 0px;
+.sideNav > button {
+  width: 100%;
+  border: 0px;
 }
 
 .beatListBtnShow {
-    background-color: #4D99CC;
+  background-color: #4d99cc;
 }
 
 .beatListBtn::after {
-    content: "▼";
+  content: "▼";
 }
 
 .beatListBtnShow::after {
-    content: "▲";
+  content: "▲";
 }
 
 .beatListDiv {
-    overflow: auto;
-    justify-self: flex-start;
-    align-self: flex-start;
-    width: 160px;
-    transform: translate(0,-50%) scale(1,0);
-    transition: all 0.3s;
+  overflow: auto;
+  justify-self: flex-start;
+  align-self: flex-start;
+  width: 160px;
+  transform: translate(0, -50%) scale(1, 0);
+  transition: all 0.3s;
 }
 
 .beatListDivShow {
-    transform: translate(0,0) scale(1,1);
-    align-self: stretch;
+  transform: translate(0, 0) scale(1, 1);
+  align-self: stretch;
 }
 
 /* width */
 .beatListDiv::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
 
 /* Track */
 .beatListDiv::-webkit-scrollbar-track {
-    background-color: #0f1a2a;
-    border-radius: 3px;
+  background-color: #0f1a2a;
+  border-radius: 3px;
 }
 
 /* Handle */
 .beatListDiv::-webkit-scrollbar-thumb {
-    background: #777777; 
-    border-radius: 3px;
+  background: #777777;
+  border-radius: 3px;
 }
 
 .beatDiv {
-    display: flex;
-    width: auto;
-    margin: 10px 10px 10px 0;
-    background-color: #3f4a5a;
-    border-radius: 5px;
-    padding: 5px;
+  display: flex;
+  width: auto;
+  margin: 10px 10px 10px 0;
+  background-color: #3f4a5a;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .beatDiv div {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .beatName {
-    flex: 1;
+  flex: 1;
 }
 
 .deleteBeat {
-    flex: none;
-    width: 10px;
-    height: 10px;
-    text-align: center;
-    color: #aaaaaa;
-    font-size: 10px;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  text-align: center;
+  color: #aaaaaa;
+  font-size: 10px;
 }
 
 /* pop up naming ---------------------------------*/
 .naming {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    position: fixed;
-    left:50%;
-    top:50%;
-    transform: translate(-50%,-50%);
-    width:300px;
-    height:180px;
-    border-radius: 10px;
-    border:1px solid #ffffff;
-    background-color: #3f4a5a;
-    color: white;
-    z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 180px;
+  border-radius: 10px;
+  border: 1px solid #ffffff;
+  background-color: #3f4a5a;
+  color: white;
+  z-index: 60;
 }
 
-@media (max-width:375px) {
-    .naming{
-        width: 75%;
-    }
+@media (max-width: 375px) {
+  .naming {
+    width: 75%;
+  }
 }
 
 .namingText {
-    width: 80%;
-    text-align: center;
+  width: 80%;
+  text-align: center;
 }
 
-.naming>input {
-    width: 80%;
-    height: 20px;
-    padding: 5px;
-    border: 0px;
-    border-radius: 5px;
+.naming > input {
+  width: 80%;
+  height: 20px;
+  padding: 5px;
+  border: 0px;
+  border-radius: 5px;
 }
 
 .namingCopy {
-    position: absolute;
-    right: 30px;
-    top: 100px;
-    font-size: 12px;
-    color: #aaaaaa;
-    line-height: 12px;
+  position: absolute;
+  right: 30px;
+  top: 100px;
+  font-size: 12px;
+  color: #aaaaaa;
+  line-height: 12px;
 }
 
 .namingBtn {
-    background-color: #0f1a2a;
+  background-color: #0f1a2a;
 }
 
 .namingCancel {
-    background-color: #3f4a5a;
+  background-color: #3f4a5a;
 }
-
 
 /* section ---------------------------------------*/
 section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
 }
 
 .loading {
-    position: absolute;
-    margin-top: 120px;
+  position: absolute;
+  margin-top: 120px;
 }
 
 canvas {
-    position: absolute;
-    transform: translateX(22.5px);
-    border-radius: 5px;
-    z-index: 0;
-    opacity: 1;
+  position: absolute;
+  transform: translateX(22.5px);
+  border-radius: 5px;
+  z-index: 0;
+  opacity: 1;
 }
 
-@media (max-width:375px) {
-    canvas {
-        transform: translateX(16px);
-    }
+@media (max-width: 375px) {
+  canvas {
+    transform: translateX(16px);
+  }
 }
 
 .padDiv {
-    display: grid;
-    grid-template-columns: 40px repeat(32,30px);
-    grid-template-rows: repeat(8,30px) 10px;
-    grid-gap: 5px 5px;
-    align-items: center;
-    margin: 0 10px 15px;
-    z-index: 2;
+  display: grid;
+  grid-template-columns: 40px repeat(32, 30px);
+  grid-template-rows: repeat(8, 30px) 10px;
+  grid-gap: 5px 5px;
+  align-items: center;
+  margin: 0 10px 15px;
+  z-index: 2;
 }
 
 .track {
-    display: flex;
-    align-items: flex-start;
-    font-size: 12px;
-    border-radius: 5px;
-    justify-content: flex-end;
-    background-color: #333333;
-    cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  font-size: 12px;
+  border-radius: 5px;
+  justify-content: flex-end;
+  background-color: #333333;
+  cursor: pointer;
 }
 
 .trackIcon {
-    width: 30px;
-    height: 30px;
-    margin: 0;
+  width: 30px;
+  height: 30px;
+  margin: 0;
 }
-@media (max-width:1200px) and (min-width:650px) {
-    .padDiv {
-        grid-template-columns: 40px repeat(16,30px);
-    }
-    
+@media (max-width: 1199px) and (min-width: 650px) {
+  .padDiv {
+    grid-template-columns: 40px repeat(16, 30px);
+  }
 }
-@media (max-width:650px) {
-    .padDiv {
-        grid-template-columns: 40px repeat(8,30px);
-    }
-    
+@media (max-width: 649px) {
+  .padDiv {
+    grid-template-columns: 40px repeat(8, 30px);
+  }
 }
-@media (max-width:375px) {
-    .padDiv {
-        /* grid-template-columns: repeat(8,30px); */
-        grid-gap: 2px 2px;
-        margin: 0 auto 15px;
-    }
-    /* .trackNumber {
+@media (max-width: 375px) {
+  .padDiv {
+    /* grid-template-columns: repeat(8,30px); */
+    grid-gap: 2px 2px;
+    margin: 0 auto 15px;
+  }
+  /* .trackNumber {
         display: none;
     } */
-    .trackIcon {
-        margin: 0;
-    }
+  .trackIcon {
+    margin: 0;
+  }
 }
 
 .pointNumber {
-    text-align: center;
-    font-size: 12px;
-    align-self: flex-start;
-    color: #777777;
+  text-align: center;
+  font-size: 12px;
+  align-self: flex-start;
+  color: #777777;
 }
 .pointNumberP {
-    text-align: center;
-    font-size: 12px;
-    font-weight: bold;
-    align-self: flex-start;
-    color: #ffffff;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  align-self: flex-start;
+  color: #ffffff;
 }
 
 .pointNumberOn {
-    background-color: #4d99cc;
-    color: #ffffff;
-    border-radius: 5px;
+  background-color: #4d99cc;
+  color: #ffffff;
+  border-radius: 5px;
 }
 
-.b, .bp {
-    background-color: #333333;
-    border-radius: 5px;
-    width: 30px;
-    height: 30px;
-    /* transition: all 0.1s; */
-    opacity: 0.8;
-    cursor: pointer;
+.b,
+.bp {
+  background-color: #333333;
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+  /* transition: all 0.1s; */
+  opacity: 0.8;
+  cursor: pointer;
 }
-.b:hover, .bp:hover {
-    filter: brightness(1.2);
+.b:hover,
+.bp:hover {
+  filter: brightness(1.2);
 }
 
 .bp {
-    background-color: #555555;
+  background-color: #555555;
 }
 
 .bOn {
-    filter: brightness(1.5);
+  filter: brightness(1.5);
 }
 
 .bHit {
-    background-color: #dddddd;
+  background-color: #dddddd;
 }
 
 .bSelected {
-    background-color: #777777;
+  background-color: #777777;
 }
 
 /* page button */
 .pageDiv {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .pageButton {
-    width: 30px;
-    height: 10px;
-    border-radius: 5px;
-    background-color: #3f4a5a;
-    margin: 0 5px 15px;
-    border: solid 1px transparent;
+  width: 30px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #3f4a5a;
+  margin: 0 5px 15px;
+  border: solid 1px transparent;
 }
 
 .pageNow {
-    background-color: #4D99CC;
+  background-color: #4d99cc;
 }
 
 .pagePlaying {
-    border: solid 1px white;
+  border: solid 1px white;
 }
 
 .funcBtnDiv {
-    display: flex;
-    font-weight: initial;
+  display: flex;
+  font-weight: initial;
 }
 
 .func {
-    background-color: #3f4a5a;
-    border: 0px;
-    font-size: 16px;
-    width: 150px;
+  background-color: #3f4a5a;
+  border: 0px;
+  font-size: 16px;
+  width: 150px;
 }
 
 /* track setting */
 .trackSettingListDiv {
-    display: none;
-    grid-template-columns: repeat(8,auto);
-    grid-gap: 0 15px;
-    justify-content: center;
-    justify-items: center;
-    align-items: center;
-    margin: 20px 0;
-    touch-action: none;
+  display: none;
+  grid-template-columns: repeat(8, auto);
+  grid-gap: 0 15px;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  margin: 20px 0;
+  touch-action: none;
 }
 
 .trackSetDiv {
-    display: grid;
-    grid-template-columns: 10px 30px;
-    grid-template-rows: 120px 30px 50px;
-    grid-template-areas:
-        ". volume"
-        ". switch"
-        "number icon";
-    grid-gap: 10px 0px;
-    justify-items: center;
-    align-items: center;
-    border-radius: 5px;
-    padding: 10px 30px 10px 20px;
-    background-color: #333333;
-    touch-action: none;
+  display: grid;
+  grid-template-columns: 10px 30px;
+  grid-template-rows: 120px 30px 50px;
+  grid-template-areas:
+    ". volume"
+    ". switch"
+    "number icon";
+  grid-gap: 10px 0px;
+  justify-items: center;
+  align-items: center;
+  border-radius: 5px;
+  padding: 10px 30px 10px 20px;
+  background-color: #333333;
+  touch-action: none;
 }
 
 .trackSetVolume {
-    grid-area: volume;
-    transform: rotate(270deg);
-    transform-origin: center;
+  grid-area: volume;
+  transform: rotate(270deg);
+  transform-origin: center;
 }
 
-#trackSetVolume0::-webkit-slider-thumb{
-    background: #41d841;
-    width: 15px;
-    box-shadow: -50px 0 0 45px #41d841;
+#trackSetVolume0::-webkit-slider-thumb {
+  background: #41d841;
+  width: 15px;
+  box-shadow: -50px 0 0 45px #41d841;
 }
 #trackSetVolume0::-moz-range-thumb,
 #trackSetVolume0::-moz-range-progress {
-    background: #41d841;
-    box-shadow: -50px 0 0 45px #41d841;
+  background: #41d841;
+  box-shadow: -50px 0 0 45px #41d841;
 }
 #trackSetVolume1::-webkit-slider-thumb {
-    background: #d65d5d;
-    width: 15px;
-    box-shadow: -50px 0 0 45px #d65d5d;
+  background: #d65d5d;
+  width: 15px;
+  box-shadow: -50px 0 0 45px #d65d5d;
 }
 #trackSetVolume1::-moz-range-thumb,
 #trackSetVolume1::-moz-range-progress {
-    background: #d65d5d;
+  background: #d65d5d;
 }
 #trackSetVolume2::-webkit-slider-thumb {
-    background: #e2e228;
-    width: 15px;
-    box-shadow: -50px 0 0 45px #e2e228;
+  background: #e2e228;
+  width: 15px;
+  box-shadow: -50px 0 0 45px #e2e228;
 }
 #trackSetVolume2::-moz-range-thumb,
 #trackSetVolume2::-moz-range-progress {
-    background: #e2e228;
+  background: #e2e228;
 }
 #trackSetVolume3::-webkit-slider-thumb {
-    background: #ec7310;
-    width: 15px;
-    box-shadow: -50px 0 0 45px #ec7310;
+  background: #ec7310;
+  width: 15px;
+  box-shadow: -50px 0 0 45px #ec7310;
 }
 #trackSetVolume3::-moz-range-thumb,
 #trackSetVolume3::-moz-range-progress {
-    background: #ec7310;
+  background: #ec7310;
 }
 #trackSetVolume4::-webkit-slider-thumb {
-    background: #87cefa;
-    width: 15px;
-    box-shadow: -50px 0 0 45px #87cefa;
+  background: #87cefa;
+  width: 15px;
+  box-shadow: -50px 0 0 45px #87cefa;
 }
 #trackSetVolume4::-moz-range-thumb,
 #trackSetVolume4::-moz-range-progress {
-    background: #87cefa;
+  background: #87cefa;
 }
 #trackSetVolume5::-webkit-slider-thumb {
-    background: #58ffff;
-    width: 15px;
-    box-shadow: -50px 0 0 45px #58ffff;
+  background: #58ffff;
+  width: 15px;
+  box-shadow: -50px 0 0 45px #58ffff;
 }
 #trackSetVolume5::-moz-range-thumb,
 #trackSetVolume5::-moz-range-progress {
-    background: #58ffff;
+  background: #58ffff;
 }
 #trackSetVolume6::-webkit-slider-thumb {
-    background: #f3b272;
-    width: 15px;
-    box-shadow: -50px 0 0 45px #f3b272;
+  background: #f3b272;
+  width: 15px;
+  box-shadow: -50px 0 0 45px #f3b272;
 }
 #trackSetVolume6::-moz-range-thumb,
 #trackSetVolume6::-moz-range-progress {
-    background: #f3b272;
+  background: #f3b272;
 }
 #trackSetVolume7::-webkit-slider-thumb {
-    background: #ac25ac;
-    width: 15px;
-    box-shadow: -50px 0 0 45px #ac25ac;
+  background: #ac25ac;
+  width: 15px;
+  box-shadow: -50px 0 0 45px #ac25ac;
 }
 #trackSetVolume7::-moz-range-thumb,
 #trackSetVolume7::-moz-range-progress {
-    background: #ac25ac;
+  background: #ac25ac;
 }
 
 .trackSetSwitch {
-    grid-area: switch;
-    width: 30px;
-    height: 30px;
-    background-color: #3f4a5a;
-    border-radius: 5px;
-    transition: all 0.3s;
+  grid-area: switch;
+  width: 30px;
+  height: 30px;
+  background-color: #3f4a5a;
+  border-radius: 5px;
+  transition: all 0.3s;
 }
 
 .trackSetNum {
-    grid-area: number;
-    font-size: 12px;
-    align-self: flex-start;
+  grid-area: number;
+  font-size: 12px;
+  align-self: flex-start;
 }
 
 .trackSetIcon {
-    grid-area: icon;
-    width: 30px;
+  grid-area: icon;
+  width: 30px;
 }
 
 .kbCtrlDiv {
-    display: none;
-    grid-template-columns: 800px 300px;
-    justify-items: center;
-    align-items: center;
+  display: none;
+  grid-template-columns: 800px 300px;
+  justify-items: center;
+  align-items: center;
 }
 .kbImgDiv {
-    width: 750px;
-    height: 300px;
-    background-image: url("../img/kb.png");
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    margin: 20px;
+  width: 750px;
+  height: 300px;
+  background-image: url("../img/kb.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 20px;
 }
 .kbText {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
-.kbKey, .kbAction {
-    text-align: start;
-    line-height: 30px;
-    margin: 10px;
-    color: #aaaaaa;
+.kbKey,
+.kbAction {
+  text-align: start;
+  line-height: 30px;
+  margin: 10px;
+  color: #aaaaaa;
 }
 .kbKeyKey {
-    font-size: 20px;
-    color: #ffffff;
-    font-weight: bold;
+  font-size: 20px;
+  color: #ffffff;
+  font-weight: bold;
 }
 
 .drumPadDiv {
-    display: none;
-    grid-template-columns: repeat(4,135px);
-    grid-template-rows: repeat(2,135px);
-    grid-gap: 20px 20px;
-    margin: 20px 0;
+  display: none;
+  grid-template-columns: repeat(4, 135px);
+  grid-template-rows: repeat(2, 135px);
+  grid-gap: 20px 20px;
+  margin: 20px 0;
 }
 
 .drumPad {
-    display: grid;
-    grid-template-columns: 45px 8px 30px;
-    grid-template-rows: 90px 30px;
-    grid-template-areas: 
-        ". . ."
-        ". number icon";
+  display: grid;
+  grid-template-columns: 45px 8px 30px;
+  grid-template-rows: 90px 30px;
+  grid-template-areas:
+    ". . ."
+    ". number icon";
+  align-items: flex-start;
+  background-color: #333333;
+  border-radius: 10px;
+  touch-action: none;
+}
+.drumPad > span {
+  grid-area: number;
+  font-size: 12px;
+}
+.drumPad > img {
+  grid-area: icon;
+  width: 30px;
+  margin: 0 auto;
+}
+.drumPad > div {
+  display: none;
+  grid-area: name;
+  font-size: 12px;
+  align-self: center;
+  margin-left: 5px;
+}
+
+.funcOn {
+  background-color: #4d99cc;
+}
+.funcItemOn {
+  display: grid;
+}
+
+@media (max-width: 1199px) and (min-width: 650px) {
+  .trackSettingListDiv {
+    grid-gap: 0 5px;
+  }
+  .trackSetDiv {
+    padding: 5px 15px 5px 5px;
+  }
+  .kbCtrlDiv {
+    grid-template-columns: 600px;
+  }
+  .kbImgDiv {
+    width: 600px;
+    height: 240px;
+  }
+}
+@media (max-width: 650px) {
+  .func {
+    width: 155px;
+  }
+  #func2 {
+    display: none;
+  }
+
+  .trackSettingListDiv {
+    grid-template-columns: auto auto;
+    grid-template-rows: repeat(4, auto);
+    grid-gap: 5px 5px;
+  }
+  .trackSetDiv {
+    grid-template-columns: 30px 30px 85px;
+    grid-template-rows: 30px;
+    grid-gap: 0px 4px;
+    grid-template-areas: "icon switch volume";
+    padding: 5px 5px;
+    justify-items: center;
+  }
+  .trackSetVolume[type="range"] {
+    transform: initial;
+    width: 85px;
+  }
+  .trackSetNum {
+    display: none;
+  }
+
+  .drumPadDiv {
+    grid-template-columns: repeat(2, 155px);
+    grid-template-rows: repeat(4, 80px);
+    grid-gap: 10px 10px;
+    grid-auto-flow: column;
+  }
+
+  .drumPad {
+    grid-template-columns: 10px 8px 30px;
+    grid-template-rows: 20px 30px;
+    grid-template-areas:
+      ". . ."
+      ". number icon";
     align-items: flex-start;
     background-color: #333333;
     border-radius: 10px;
     touch-action: none;
+  }
+  #drumPad0 {
+    order: 1;
+  }
+  #drumPad1 {
+    order: 2;
+  }
+  #drumPad2 {
+    order: 3;
+  }
+  #drumPad3 {
+    order: 4;
+  }
+  #drumPad4 {
+    order: 5;
+  }
+  #drumPad5 {
+    order: 6;
+  }
+  #drumPad6 {
+    order: 7;
+  }
+  #drumPad7 {
+    order: 8;
+  }
+
+  .kbCtrlDiv {
+    grid-template-columns: 320px;
+  }
+  .kbImgDiv {
+    width: 320px;
+    height: 128px;
+  }
 }
-.drumPad>span {
-    grid-area: number;
-    font-size: 12px;
-}
-.drumPad>img {
-    grid-area: icon;
-    width: 30px;
-    margin: 0 auto;
-}
-.drumPad>div {
+@media (max-width: 375px) {
+  .func {
+    width: 140px;
+    margin: 5px 2.5px;
+  }
+  .funcItemDiv {
+    top: 204px;
+    height: 235px;
+  }
+  .trackSettingListDiv {
+    grid-gap: 2px 2px;
+  }
+  .trackSetDiv {
+    grid-template-columns: 10px 30px 85px;
+    grid-gap: 0px 5px;
+    grid-template-areas: "number switch volume";
+    justify-items: center;
+  }
+  .trackSetIcon {
     display: none;
-    grid-area: name;
-    font-size: 12px;
-    align-self: center;
-    margin-left: 5px;
-}
-
-.funcOn {
-    background-color: #4d99cc;
-}
-.funcItemOn {
-    display: grid;
-}
-
-@media (max-width:1200px) and (min-width:650px) {
-    .trackSettingListDiv {
-        grid-gap: 0 5px;
-    }
-    .trackSetDiv {
-        padding: 5px 15px 5px 5px;
-    }
-    .kbCtrlDiv {
-        grid-template-columns: 600px;
-    }
-    .kbImgDiv {
-        width: 600px;
-        height: 240px;
-    }
-}
-@media (max-width:650px) {
-    .func {
-        width: 155px;
-    }
-    #func2 {
-        display: none;
-    }
-
-    .trackSettingListDiv {
-        grid-template-columns: auto auto;
-        grid-template-rows: repeat(4,auto);
-        grid-gap: 5px 5px;
-    }
-    .trackSetDiv {
-        grid-template-columns: 30px 30px 85px;
-        grid-template-rows: 30px;
-        grid-gap: 0px 4px;
-        grid-template-areas:
-            "icon switch volume";
-        padding: 5px 5px;
-        justify-items: center;
-    }
-    .trackSetVolume[type="range"] {
-        transform: initial;
-        width: 85px;
-    }
-    .trackSetNum {
-        display: none;
-    }
-    
-    .drumPadDiv {
-        grid-template-columns: repeat(2,155px);
-        grid-template-rows: repeat(4,80px);
-        grid-gap: 10px 10px;
-        grid-auto-flow: column;
-    }
-
-    .drumPad {
-        grid-template-columns: 10px 8px 30px;
-        grid-template-rows: 20px 30px;
-        grid-template-areas: 
-            ". . ."
-            ". number icon";
-        align-items: flex-start;
-        background-color: #333333;
-        border-radius: 10px;
-        touch-action: none;
-    }
-    #drumPad0 {
-        order: 1;
-    }
-    #drumPad1 {
-        order: 2;
-    }
-    #drumPad2 {
-        order: 3;
-    }
-    #drumPad3 {
-        order: 4;
-    }
-    #drumPad4 {
-        order: 5;
-    }
-    #drumPad5 {
-        order: 6;
-    }
-    #drumPad6 {
-        order: 7;
-    }
-    #drumPad7 {
-        order: 8;
-    }
-
-    .kbCtrlDiv {
-        grid-template-columns: 320px;
-    }
-    .kbImgDiv {
-        width: 320px;
-        height: 128px;
-    }
-}
-@media (max-width:375px) {
-    .func {
-        width: 140px;
-        margin: 5px 2.5px;
-    }
-    .funcItemDiv {
-        top: 204px;
-        height: 235px;
-    }
-    .trackSettingListDiv {
-        grid-gap: 2px 2px;
-    }
-    .trackSetDiv {
-        grid-template-columns: 10px 30px 85px;
-        grid-gap: 0px 5px;
-        grid-template-areas: "number switch volume";
-        justify-items: center;
-    }
-    .trackSetIcon {
-        display: none;
-    }
-    .trackSetNum {
-        display: block;
-    }
-    .drumPadDiv {
-        grid-template-columns: repeat(2,145px);
-        grid-template-rows: repeat(4,70px);
-        grid-gap: 5px 5px;
-    }
-    .kbCtrlDiv {
-        display: none;
-    }
+  }
+  .trackSetNum {
+    display: block;
+  }
+  .drumPadDiv {
+    grid-template-columns: repeat(2, 145px);
+    grid-template-rows: repeat(4, 70px);
+    grid-gap: 5px 5px;
+  }
+  .kbCtrlDiv {
+    display: none;
+  }
 }
 
 .b0 {
-    background-color: #41d841;
+  background-color: #41d841;
 }
 
 .b1 {
-    background-color: #d65d5d;
+  background-color: #d65d5d;
 }
 
 .b2 {
-    background-color: #e2e228;
+  background-color: #e2e228;
 }
 
 .b3 {
-    background-color: #ec7310;
+  background-color: #ec7310;
 }
 
 .b4 {
-    background-color: #87cefa;
+  background-color: #87cefa;
 }
 
 .b5 {
-    background-color: #58ffff;
+  background-color: #58ffff;
 }
 
 .b6 {
-    background-color: #f3b272;
+  background-color: #f3b272;
 }
 
 .b7 {
-    background-color: #ac25ac;
+  background-color: #ac25ac;
 }
 
-.b0.bOn,.b1.bOn,.b2.bOn,.b3.bOn,.b4.bOn,.b5.bOn,.b6.bOn,.b7.bOn {
-    transform: scale(1.1,1.1);
-    background-color: #ffffff;
-    filter: drop-shadow(5,5,5);
-    animation: hit 0.3s;
+.b0.bOn,
+.b1.bOn,
+.b2.bOn,
+.b3.bOn,
+.b4.bOn,
+.b5.bOn,
+.b6.bOn,
+.b7.bOn {
+  transform: scale(1.1, 1.1);
+  background-color: #ffffff;
+  filter: drop-shadow(5, 5, 5);
+  animation: hit 0.3s;
 }
 
-@keyframes hit{
-    0% {
-        transform: scale(0.8,0.8);
-        opacity: 0.8;
-    }
-    25% {
-        transform: scale(1,1);
-        opacity: 0.9;
-    }
-    50% {
-        transform: scale(1.1,1.1);
-        opacity: 1;
-    }
-    75% {
-        transform: scale(1,1);
-        opacity: 0.9;
-    }
-    100% {
-        transform: scale(1,1);
-        opacity: 1;
-    }
+@keyframes hit {
+  0% {
+    transform: scale(0.8, 0.8);
+    opacity: 0.8;
+  }
+  25% {
+    transform: scale(1, 1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.1, 1.1);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(1, 1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
 }
-@media (max-width:650px) {
-    .b0.bOn,.b1.bOn,.b2.bOn,.b3.bOn,.b4.bOn,.b5.bOn,.b6.bOn,.b7.bOn {
-        animation: none;
-    }
+@media (max-width: 650px) {
+  .b0.bOn,
+  .b1.bOn,
+  .b2.bOn,
+  .b3.bOn,
+  .b4.bOn,
+  .b5.bOn,
+  .b6.bOn,
+  .b7.bOn {
+    animation: none;
+  }
 }
