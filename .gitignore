@@ -1,4 +1,5 @@
 public/js/firebaseInit.js
+.firebase/
 
 # Logs
 logs
